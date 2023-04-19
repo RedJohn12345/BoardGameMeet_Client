@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'screens/myEventsScreen.dart';
 import 'screens/authorizationScreen.dart';
 import 'screens/mainScreen.dart';
+import 'screens/registration1Screen.dart';
+import 'screens/registration2Screen.dart';
 
 void main() {
   runApp(const FlutterApp());
@@ -19,7 +21,9 @@ class FlutterApp extends StatelessWidget {
       routes: {
         '/': (context) => MainScreen(),
         '/my_events': (context) => MyEventsScreen(),
-        '/authorization': (context) => AuthorizationScreen()
+        '/authorization': (context) => AuthorizationScreen(),
+        '/registration': (context) => Registration1Screen(),
+        '/registration+': (context) => Registration2Screen(),
       },
     );
   }

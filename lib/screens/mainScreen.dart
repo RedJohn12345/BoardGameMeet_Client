@@ -100,9 +100,23 @@ class MainScreen extends StatelessWidget {
       body:
       Column(
         children:[
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: FloatingActionButton(onPressed: () {
+                Navigator.pushNamed(context, '/authorization');
+              },
+                child: CircleAvatar(
+                  backgroundImage: AssetImage("images/2.jpg"),
+                  radius: 200,
+                ),
+                heroTag: 'avatar',
+              ),
+            ),
+          ),
           Container(
-            padding: EdgeInsets.fromLTRB(40, 40, 40, 0),
-            margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+            padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
             child: Row(
               children: [
                 Expanded(
@@ -143,9 +157,13 @@ class MainScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(onPressed: () {},
         backgroundColor: Color(0xff50bc55),
         child: Icon(Icons.add, color: Colors.white, size: 30.0,),
+        heroTag: 'create_event',
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: numberPage,
+        selectedItemColor: Colors.deepPurpleAccent,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         onTap: (int index) {
           if (index == 1) {
             Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
@@ -153,11 +171,11 @@ class MainScreen extends StatelessWidget {
         },
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Главная"),
+              icon: Icon(Icons.home, size: 30.0,),
+              label: ""),
           BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt),
-              label: "Мои мероприятия"),
+              icon: Icon(Icons.list_alt, size: 30.0,),
+              label: ""),
         ],
         backgroundColor: Color(0xff50bc55),
       ),

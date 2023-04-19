@@ -98,25 +98,45 @@ class MyEventsScreen extends StatelessWidget {
       ),
       backgroundColor: Color(0xff292929),
       body:
-        Container(
-            padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-            margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            child: ListView.builder(
-              //shrinkWrap: true,
-              itemCount: events.length,
-              itemBuilder: (_, index) =>
-                  Card(
-                    color: Colors.white,
-                    child: ListTile(
-                        title: Text(events[index].name),
-                        subtitle: Text(
-                            "${events[index].game} - ${events[index].date
-                                .toString()} - ${events[index].location}"),
-                        trailing: Icon(Icons.account_box),
-                    ),
-                  )
-          ),
+        Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: FloatingActionButton(onPressed: () {
+                  Navigator.pushNamed(context, '/authorization');
+                },
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("images/2.jpg"),
+                    radius: 200,
+                  ),
+                  heroTag: 'avatar',
+                ),
+              ),
+            ),
+            Flexible(
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                  child: ListView.builder(
+                    //shrinkWrap: true,
+                    itemCount: events.length,
+                    itemBuilder: (_, index) =>
+                        Card(
+                          color: Colors.white,
+                          child: ListTile(
+                              title: Text(events[index].name),
+                              subtitle: Text(
+                                  "${events[index].game} - ${events[index].date
+                                      .toString()} - ${events[index].location}"),
+                              trailing: Icon(Icons.account_box),
+                          ),
+                        )
+                ),
       ),
+            ),
+          ],
+        ),
 
       floatingActionButton: FloatingActionButton(onPressed: () {},
         backgroundColor: Color(0xff50bc55),
@@ -124,6 +144,9 @@ class MyEventsScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: numberPage,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedItemColor: Colors.deepPurpleAccent,
         onTap: (int index) {
           if (index == 0) {
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -131,11 +154,11 @@ class MyEventsScreen extends StatelessWidget {
         },
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Главная"),
+              icon: Icon(Icons.home, size: 30.0,),
+              label: ""),
           BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt),
-              label: "Мои мероприятия"),
+              icon: Icon(Icons.list_alt, size: 30.0,),
+              label: ""),
         ],
         backgroundColor: Color(0xff50bc55),
       ),
