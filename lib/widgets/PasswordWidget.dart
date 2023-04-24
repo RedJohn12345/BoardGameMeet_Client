@@ -8,9 +8,11 @@ class PasswordWidget extends StatefulWidget {
 
   bool withHelper = false;
 
+  String hintText;
+
   PasswordWidget({
     Key? key,
-    required this.controller, this.withHelper = false}): super(key: key);
+    required this.controller, this.withHelper = false, this.hintText = ""}): super(key: key);
 
   @override
   _PasswordWidgetState createState() {
@@ -26,7 +28,7 @@ class _PasswordWidgetState extends State<PasswordWidget> {
       obscureText: isHidden,
       obscuringCharacter: "*",
       decoration: InputDecoration(
-          labelText: widget.withHelper ? "Пароль*" : "Пароль",
+          labelText: widget.hintText == "" ? (widget.withHelper ? "Пароль*" : "Пароль") : (widget.hintText + "*"),
           fillColor:  Color(0xff171717),
           filled: true,
           labelStyle: TextStyle(color: Colors.white60),

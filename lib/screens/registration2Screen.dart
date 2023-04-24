@@ -37,7 +37,11 @@ class _Registration2ScreenState extends State<Registration2Screen> {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
-                SexWidget(),
+                Row(
+                  children: [
+                    Expanded(child: SexWidget()),
+                  ],
+                ),
                 const SizedBox(height: 16,),
                 AgeWidget(controller: ageController,),
                 const SizedBox(height: 16,),
