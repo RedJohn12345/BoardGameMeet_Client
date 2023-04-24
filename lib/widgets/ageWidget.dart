@@ -20,6 +20,9 @@ class _AgeWidgetState extends State<AgeWidget> {
   @override
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
+    inputFormatters: [
+      FilteringTextInputFormatter.digitsOnly
+    ],
     maxLength: 3,
     decoration: InputDecoration(
       labelText: "Возраст",

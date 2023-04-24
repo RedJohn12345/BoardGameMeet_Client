@@ -75,7 +75,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                 const SizedBox(height: 16,),
                 TextButton(
                   child: Text("Восстановление пароля", style: TextStyle(fontSize: 21, color: Colors.blue,), textAlign: TextAlign.center,),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/changePassword');
+                  },
                 ),
                 const SizedBox(height: 16,),
             ]),
