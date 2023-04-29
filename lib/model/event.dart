@@ -8,7 +8,7 @@ class Event {
   late int numberPlayers;
   late int maxNumberPlayers;
   late String description;
-  late List<Item> items;
+  late Map<Item, bool> items;
 
   /*late int minAge;
   late int maxAge;*/

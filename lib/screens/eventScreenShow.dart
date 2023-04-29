@@ -19,11 +19,6 @@ class _EventScreenShowState extends State<EventScreenShow> {
     final event = (ModalRoute.of(context)?.settings.arguments) as Event;
 
 
-    Map<Item, bool> it = {};
-    for (Item s in event.items) {
-      it[s] = true;
-    }
-    
     final List<Widget> params = [
       const Center(child: Text("Игра", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.game, style: TextStyle(color: Colors.black, fontSize: 24)),),

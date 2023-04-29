@@ -13,18 +13,11 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
+
   @override
   Widget build(BuildContext context) {
 
     final event = (ModalRoute.of(context)?.settings.arguments) as Event;
-
-
-    /*Map<Item, bool> it = {};
-    for (Item s in event.items) {
-      it[s] = true;
-    }*/
-
-    bool isCheck = false;
 
     final List<Widget> items = [];
 
@@ -48,17 +41,16 @@ class _EventScreenState extends State<EventScreen> {
       const SizedBox(height: 10,),
     ];
 
-    for (Item item in event.items) {
+    for (Item item in event.items.keys) {
       items.add(Container(
         decoration: BoxDecoration(border: Border.all(width: 2, color: Colors.black), borderRadius: BorderRadius.circular(20)),
         child: CheckboxListTile(
             controlAffinity: ListTileControlAffinity.leading,
             title: Text(item.name),
-            value: isCheck,
+            value: event.items[item],
             onChanged: (bool? value) {
               setState(() {
-                isCheck = value!;
-                print(isCheck);
+                event.items[item] = value!;
               });
             },
           ),
@@ -80,6 +72,12 @@ class _EventScreenState extends State<EventScreen> {
         //
         centerTitle: true,
         backgroundColor: Color(0xff50bc55),
+        actions: [
+          IconButton(onPressed: () {
+            Navigator.pushNamed(context, '/members');
+          },
+              icon: Icon(Icons.account_box_sharp))
+        ],
       ),
       backgroundColor: Color(0xff292929),
       body:

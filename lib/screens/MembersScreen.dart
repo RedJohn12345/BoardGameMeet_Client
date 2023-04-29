@@ -1,143 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/model/member.dart';
 
-import '../model/event.dart';
-
-class MyEventsScreen extends StatelessWidget {
+class MembersScreen extends StatelessWidget {
 
   final int numberPage = 1;
-  final List<Event> events = [
-    Event(name: "Event 1",
-        game: "Monopoly",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6
-    ),
-    Event(name: "Event 2",
-        game: "Monopoly1",
-        location: "Voronezh3123",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 3",
-        game: "Monopoly2",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 4",
-        game: "Monopoly3",
-        location: "Voronezh213",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 5",
-        game: "Monopoly5",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 6",
-        game: "Monopoly4",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 7",
-        game: "Monopoly2",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 8",
-        game: "Monopoly434",
-        location: "Voronezh213",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 1",
-        game: "Monopoly",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 2",
-        game: "Monopoly1",
-        location: "Voronezh3123",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 3",
-        game: "Monopoly2",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 4",
-        game: "Monopoly3",
-        location: "Voronezh213",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 5",
-        game: "Monopoly5",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 6",
-        game: "Monopoly4",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
-    Event(name: "Event 7",
-        game: "Monopoly2",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: [],
-        maxNumberPlayers: 6),
+  final List<Member> members = [
+    Member(name: "Denis", pathToAvatar: "images/2.jpg"),
+    Member(name: "Ivan", pathToAvatar: "images/2.jpg"),
+    Member(name: "Denis", pathToAvatar: "images/2.jpg"),
+    Member(name: "Vadim", pathToAvatar: "images/2.jpg"),
   ];
 
 
-  MyEventsScreen({super.key});
+  MembersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: 
-            Text("Мои мероприятия", style: TextStyle(fontSize: 24),),
+            Text("Список участников", style: TextStyle(fontSize: 24),),
         //
         centerTitle: true,
         backgroundColor: Color(0xff50bc55),
@@ -146,36 +28,26 @@ class MyEventsScreen extends StatelessWidget {
       body:
         Column(
           children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: FloatingActionButton(onPressed: () {
-                  Navigator.pushNamed(context, '/authorization');
-                },
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage("images/2.jpg"),
-                    radius: 200,
-                  ),
-                  heroTag: 'avatar',
-                ),
-              ),
-            ),
+            const SizedBox(height: 40,),
             Flexible(
               child: Container(
                   padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                   child: ListView.builder(
                     //shrinkWrap: true,
-                    itemCount: events.length,
+                    itemCount: members.length,
                     itemBuilder: (_, index) =>
                         Card(
                           color: Colors.white,
                           child: ListTile(
-                              title: Text(events[index].name),
-                              subtitle: Text(
-                                  "${events[index].game} - ${events[index].date
-                                      .toString()} - ${events[index].location}"),
-                              trailing: Icon(Icons.account_box),
+                              title: Text(members[index].name),
+                              leading: SizedBox(height: 40, width: 40,
+                                child: CircleAvatar(
+                                  backgroundImage: AssetImage(members[index].pathToAvatar),
+                                  radius: 200,
+                                ),
+                              ),
+                              trailing: IconButton(icon: Icon(Icons.disabled_by_default_outlined), color: Colors.red,
+                                onPressed: () {},),
                           ),
                         )
                 ),
@@ -183,31 +55,6 @@ class MyEventsScreen extends StatelessWidget {
             ),
           ],
         ),
-
-      floatingActionButton: FloatingActionButton(onPressed: () {},
-        backgroundColor: Color(0xff50bc55),
-        child: Icon(Icons.add, color: Colors.white, size: 30.0,),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: numberPage,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedItemColor: Colors.deepPurpleAccent,
-        onTap: (int index) {
-          if (index == 0) {
-            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home, size: 30.0,),
-              label: ""),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.list_alt, size: 30.0,),
-              label: ""),
-        ],
-        backgroundColor: Color(0xff50bc55),
-      ),
     );
   }
 }
