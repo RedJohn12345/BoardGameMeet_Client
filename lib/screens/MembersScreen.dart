@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../model/event.dart';
-import '../model/item.dart';
 
-class MainScreen extends StatelessWidget {
+class MyEventsScreen extends StatelessWidget {
 
-  final int numberPage = 0;
+  final int numberPage = 1;
   final List<Event> events = [
     Event(name: "Event 1",
         game: "Monopoly",
         location: "Voronezh",
         numberPlayers: 4,
         date: DateTime.now(),
-        description: "dsgkbjagjbigasjbkadgjhdjhkdsjhdfsjhldsgahjgjhk",
-        items: [Item(name: "Pidge"), Item(name: 'Padge'),
-          Item(name: "Pidge"), Item(name: 'Padge'),
-          Item(name: "Pidge"), Item(name: 'Padge'),
-          Item(name: "Pidge"), Item(name: 'Padge'),
-          Item(name: "Pidge"), Item(name: 'Padge'),
-          Item(name: "Pidge"), Item(name: 'Padge'),
-          Item(name: "Pidge"), Item(name: 'Padge'),
-          Item(name: "Pidge"), Item(name: 'Padge'),],
+        description: "",
+        items: [],
         maxNumberPlayers: 6
-        ),
+    ),
     Event(name: "Event 2",
         game: "Monopoly1",
         location: "Voronezh3123",
@@ -138,92 +130,72 @@ class MainScreen extends StatelessWidget {
   ];
 
 
-  MainScreen({super.key});
+  MyEventsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: 
-            Text("Список мероприятий", style: TextStyle(fontSize: 24),),
+            Text("Мои мероприятия", style: TextStyle(fontSize: 24),),
         //
         centerTitle: true,
         backgroundColor: Color(0xff50bc55),
       ),
       backgroundColor: Color(0xff292929),
       body:
-      Column(
-        children:[
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: FloatingActionButton(onPressed: () {
-                Navigator.pushNamed(context, '/authorization');
-              },
-                child: CircleAvatar(
-                  backgroundImage: AssetImage("images/2.jpg"),
-                  radius: 200,
-                ),
-                heroTag: 'avatar',
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: "Введите название игры или мероприятия",
-                    fillColor:  Color(0xff171717),
-                    filled: true,
-                    hintStyle: TextStyle(color: Colors.white60)
+        Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: FloatingActionButton(onPressed: () {
+                  Navigator.pushNamed(context, '/authorization');
+                },
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("images/2.jpg"),
+                    radius: 200,
                   ),
-                    style: TextStyle(color: Colors.white),
-              ),
+                  heroTag: 'avatar',
                 ),
-                //IconButton(onPressed: (){}, icon: Icon(Icons.search))
-            ]),
-          ),
-          Flexible(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
-              child: ListView.builder(
-                //shrinkWrap: true,
-                itemCount: events.length,
-                itemBuilder: (_, index) =>
-                    Card(
-                      color: Colors.white,
-                      child: ListTile(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/eventShow', arguments: events[index]);
-                          },
-                          title: Text(events[index].name),
-                          subtitle: Text(
-                              "${events[index].game} - ${events[index].date
-                                  .toString()} - ${events[index].location}")
-                      ),
-                    )
+              ),
             ),
+            Flexible(
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                  child: ListView.builder(
+                    //shrinkWrap: true,
+                    itemCount: events.length,
+                    itemBuilder: (_, index) =>
+                        Card(
+                          color: Colors.white,
+                          child: ListTile(
+                              title: Text(events[index].name),
+                              subtitle: Text(
+                                  "${events[index].game} - ${events[index].date
+                                      .toString()} - ${events[index].location}"),
+                              trailing: Icon(Icons.account_box),
+                          ),
+                        )
+                ),
+      ),
+            ),
+          ],
         ),
-          ),
-      ],),
+
       floatingActionButton: FloatingActionButton(onPressed: () {},
         backgroundColor: Color(0xff50bc55),
         child: Icon(Icons.add, color: Colors.white, size: 30.0,),
-        heroTag: 'create_event',
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: numberPage,
-        selectedItemColor: Colors.deepPurpleAccent,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        selectedItemColor: Colors.deepPurpleAccent,
         onTap: (int index) {
-          if (index == 1) {
-            Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
+          if (index == 0) {
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
           }
         },
         items: [

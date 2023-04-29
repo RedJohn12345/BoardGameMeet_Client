@@ -4,30 +4,26 @@ import 'package:untitled/model/item.dart';
 
 import '../model/event.dart';
 
-class EventScreen extends StatefulWidget {
+class EventScreenShow extends StatefulWidget {
 
-  EventScreen({super.key});
+  EventScreenShow({super.key});
 
   @override
-  State<EventScreen> createState() => _EventScreenState();
+  State<EventScreenShow> createState() => _EventScreenShowState();
 }
 
-class _EventScreenState extends State<EventScreen> {
+class _EventScreenShowState extends State<EventScreenShow> {
   @override
   Widget build(BuildContext context) {
 
     final event = (ModalRoute.of(context)?.settings.arguments) as Event;
 
 
-    /*Map<Item, bool> it = {};
+    Map<Item, bool> it = {};
     for (Item s in event.items) {
       it[s] = true;
-    }*/
-
-    bool isCheck = false;
-
-    final List<Widget> items = [];
-
+    }
+    
     final List<Widget> params = [
       const Center(child: Text("Игра", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.game, style: TextStyle(color: Colors.black, fontSize: 24)),),
@@ -38,40 +34,10 @@ class _EventScreenState extends State<EventScreen> {
       const Center(child: Text("Место", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.location, style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
-      const Center(child: Text("Описание", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      Align(alignment: Alignment.topLeft, child: Text(event.description, style: TextStyle(color: Colors.black, fontSize: 24)),),
-      const SizedBox(height: 16,),
       const Center(child: Text("Количество игроков", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.viewCountPlayers(), style: TextStyle(color: Colors.black, fontSize: 24),),),
       const SizedBox(height: 16,),
-      Center(child: Text("Нужные предметы", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      const SizedBox(height: 10,),
     ];
-
-    for (Item item in event.items) {
-      items.add(Container(
-        decoration: BoxDecoration(border: Border.all(width: 2, color: Colors.black), borderRadius: BorderRadius.circular(20)),
-        child: CheckboxListTile(
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Text(item.name),
-            value: isCheck,
-            onChanged: (bool? value) {
-              setState(() {
-                isCheck = value!;
-                print(isCheck);
-              });
-            },
-          ),
-      ),
-      );
-      items.add(const SizedBox(height: 10,),);
-    }
-
-    params.add(Container(decoration: BoxDecoration(
-        color: Color(0xff50bc55),
-        borderRadius: BorderRadius.circular(20)),
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-        margin: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Column(children: items,)));
 
     return Scaffold(
       appBar: AppBar(
@@ -105,22 +71,12 @@ class _EventScreenState extends State<EventScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton( onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/');
+                      Navigator.pushReplacementNamed(context, '/event', arguments: event);
                     },
-                      child: Text("Покинуть"),
+                      child: Text("Вступить"),
                       style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
                     ),
-                  ),
-                  const SizedBox(width: 16,),
-                  Expanded(
-                    child: ElevatedButton( onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/');
-                    },
-                      child: Text("Чат"),
-                      style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
-                    ),
-                  ),
-                ]
+                  ),]
             ),
           ),
       ],),

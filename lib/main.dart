@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/screens/changePassword.dart';
 import 'package:untitled/screens/eventScreen.dart';
+import 'package:untitled/screens/eventScreenShow.dart';
 import 'screens/changePassword2.dart';
 import 'screens/myEventsScreen.dart';
 import 'screens/authorizationScreen.dart';
@@ -30,6 +31,7 @@ class FlutterApp extends StatelessWidget {
         '/changePassword': (context) => ChangePasswordScreen(),
         '/changePassword+': (context) => ChangePassword2Screen(),
         '/event': (context) => EventScreen(),
+        '/eventShow': (context) => EventScreenShow(),
       },
     );
   }
