@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum Sex {
-  MAN(title: "Мужской"),
-  WOMAN(title: "Женский"),
-  OTHER(title: "Другой"),
-  NONE(title: "Не указывать");
-
-
-  final String title;
-
-
-  const Sex({required this.title});
-
-}
+import '../model/Sex.dart';
 
 class SexWidget extends StatefulWidget {
 
@@ -44,7 +32,7 @@ class _SexWidgetState extends State<SexWidget> {
         borderRadius: BorderRadius.circular(20),
         dropdownColor: Color(0xff50bc55),
         value: hintText,
-      items: <int>[Sex.NONE.index, Sex.MAN.index, Sex.WOMAN.index, Sex.OTHER.index].map((int value) {
+      items: <int>[Sex.NONE.index, Sex.MAN.index, Sex.WOMAN.index, ].map((int value) {
       return DropdownMenuItem<String>(
             value: Sex.values[value].title,
             child: Text(Sex.values[value].title),

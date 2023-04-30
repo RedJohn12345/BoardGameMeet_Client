@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/model/Sex.dart';
 import 'package:untitled/model/member.dart';
 
 class MembersScreen extends StatelessWidget {
 
   final int numberPage = 1;
   final List<Member> members = [
-    Member(name: "Denis", pathToAvatar: "images/2.jpg"),
-    Member(name: "Ivan", pathToAvatar: "images/2.jpg"),
-    Member(name: "Denis", pathToAvatar: "images/2.jpg"),
-    Member(name: "Vadim", pathToAvatar: "images/2.jpg"),
+    Member(name: "Denis", pathToAvatar: "images/2.jpg", login: "pangolin", city: "Voronezh", sex: Sex.MAN),
+    Member(name: "Ivan", pathToAvatar: "images/2.jpg", login: "mneploxa", city: "Voronezh"),
+    Member(name: "Denis", pathToAvatar: "images/2.jpg", login: "dunadan", city: "Voronezh", age: 21),
+    Member(name: "Vadim", pathToAvatar: "images/2.jpg", login: "bezdeneg", city: "Voronezh"),
   ];
 
 
@@ -39,6 +40,9 @@ class MembersScreen extends StatelessWidget {
                         Card(
                           color: Colors.white,
                           child: ListTile(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/profile', arguments: members[index]);
+                            },
                               title: Text(members[index].name),
                               leading: SizedBox(height: 40, width: 40,
                                 child: CircleAvatar(

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:untitled/screens/ProfileScreen.dart';
 import 'package:untitled/screens/changePassword.dart';
 import 'package:untitled/screens/eventScreen.dart';
 import 'package:untitled/screens/eventScreenShow.dart';
@@ -34,6 +35,7 @@ class FlutterApp extends StatelessWidget {
         '/event': (context) => EventScreen(),
         '/eventShow': (context) => EventScreenShow(),
         '/members': (context) => MembersScreen(),
+        '/profile': (context) => ProfileScreen(),
       },
     );
   }
