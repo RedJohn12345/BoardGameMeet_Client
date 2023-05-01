@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:untitled/model/item.dart';
 
 import '../model/event.dart';
+import '../model/item.dart';
 
 class EventScreen extends StatefulWidget {
 

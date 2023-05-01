@@ -1,8 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:untitled/model/Sex.dart';
-import 'package:untitled/model/item.dart';
 
+import '../model/Sex.dart';
 import '../model/event.dart';
 import '../model/member.dart';
 

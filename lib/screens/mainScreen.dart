@@ -211,7 +211,9 @@ class MainScreen extends StatelessWidget {
         ),
           ),
       ],),
-      floatingActionButton: FloatingActionButton(onPressed: () {},
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.pushNamed(context, '/map');
+      },
         backgroundColor: Color(0xff50bc55),
         child: Icon(Icons.add, color: Colors.white, size: 30.0,),
         heroTag: 'create_event',

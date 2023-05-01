@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/model/Sex.dart';
-import 'package:untitled/model/member.dart';
+
+import '../model/Sex.dart';
+import '../model/member.dart';
 
 class MembersScreen extends StatelessWidget {
 

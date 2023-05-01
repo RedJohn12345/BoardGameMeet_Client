@@ -1,9 +1,10 @@
 
+import 'package:boardgm/screens/MapCity.dart';
+import 'package:boardgm/screens/ProfileScreen.dart';
+import 'package:boardgm/screens/changePassword.dart';
+import 'package:boardgm/screens/eventScreen.dart';
+import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled/screens/ProfileScreen.dart';
-import 'package:untitled/screens/changePassword.dart';
-import 'package:untitled/screens/eventScreen.dart';
-import 'package:untitled/screens/eventScreenShow.dart';
 import 'screens/MembersScreen.dart';
 import 'screens/changePassword2.dart';
 import 'screens/myEventsScreen.dart';
@@ -36,6 +37,7 @@ class FlutterApp extends StatelessWidget {
         '/eventShow': (context) => EventScreenShow(),
         '/members': (context) => MembersScreen(),
         '/profile': (context) => ProfileScreen(),
+        '/map': (context) => MapCity(),
       },
     );
   }
