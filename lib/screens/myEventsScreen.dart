@@ -154,7 +154,7 @@ class MyEventsScreen extends StatelessWidget {
                   Navigator.pushNamed(context, '/authorization');
                 },
                   child: CircleAvatar(
-                    backgroundImage: AssetImage("images/2.jpg"),
+                    backgroundImage: AssetImage("assets/images/2.jpg"),
                     radius: 200,
                   ),
                   heroTag: 'avatar',

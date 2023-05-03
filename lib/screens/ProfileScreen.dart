@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Color(0xff50bc55),
         actions: [
           IconButton(onPressed: () {
-
+            Navigator.pushNamed(context, '/profileEdit', arguments: member);
           }, icon: Icon(Icons.settings))
         ],
       ),

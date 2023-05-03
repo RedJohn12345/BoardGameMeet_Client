@@ -78,7 +78,7 @@ class _MapCityState extends State<MapCity> {
     setState(() {
       _suggestions = [];
         result.items!.asMap().forEach((i, item) {
-          _suggestions.add(item.displayText);
+          _suggestions.add(item.title);
         });
     });
 

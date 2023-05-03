@@ -4,10 +4,11 @@ import '../model/Sex.dart';
 
 class SexWidget extends StatefulWidget {
 
-  Sex sex = Sex.NONE;
+  final Sex sex;
 
   SexWidget({
     super.key,
+    this.sex = Sex.NONE
   });
 
   @override
@@ -20,6 +21,7 @@ class _SexWidgetState extends State<SexWidget> {
 
   @override
   Widget build(BuildContext context) {
+    hintText = widget.sex == Sex.NONE ? null : widget.sex.title;
     return Container(
       padding: EdgeInsets.fromLTRB(15,5,15,5),
       decoration: BoxDecoration(
