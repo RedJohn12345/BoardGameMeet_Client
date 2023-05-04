@@ -6,9 +6,11 @@ class NameWidget extends StatefulWidget {
 
   final TextEditingController controller;
   bool withHelper = false;
+  String text;
   NameWidget({
     Key? key,
-    required this.controller, this.withHelper = false}): super(key: key);
+    required this.controller, this.withHelper = false,
+  this.text = "Имя"}): super(key: key);
 
   @override
   _NameWidgetState createState() {
@@ -22,7 +24,7 @@ class _NameWidgetState extends State<NameWidget> {
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
     decoration: InputDecoration(
-      labelText: widget.withHelper ? "Имя*" : "Имя",
+      labelText: widget.withHelper ? "${widget.text}*" : widget.text,
       fillColor:  Color(0xff171717),
       filled: true,
       labelStyle: TextStyle(color: Colors.white60),
@@ -34,7 +36,7 @@ class _NameWidgetState extends State<NameWidget> {
     style: TextStyle(color: Colors.white),
     validator: (name) {
       if (name != null && name.isEmpty) {
-        return 'Введите имя!';
+        return 'Введите ${widget.text}!';
       }
       return null;
     }

@@ -212,7 +212,7 @@ class MainScreen extends StatelessWidget {
           ),
       ],),
       floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.pushNamed(context, '/map');
+        Navigator.pushNamed(context, '/editEvent');
       },
         backgroundColor: Color(0xff50bc55),
         child: Icon(Icons.add, color: Colors.white, size: 30.0,),
@@ -220,7 +220,7 @@ class MainScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: numberPage,
-        selectedItemColor: Colors.deepPurpleAccent,
+        selectedItemColor: Colors.black,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         onTap: (int index) {

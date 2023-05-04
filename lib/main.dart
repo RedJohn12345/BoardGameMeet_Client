@@ -3,6 +3,7 @@ import 'package:boardgm/screens/MapCity.dart';
 import 'package:boardgm/screens/ProfileEditScreen.dart';
 import 'package:boardgm/screens/ProfileScreen.dart';
 import 'package:boardgm/screens/changePassword.dart';
+import 'package:boardgm/screens/editEventScreen.dart';
 import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class FlutterApp extends StatelessWidget {
         '/profile': (context) => ProfileScreen(),
         '/profileEdit': (context) => ProfileEditScreen(),
         '/avatarChoose': (context) => ChooseAvatar(),
-        '/map': (context) => MapCity(),
+        '/editEvent': (context) => EditEventScreen(),
 
       },
     );

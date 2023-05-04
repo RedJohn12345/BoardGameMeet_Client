@@ -13,6 +13,7 @@ class Registration2Screen extends StatefulWidget {
 class _Registration2ScreenState extends State<Registration2Screen> {
   final ageController = TextEditingController();
   final passwordController = TextEditingController();
+  final SexWidget sexController = SexWidget();
 
   @override
   void dispose() {
@@ -39,7 +40,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
               children: [
                 Row(
                   children: [
-                    Expanded(child: SexWidget()),
+                    Expanded(child: sexController),
                   ],
                 ),
                 const SizedBox(height: 16,),

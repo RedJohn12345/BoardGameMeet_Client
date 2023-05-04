@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   yandex_mapkit: ^3.2.0
   geolocator: ^9.0.2
+  flutter_datetime_picker: ^1.5.1
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

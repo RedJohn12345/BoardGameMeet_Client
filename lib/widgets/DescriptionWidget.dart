@@ -2,32 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class AgeWidget extends StatefulWidget {
+class DescriptionWidget extends StatefulWidget {
 
   final TextEditingController controller;
-  String text;
-  AgeWidget({
+  const DescriptionWidget({
     Key? key,
-    required this.controller, this.text = "Возраст"}): super(key: key);
+    required this.controller}): super(key: key);
 
   @override
-  _AgeWidgetState createState() {
-    return _AgeWidgetState();
+  _DescriptionWidgetState createState() {
+    return _DescriptionWidgetState();
   }
 
 }
 
-class _AgeWidgetState extends State<AgeWidget> {
+class _DescriptionWidgetState extends State<DescriptionWidget> {
   @override
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
-    inputFormatters: [
-      FilteringTextInputFormatter.digitsOnly
-    ],
-    maxLength: 3,
+    maxLength: 300,
+    minLines: 4,
+    maxLines: 4,
     decoration: InputDecoration(
-      counterText: "",
-      labelText: widget.text,
+      labelText: "Описание",
       fillColor:  Color(0xff171717),
       filled: true,
       labelStyle: TextStyle(color: Colors.white60),
@@ -35,7 +32,7 @@ class _AgeWidgetState extends State<AgeWidget> {
         borderRadius: BorderRadius.circular(20),
       )
     ),
-    keyboardType: TextInputType.number,
+    keyboardType: TextInputType.name,
     style: TextStyle(color: Colors.white),
   );
 }

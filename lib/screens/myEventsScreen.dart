@@ -192,7 +192,7 @@ class MyEventsScreen extends StatelessWidget {
         currentIndex: numberPage,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        selectedItemColor: Colors.deepPurpleAccent,
+        selectedItemColor: Colors.black,
         onTap: (int index) {
           if (index == 0) {
             Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);

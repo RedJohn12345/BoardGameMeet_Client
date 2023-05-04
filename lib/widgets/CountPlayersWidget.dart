@@ -2,32 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class AgeWidget extends StatefulWidget {
+class CountPlayersWidget extends StatefulWidget {
 
   final TextEditingController controller;
-  String text;
-  AgeWidget({
+  bool withHelper;
+  CountPlayersWidget({
     Key? key,
-    required this.controller, this.text = "Возраст"}): super(key: key);
+    required this.controller,
+  this.withHelper = false}): super(key: key);
 
   @override
-  _AgeWidgetState createState() {
-    return _AgeWidgetState();
+  _CountPlayersWidgetState createState() {
+    return _CountPlayersWidgetState();
   }
 
 }
 
-class _AgeWidgetState extends State<AgeWidget> {
+class _CountPlayersWidgetState extends State<CountPlayersWidget> {
   @override
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
     inputFormatters: [
       FilteringTextInputFormatter.digitsOnly
     ],
-    maxLength: 3,
+    maxLength: 2,
     decoration: InputDecoration(
       counterText: "",
-      labelText: widget.text,
+      labelText: widget.withHelper ? "Количество игроков*" : "Количество игроков",
       fillColor:  Color(0xff171717),
       filled: true,
       labelStyle: TextStyle(color: Colors.white60),
@@ -37,5 +38,11 @@ class _AgeWidgetState extends State<AgeWidget> {
     ),
     keyboardType: TextInputType.number,
     style: TextStyle(color: Colors.white),
+      validator: (count) {
+        if (count != null && count.isEmpty) {
+          return 'Введите количество игроков!';
+        }
+        return null;
+      }
   );
 }
