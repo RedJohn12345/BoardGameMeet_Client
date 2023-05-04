@@ -4,7 +4,7 @@ import '../model/Sex.dart';
 
 class SexWidget extends StatefulWidget {
 
-  final Sex sex;
+  Sex sex;
 
   SexWidget({
     super.key,
@@ -42,10 +42,17 @@ class _SexWidgetState extends State<SexWidget> {
         }).toList(),
         onChanged: (item) {
           setState(() {
-            hintText = item!;
+            if (item! == "Мужской") {
+              widget.sex = Sex.MAN;
+            } else if (item== "Женский") {
+              widget.sex = Sex.WOMAN;
+            } else {
+              widget.sex = Sex.NONE;
+            }
+            /*hintText = item;
             if (hintText == "Не указывать") {
               hintText = null;
-            }
+            }*/
           });
         },
       ),

@@ -24,4 +24,16 @@ class Event {
   String viewCountPlayers() {
     return "$numberPlayers/$maxNumberPlayers";
   }
+
+  static fromJson(json) {
+    final itemsJson = json['items'] as Map<dynamic, bool>;
+    final itemsMap = <Item, bool>{};
+    itemsJson.forEach((key, value) {
+      itemsMap[Item.fromJson(key)] = value;
+    });
+    return Event(name: json['name'] as String, game: json['game'] as String,
+        date: DateTime.parse(json['date'] as String), location: json['location'] as String,
+        numberPlayers: json['numberPlayers'] as int, maxNumberPlayers: json['maxNumberPlayers'] as int,
+        description: json['description'] as String, items: itemsMap);
+  }
 }
