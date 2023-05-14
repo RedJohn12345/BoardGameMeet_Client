@@ -8,9 +8,12 @@ class Member {
   late int age;
   late String city;
   late Sex sex;
+  late String password;
+  late String secretWord;
 
-  Member({required this.name, this.pathToAvatar = "",
-    required this.login, this.age = 0, required this.city, this.sex = Sex.NONE
+  Member({this.name = "", this.pathToAvatar = "",
+    required this.login, this.age = 0, this.city = "", this.sex = Sex.NONE,
+    this.password = "", this.secretWord = ""
   });
 
   /*Event({required this.name, required this.game, required this.date,

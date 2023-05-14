@@ -16,11 +16,18 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   Stream<EventsState> mapEventToState(
       EventsEvent event,
       ) async* {
-    if (event is LoadEvents) {
+    if (event is LoadMyEvents) {
       yield EventsLoading();
       try {
-        final events = await repository.getEvents(event.userId);
-        yield EventsLoaded(events as List<Event>);
+        final events = await repository.getMyEvents();
+        yield EventsLoaded(events.cast<Event>());
+      } catch (e) {
+        yield EventsError(errorMessage: e.toString());
+      }
+    } else if (event is LoadEvents) {
+      try {
+        final events = await repository.getEvents();
+        yield EventsLoaded(events.cast<Event>());
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }

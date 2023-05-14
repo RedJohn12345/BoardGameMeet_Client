@@ -1,3 +1,4 @@
+import 'package:boardgm/model/member.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/LoginWidget.dart';
@@ -61,8 +62,9 @@ class _Registration1ScreenState extends State<Registration1Screen> {
                       child: ElevatedButton( onPressed: () {
                         final form = formKey.currentState!;
                         if (form.validate()) {
-                          //Navigator.pushNamed(context, '/registration+');
-                          Navigator.pushReplacementNamed(context, '/registration+');
+                          Member member = Member(name: nameController.text, login: loginController.text,
+                              password: passwordController.text, secretWord: secretWordController.text);
+                          Navigator.pushReplacementNamed(context, '/registration+', arguments: member);
                         }
                       },
                         child: Text("Продолжить"),

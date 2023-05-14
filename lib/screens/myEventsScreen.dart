@@ -8,7 +8,6 @@ import '../model/event.dart';
 class MyEventsScreen extends StatelessWidget {
 
   final int numberPage = 1;
-  final int userId;
 
   final List<Event> events = [
     Event(name: "Event 1",
@@ -134,16 +133,16 @@ class MyEventsScreen extends StatelessWidget {
         maxNumberPlayers: 6),
   ];
 
-  MyEventsScreen({super.key, required this.userId});
+  MyEventsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EventsBloc>(
       create: (context) => EventsBloc(
-          repository: EventsRepository(
-            apiClient: EventsApiClient(),
-          ),
-      )..add(LoadEvents(userId: userId)),
+        repository: EventsRepository(
+          apiClient: EventsApiClient()
+        )
+      )..add(LoadMyEvents()),
       child: Scaffold(
         appBar: AppBar(
           title: 
@@ -178,15 +177,15 @@ class MyEventsScreen extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                       child: ListView.builder(
                         //shrinkWrap: true,
-                          itemCount: events.length,
+                          itemCount: state.events.length,
                           itemBuilder: (_, index) =>
                               Card(
                                 color: Colors.white,
                                 child: ListTile(
-                                  title: Text(events[index].name),
+                                  title: Text(state.events[index].name),
                                   subtitle: Text(
-                                      "${events[index].game} - ${events[index].date
-                                          .toString()} - ${events[index].location}"),
+                                      "${state.events[index].game} - ${state.events[index].date
+                                          .toString()} - ${state.events[index].location}"),
                                   trailing: Icon(Icons.account_box),
                                 ),
                               )

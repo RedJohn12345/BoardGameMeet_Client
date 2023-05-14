@@ -30,7 +30,7 @@ class FlutterApp extends StatelessWidget {
       initialRoute: '/welcome',
       routes: {
         '/home': (context) => MainScreen(),
-        '/my_events': (context) => MyEventsScreen(userId: 1,),
+        '/my_events': (context) => MyEventsScreen(),
         '/authorization': (context) => AuthorizationScreen(),
         '/registration': (context) => Registration1Screen(),
         '/registration+': (context) => Registration2Screen(),

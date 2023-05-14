@@ -6,6 +6,9 @@ import '../model/event.dart';
 class EventsRepository {
   final EventsApiClient apiClient;
   EventsRepository({required this.apiClient});
-  Future<Future<List>> getEvents(int userId) async =>
-      apiClient.fetchEvents(userId);
+  Future<List<dynamic>> getMyEvents() async =>
+      apiClient.fetchMyEvents();
+
+  Future<List<dynamic>> getEvents() async =>
+      apiClient.fetchEvents();
 }
