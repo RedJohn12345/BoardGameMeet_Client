@@ -7,6 +7,8 @@ class EventsInitial extends EventsState {}
 
 class EventsLoading extends EventsState {}
 
+class EventsFirstLoading extends EventsState {}
+
 class EventsLoaded extends EventsState {
   final List<Event> events;
   EventsLoaded(this.events);

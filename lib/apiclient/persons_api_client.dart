@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:boardgm/model/Sex.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/event.dart';
 import '../model/member.dart';
@@ -66,9 +67,17 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       print(response.body);
+      final body = jsonDecode(response.body);
+      final token = body['token'];
+      await _saveToken(token);
       return;
     } else {
       throw Exception(response.statusCode);
     }
+  }
+
+  static Future<void> _saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
   }
 }

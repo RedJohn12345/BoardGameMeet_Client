@@ -10,6 +10,8 @@ part '../states/events_state.dart';
 
 class EventsBloc extends Bloc<EventsEvent, EventsState> {
   final EventsRepository repository;
+  int page = 0;
+  List<Event> listEvents = [];
   EventsBloc({required this.repository}) : super(EventsInitial());
 
   @override
@@ -17,17 +19,23 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       EventsEvent event,
       ) async* {
     if (event is LoadMyEvents) {
-      yield EventsLoading();
+      if (page != 0) {
+        yield EventsLoading();
+      } else {
+        yield EventsFirstLoading();
+      }
       try {
-        final events = await repository.getMyEvents();
-        yield EventsLoaded(events.cast<Event>());
+        final events = await repository.getMyEvents(page);
+        yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
+        page++;
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }
     } else if (event is LoadEvents) {
       try {
-        final events = await repository.getEvents();
-        yield EventsLoaded(events.cast<Event>());
+        final events = await repository.getEvents(event.city, event.search, page);
+        yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
+        page++;
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }

@@ -5,147 +5,53 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../model/event.dart';
 
-class MyEventsScreen extends StatelessWidget {
+class MyEventsScreen extends StatefulWidget {
 
-  final int numberPage = 1;
-
-  final List<Event> events = [
-    Event(name: "Event 1",
-        game: "Monopoly",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6
-    ),
-    Event(name: "Event 2",
-        game: "Monopoly1",
-        location: "Voronezh3123",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 3",
-        game: "Monopoly2",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 4",
-        game: "Monopoly3",
-        location: "Voronezh213",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 5",
-        game: "Monopoly5",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 6",
-        game: "Monopoly4",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 7",
-        game: "Monopoly2",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 8",
-        game: "Monopoly434",
-        location: "Voronezh213",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 1",
-        game: "Monopoly",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 2",
-        game: "Monopoly1",
-        location: "Voronezh3123",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 3",
-        game: "Monopoly2",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 4",
-        game: "Monopoly3",
-        location: "Voronezh213",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 5",
-        game: "Monopoly5",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 6",
-        game: "Monopoly4",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-    Event(name: "Event 7",
-        game: "Monopoly2",
-        location: "Voronezh",
-        numberPlayers: 4,
-        date: DateTime.now(),
-        description: "",
-        items: {},
-        maxNumberPlayers: 6),
-  ];
 
   MyEventsScreen({super.key});
 
   @override
+  State<MyEventsScreen> createState() => _MyEventsScreenState();
+}
+
+class _MyEventsScreenState extends State<MyEventsScreen> {
+
+  List<Event> myEvents = [];
+  final scrollController = ScrollController();
+  final bloc = EventsBloc(
+      repository: EventsRepository(
+          apiClient: EventsApiClient()
+      )
+  )..add(LoadMyEvents());
+
+  @override
+  void initState() {
+    scrollController.addListener(_scrollListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // Удаляем обработчик прокрутки списка
+    scrollController.removeListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    // Проверяем, если мы прокрутили до конца списка
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      bloc.add(LoadMyEvents());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider<EventsBloc>(
-      create: (context) => EventsBloc(
-        repository: EventsRepository(
-          apiClient: EventsApiClient()
-        )
-      )..add(LoadMyEvents()),
+      create: (context) => bloc,
       child: Scaffold(
         appBar: AppBar(
-          title: 
+          title:
               Text("Мои мероприятия", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
@@ -155,47 +61,20 @@ class MyEventsScreen extends StatelessWidget {
         body: BlocBuilder<EventsBloc, EventsState>(
           builder: (context, state) {
             if (state is EventsLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  myEvents = state.events;
+                });
+              });
               return Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: FloatingActionButton(onPressed: () {
-                        Navigator.pushNamed(context, '/authorization');
-                      },
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage("assets/images/2.jpg"),
-                          radius: 200,
-                        ),
-                        heroTag: 'avatar',
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                      child: ListView.builder(
-                        //shrinkWrap: true,
-                          itemCount: state.events.length,
-                          itemBuilder: (_, index) =>
-                              Card(
-                                color: Colors.white,
-                                child: ListTile(
-                                  title: Text(state.events[index].name),
-                                  subtitle: Text(
-                                      "${state.events[index].game} - ${state.events[index].date
-                                          .toString()} - ${state.events[index].location}"),
-                                  trailing: Icon(Icons.account_box),
-                                ),
-                              )
-                      ),
-                    ),
-                  ),
-                ],
+                children: getColumnEvents(),
               );
-            } else if (state is EventsLoading) {
+            } else if (state is EventsFirstLoading) {
               return Center(child: CircularProgressIndicator(),);
+            } else if (state is EventsLoading) {
+              return Column(
+                children: getColumnEvents()..add(Center(child: CircularProgressIndicator())),
+              );
             } else if (state is EventsError) {
               return Center(child: Text(state.errorMessage),);
             } else {
@@ -207,7 +86,7 @@ class MyEventsScreen extends StatelessWidget {
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: numberPage,
+          currentIndex: 1,
           showSelectedLabels: false,
           showUnselectedLabels: false,
           selectedItemColor: Colors.black,
@@ -228,5 +107,46 @@ class MyEventsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  List<Widget> getColumnEvents() {
+    return [
+      Padding(
+      padding: EdgeInsets.all(16),
+      child: Align(
+        alignment: Alignment.topRight,
+        child: FloatingActionButton(onPressed: () {
+          Navigator.pushNamed(context, '/authorization');
+        },
+          child: CircleAvatar(
+            backgroundImage: AssetImage("assets/images/2.jpg"),
+            radius: 200,
+          ),
+          heroTag: 'avatar',
+        ),
+      ),
+    ),
+      Flexible(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+          child: ListView.builder(
+            //shrinkWrap: true,
+              controller: scrollController,
+              itemCount: myEvents.length,
+              itemBuilder: (_, index) =>
+                  Card(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text(myEvents[index].name),
+                      subtitle: Text(
+                          "${myEvents[index].game} - ${myEvents[index].date
+                              .toString()} - ${myEvents[index].location}"),
+                      trailing: Icon(Icons.account_box),
+                    ),
+                  )
+          ),
+        ),
+      ),
+    ];
   }
 }

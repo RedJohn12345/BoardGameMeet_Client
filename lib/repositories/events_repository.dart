@@ -5,10 +5,12 @@ import '../model/event.dart';
 
 class EventsRepository {
   final EventsApiClient apiClient;
-  EventsRepository({required this.apiClient});
-  Future<List<dynamic>> getMyEvents() async =>
-      apiClient.fetchMyEvents();
 
-  Future<List<dynamic>> getEvents() async =>
-      apiClient.fetchEvents();
+  EventsRepository({required this.apiClient});
+
+  Future<List<dynamic>> getMyEvents(int page) async =>
+      apiClient.fetchMyEvents(page);
+
+  Future<List<dynamic>> getEvents(String city, String search, int page) async =>
+      apiClient.fetchEvents(city, search, page);
 }

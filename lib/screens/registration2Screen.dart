@@ -69,6 +69,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
                                     member.sex = sexController.sex;
                                     member.age = ageController.text.isNotEmpty ? int.parse(ageController.text) : 0;
                                     bloc.add(RegistrationPerson(member));
+
                                   },
                                     child: Text("Продолжить"),
                                     style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),

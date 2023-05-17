@@ -8,6 +8,7 @@ import 'package:boardgm/screens/editEventScreen.dart';
 import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/MembersScreen.dart';
 import 'screens/changePassword2.dart';
 import 'screens/myEventsScreen.dart';
@@ -17,36 +18,74 @@ import 'screens/registration1Screen.dart';
 import 'screens/registration2Screen.dart';
 
 void main() {
-  runApp(const FlutterApp());
+  runApp(FlutterApp());
 }
 
-class FlutterApp extends StatelessWidget {
+class FlutterApp extends StatefulWidget {
   const FlutterApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Board Game Meet',
-      initialRoute: '/welcome',
-      routes: {
-        '/home': (context) => MainScreen(),
-        '/my_events': (context) => MyEventsScreen(),
-        '/authorization': (context) => AuthorizationScreen(),
-        '/registration': (context) => Registration1Screen(),
-        '/registration+': (context) => Registration2Screen(),
-        '/changePassword': (context) => ChangePasswordScreen(),
-        '/changePassword+': (context) => ChangePassword2Screen(),
-        '/event': (context) => EventScreen(),
-        '/eventShow': (context) => EventScreenShow(),
-        '/members': (context) => MembersScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/profileEdit': (context) => ProfileEditScreen(),
-        '/avatarChoose': (context) => ChooseAvatar(),
-        '/editEvent': (context) => EditEventScreen(),
-        '/welcome': (context) => WelcomeScreen(),
+  State<FlutterApp> createState() => _FlutterAppState();
 
-      },
-    );
+  static Future<void> _setFirst() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('first', false);
+  }
+
+}
+
+class _FlutterAppState extends State<FlutterApp> {
+  bool? isFirst;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFirstTime();
+  }
+
+  Future<void> _checkFirstTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstTime = prefs.getBool('first') ?? true;
+
+    setState(() {
+      isFirst = isFirstTime;
+    });
+
+    if (isFirstTime) {
+      await prefs.setBool('isFirstTime', false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isFirst == null)
+      return CircularProgressIndicator();
+    else {
+      final String page = isFirst! ? '/welcome' : '/home';
+
+      return MaterialApp(
+        title: 'Board Game Meet',
+        initialRoute: page,
+        routes: {
+          '/home': (context) => MainScreen(),
+          '/my_events': (context) => MyEventsScreen(),
+          '/authorization': (context) => AuthorizationScreen(),
+          '/registration': (context) => Registration1Screen(),
+          '/registration+': (context) => Registration2Screen(),
+          '/changePassword': (context) => ChangePasswordScreen(),
+          '/changePassword+': (context) => ChangePassword2Screen(),
+          '/event': (context) => EventScreen(),
+          '/eventShow': (context) => EventScreenShow(),
+          '/members': (context) => MembersScreen(),
+          '/profile': (context) => ProfileScreen(),
+          '/profileEdit': (context) => ProfileEditScreen(),
+          '/avatarChoose': (context) => ChooseAvatar(),
+          '/editEvent': (context) => EditEventScreen(),
+          '/welcome': (context) => WelcomeScreen(),
+        },
+      );
+    }
+
   }
 }
 
