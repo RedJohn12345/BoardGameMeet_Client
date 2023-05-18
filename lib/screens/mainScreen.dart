@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../apiclient/events_api_client.dart';
 import '../bloc/events_bloc.dart';
@@ -84,8 +85,8 @@ class _MainScreenState extends State<MainScreen> {
           }
         }
         ),
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          Navigator.pushNamed(context, '/editEvent');
+        floatingActionButton: FloatingActionButton(onPressed: () async {
+          await _checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
         },
           backgroundColor: Color(0xff50bc55),
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),
@@ -173,4 +174,10 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),];
   }
+
+  static Future<bool> _checkToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey('token');
+  }
+
 }

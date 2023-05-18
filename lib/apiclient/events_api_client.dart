@@ -47,6 +47,38 @@ class EventsApiClient {
     }
   }
 
+  Future fetchCreateEvent(Event event) async {
+    //final String url = '$_baseUrl/';
+    var url = Uri.parse('http://10.0.2.2:8080/createEvent');
+    final token = await _getToken();
+
+    final msg = jsonEncode({
+    "name": event.name,
+    "game": event.game,
+    "city": event.city,
+    "address": event.location,
+    "date": event.date.toString(),
+    "maxPersonCount": event.maxNumberPlayers,
+    "minAge": event.minAge,
+    "maxAge": event.maxAge,
+    "description": event.description
+    });
+
+    var response = await http.post(url, body: msg,
+        headers: {'Authorization':
+        'Bearer_$token', 'Content-type':
+        'application/json'}
+    );
+
+
+    if (response.statusCode == 200) {
+      // Парсим JSON-ответ и преобразуем его в список событий
+      return;
+    } else {
+      throw Exception(response.statusCode);
+    }
+  }
+
   static Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');

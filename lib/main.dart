@@ -52,7 +52,7 @@ class _FlutterAppState extends State<FlutterApp> {
     });
 
     if (isFirstTime) {
-      await prefs.setBool('isFirstTime', false);
+      await prefs.setBool('first', false);
     }
   }
 

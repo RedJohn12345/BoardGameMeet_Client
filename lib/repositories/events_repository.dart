@@ -13,4 +13,7 @@ class EventsRepository {
 
   Future<List<dynamic>> getEvents(String city, String search, int page) async =>
       apiClient.fetchEvents(city, search, page);
+
+  Future createEvent(Event event) async =>
+      apiClient.fetchCreateEvent(event);
 }

@@ -14,3 +14,9 @@ class LoadEvents extends EventsEvent {
 
   LoadEvents(this.city, this.search);
 }
+
+class CreateEvent extends EventsEvent {
+  final Event event;
+
+  CreateEvent(this.event);
+}

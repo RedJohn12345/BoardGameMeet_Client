@@ -14,6 +14,10 @@ class EventsLoaded extends EventsState {
   EventsLoaded(this.events);
 }
 
+class EventCreated extends EventsState {
+
+}
+
 class EventsError extends EventsState {
   final String errorMessage;
   EventsError({required this.errorMessage});
