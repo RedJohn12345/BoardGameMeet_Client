@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../apiclient/events_api_client.dart';
 import '../bloc/events_bloc.dart';
 import '../model/event.dart';
-import '../model/item.dart';
 import '../repositories/events_repository.dart';
 
 class MainScreen extends StatefulWidget {
@@ -24,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
       repository: EventsRepository(
           apiClient: EventsApiClient()
       )
-  )..add(LoadEvents("", ""));
+  )..add(LoadEvents("Voronezh", null));
 
   @override
   void initState() {
@@ -43,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
   void _scrollListener() {
     // Проверяем, если мы прокрутили до конца списка
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      bloc.add(LoadEvents("", ""));
+      bloc.add(LoadEvents("Voronezh", null));
     }
   }
 
@@ -85,7 +84,8 @@ class _MainScreenState extends State<MainScreen> {
         }
         ),
         floatingActionButton: FloatingActionButton(onPressed: () {
-          Navigator.pushNamed(context, '/editEvent');
+          // Navigator.pushNamed(context, '/editEvent');
+          Navigator.pushNamed(context, '/authorization');
         },
           backgroundColor: Color(0xff50bc55),
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),

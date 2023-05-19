@@ -1,7 +1,7 @@
-import '../apiclient/events_api_client.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:ffi';
 
-import '../model/event.dart';
+import '../apiclient/events_api_client.dart';
+
 
 class EventsRepository {
   final EventsApiClient apiClient;
@@ -11,6 +11,9 @@ class EventsRepository {
   Future<List<dynamic>> getMyEvents(int page) async =>
       apiClient.fetchMyEvents(page);
 
-  Future<List<dynamic>> getEvents(String city, String search, int page) async =>
+  Future<List<dynamic>> getEvents(String city, String? search, int page) async =>
       apiClient.fetchEvents(city, search, page);
+
+  Future<dynamic> getEvent(Long eventId) async =>
+      apiClient.fetchEvent(eventId);
 }

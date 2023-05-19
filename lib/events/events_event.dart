@@ -10,7 +10,13 @@ class LoadMyEvents extends EventsEvent {
 
 class LoadEvents extends EventsEvent {
   final String city;
-  final String search;
+  final String? search;
 
   LoadEvents(this.city, this.search);
+}
+
+class LoadEvent extends EventsEvent {
+  final Long id;
+
+  LoadEvent(this.id);
 }
