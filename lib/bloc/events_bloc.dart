@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -36,6 +37,13 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         final events = await repository.getEvents(event.city, event.search, page);
         yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
         page++;
+      } catch (e) {
+        yield EventsError(errorMessage: e.toString());
+      }
+    } else if (event is LoadEvent) {
+      try {
+        final responseEvent = await repository.getEvent(event.id);
+        yield EventLoaded(responseEvent);
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }

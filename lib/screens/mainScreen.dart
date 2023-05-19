@@ -25,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
       repository: EventsRepository(
           apiClient: EventsApiClient()
       )
-  )..add(LoadEvents("", ""));
+  )..add(LoadEvents("Voronezh", null));
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
   void _scrollListener() {
     // Проверяем, если мы прокрутили до конца списка
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      bloc.add(LoadEvents("", ""));
+      bloc.add(LoadEvents("Voronezh", null));
     }
   }
 
