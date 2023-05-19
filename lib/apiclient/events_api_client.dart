@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:boardgm/model/dto/event_dto.dart';
+import 'package:boardgm/model/item.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,6 +12,9 @@ class EventsApiClient {
 
   static const authorization = 'Authorization';
   static const bearer = 'Bearer_';
+  static const contentType = 'Content-type';
+  static const json = 'application/json';
+  static const address = 'http://10.0.2.2:8080';
 
   Future<List> fetchMyEvents(int page) async {
     //final String url = '$_baseUrl/';
@@ -63,6 +68,143 @@ class EventsApiClient {
       return eventJson.map((json) => Event.fromJson(json));
     } else {
       throw Exception("Ошибка при загрузке ивента с id=$eventId");
+    }
+  }
+
+  Future fetchUpdateEvent(UpdateEventRequest request) async {
+    var url = Uri.parse('http://10.0.2.2:8080/updateEvent');
+    final token = await _getToken();
+
+    final msg = jsonEncode({
+      "id": request.id,
+      "name": request.name,
+      "game": request.game,
+      "city": request.city,
+      "address": request.address,
+      "date": request.date,
+      "maxPersonCount": request.maxPersonCount,
+      "minAge": request.minAge,
+      "maxAge": request.maxAge,
+      "description": request.description
+    });
+
+    var response = await http.put(url, body: msg,
+      headers: {
+        authorization: bearer + token.toString(),
+        contentType: json
+      }
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Error while update event with code ${response.statusCode}');
+    }
+  }
+
+  Future fetchBanPerson(Long eventId, String userNickname) async {
+    var url = Uri.parse('${address}banPerson');
+    final token = await _getToken();
+
+    final msg = jsonEncode({
+      "eventId": eventId,
+      "userNickname": userNickname
+    });
+
+    var response = await http.put(url, body: msg,
+      headers: {
+        authorization: bearer + token.toString(),
+        contentType: json
+      }
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Error while ban person with code ${response.statusCode}');
+    }
+  }
+
+  Future fetchDeleteEvent(Long eventId) async {
+    var url = Uri.parse('$address/deleteEvent/$eventId');
+    final token = _getToken();
+
+    var response = await http.delete(url, headers: {
+      authorization: bearer + token.toString()
+    });
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Error while delete event with code ${response.statusCode}');
+    }
+  }
+
+  Future<List> fetchGetItems(Long eventId) async {
+    var url = Uri.parse('$address/getItemsIn/$eventId');
+    final token = _getToken();
+
+    var response = await http.get(url, headers: {
+      authorization: bearer + token.toString()
+    });
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonItems = jsonDecode(response.body);
+      return jsonItems.map((json) => Item.fromJson(json)).toList();
+    } else {
+      throw Exception('Ошибка при получении нежных вещей с кодом'
+                                                      '${response.statusCode}');
+    }
+  }
+  
+  Future fetchEditItemsIn(Long eventId, List<Item> items) async {
+    var url = Uri.parse('$address/editItemsIn/$eventId');
+    final token = _getToken();
+    var itemsMap = items.map((item) {
+      return {
+        "name": item.name,
+        "marked": item.marked
+      };
+    }).toList();
+    final msg = jsonEncode(itemsMap);
+    
+    var response = await http.put(url, body: msg,
+      headers: {
+        authorization: bearer + token.toString(),
+        contentType: json
+      }
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Ошибка при редактировании нужных предметов с кодом'
+                                                      '${response.statusCode}');
+    }
+  }
+
+  Future fetchMarkItemsIn(Long eventId, List<Item> items) async {
+    var url = Uri.parse('$address/markItemsIn/$eventId');
+    final token = _getToken();
+    var itemsMap = items.map((item) {
+      return {
+        "marked": item.marked
+      };
+    }).toList();
+    final msg = jsonEncode(itemsMap);
+
+    var response = await http.put(url, body: msg,
+        headers: {
+          authorization: bearer + token.toString(),
+          contentType: json
+        }
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Ошибка при отметке нужных предметов с кодом'
+                                                      '${response.statusCode}');
     }
   }
 
