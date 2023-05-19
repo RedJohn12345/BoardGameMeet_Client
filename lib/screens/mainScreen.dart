@@ -19,13 +19,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<Event> events = [];
-  List<Event> myEvents = [];
   final scrollController = ScrollController();
   final bloc = EventsBloc(
       repository: EventsRepository(
           apiClient: EventsApiClient()
       )
-  )..add(LoadEvents("Voronezh", null));
+  )..add(LoadEvents("string", null));
 
   @override
   void initState() {
@@ -44,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
   void _scrollListener() {
     // Проверяем, если мы прокрутили до конца списка
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      bloc.add(LoadEvents("Voronezh", null));
+      bloc.add(LoadEvents("string", null));
     }
   }
 
@@ -66,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
           if (state is EventsLoaded) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
-                myEvents = state.events;
+                events = state.events;
               });
             });
             return Column(

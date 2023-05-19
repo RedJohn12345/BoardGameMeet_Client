@@ -13,6 +13,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   final EventsRepository repository;
   int page = 0;
   List<Event> listEvents = [];
+
   EventsBloc({required this.repository}) : super(EventsInitial());
 
   @override
@@ -33,6 +34,11 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield EventsError(errorMessage: e.toString());
       }
     } else if (event is LoadEvents) {
+      if (page != 0) {
+        yield EventsLoading();
+      } else {
+        yield EventsFirstLoading();
+      }
       try {
         final events = await repository.getEvents(event.city, event.search, page);
         yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
@@ -41,9 +47,18 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield EventsError(errorMessage: e.toString());
       }
     } else if (event is LoadEvent) {
+      yield EventsLoading();
       try {
         final responseEvent = await repository.getEvent(event.id);
         yield EventLoaded(responseEvent);
+      } catch (e) {
+        yield EventsError(errorMessage: e.toString());
+      }
+    } else if (event is CreateEvent) {
+      yield EventsLoading();
+      try {
+        await repository.createEvent(event.event);
+        yield EventCreated();
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }

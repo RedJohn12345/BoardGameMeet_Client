@@ -66,12 +66,14 @@ class EventsApiClient {
     "game": event.game,
     "city": event.city,
     "address": event.location,
-    "date": event.date.toString(),
+    "date": event.date!.toIso8601String(),
     "maxPersonCount": event.maxNumberPlayers,
     "minAge": event.minAge,
     "maxAge": event.maxAge,
     "description": event.description
     });
+
+    print(msg);
 
     var response = await http.post(url, body: msg,
         headers: {'Authorization':
