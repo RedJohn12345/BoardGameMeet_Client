@@ -11,7 +11,7 @@ class EventsApiClient {
     //final String url = '$_baseUrl/';
     var url = Uri.parse('http://10.0.2.2:8080/myEvents?page=$page&size=20');
     final token = await _getToken();
-    var response = await http.get(url,
+    var response = await http.get(url
         headers: {'Authorization':
         'Bearer_$token'},);
 
