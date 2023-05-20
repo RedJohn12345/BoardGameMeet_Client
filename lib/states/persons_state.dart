@@ -15,10 +15,26 @@ class PersonsLoaded extends PersonsState {
 class RegistrationSuccess extends PersonsState {
 }
 
+class ExitSuccess extends PersonsState {
+}
+
 class AuthorizationSuccess extends PersonsState {
+}
+
+class UpdateProfileSuccess extends PersonsState {
 }
 
 class PersonsError extends PersonsState {
   final String errorMessage;
   PersonsError({required this.errorMessage});
+}
+
+class OwnProfileLoaded extends PersonsState {
+  final Member member;
+  OwnProfileLoaded(this.member);
+}
+
+class ProfileLoaded extends PersonsState {
+  final Member member;
+  ProfileLoaded(this.member);
 }

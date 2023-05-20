@@ -104,7 +104,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
               return Center(child: Text(state.errorMessage),);
             } else if (state is AuthorizationSuccess) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
               });
               return const Center(child: CircularProgressIndicator(),);
             } else {

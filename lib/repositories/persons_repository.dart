@@ -32,6 +32,9 @@ class PersonsRepository {
   Future deletePerson(String userNickname) async =>
       apiClient.fetchDeletePerson(userNickname);
 
+  Future exitProfile() async =>
+      apiClient.fetchExitProfile();
+
   Future joinToEvent(Long eventId) async =>
       apiClient.fetchJoinToEvent(eventId);
 

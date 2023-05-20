@@ -93,11 +93,25 @@ class PersonsApiClient {
     });
 
     if (response.statusCode == 200) {
-      print(token);
-      final dynamic jsonProfile = jsonDecode(response.body);
-      return jsonProfile.map((json) => Member.fromJson(json));
+      final Map<String, dynamic> jsonProfile = jsonDecode(response.body);
+      return Member.fromJson(jsonProfile);
     } else {
       throw Exception('Error while get profile wile code ${response.statusCode}');
+    }
+  }
+
+  Future fetchExitProfile() async {
+    var url = Uri.parse('$address/exit');
+    final token = await _getToken();
+
+    var response = await http.post(url, headers: {
+      authorization: bearer + token.toString()
+    });
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Error while exit profile with code ${response.statusCode}');
     }
   }
 
@@ -110,7 +124,6 @@ class PersonsApiClient {
     });
 
     if (response.statusCode == 200) {
-      print(token);
       final Map<String, dynamic> jsonProfile = jsonDecode(response.body);
       return Member.fromJson(jsonProfile);
     } else {
@@ -120,13 +133,14 @@ class PersonsApiClient {
 
   Future fetchUpdatePerson(UpdatePersonRequest request) async {
     var url = Uri.parse('$address/updatePerson');
-    final token = _getToken();
+    final token = await _getToken();
+    String gender = request.gender == Sex.MAN ? "MALE" : "FEMALE";
     final msg = jsonEncode({
       "name": request.name,
       "nickname": request.nickname,
       "city": request.city,
       "age": request.age,
-      "gender": request.gender,
+      "gender": gender,
       "avatarId": request.avatarId
     });
 
@@ -199,7 +213,7 @@ class PersonsApiClient {
     var response = await http.post(url, headers: {
       authorization: bearer + token.toString()
     });
-
+    await _deleteToken();
     if (response.statusCode == 200) {
       return;
     } else {
@@ -260,4 +274,9 @@ class PersonsApiClient {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
+  static Future _deleteToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+  }
+
 }

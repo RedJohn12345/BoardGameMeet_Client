@@ -8,7 +8,7 @@ class Profile {
   late String nickname;
   late int age;
   late String city;
-  late Long avatarId;
+  late int avatarId;
   late Sex sex;
 
   Profile({required this.name, required this.nickname, required this.age,
@@ -19,7 +19,7 @@ class Profile {
                    nickname: json['nickname'] as String,
                    age: json['age'] as int,
                    city: json['city'] as String,
-                   avatarId: json['avatarId'] as Long,
+                   avatarId: json['avatarId'] as int,
                    sex: json['sex'] as Sex);
   }
 }
@@ -30,7 +30,7 @@ class UpdatePersonRequest {
   late String city;
   late int? age;
   late Sex? gender;
-  late Long avatarId;
+  late int avatarId;
 
   UpdatePersonRequest(this.name, this.nickname, this.city,
                       this.age, this.gender, this.avatarId);
@@ -38,14 +38,14 @@ class UpdatePersonRequest {
 
 class MemberInEvent {
   late String nickname;
-  late Long? avatarId;
+  late int? avatarId;
   late Bool isHost;
 
   MemberInEvent({required this.nickname, required this.avatarId, required this.isHost});
 
   static fromJson(json) {
     return MemberInEvent(nickname: json['nickname'] as String,
-                         avatarId: json['avatarId'] as Long,
+                         avatarId: json['avatarId'] as int,
                          isHost: json['host'] as Bool);
   }
 }
