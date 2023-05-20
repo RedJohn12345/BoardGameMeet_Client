@@ -7,11 +7,13 @@ import '../bloc/events_bloc.dart';
 import '../model/event.dart';
 import '../model/item.dart';
 import '../repositories/events_repository.dart';
+import '../utils/Preference.dart';
 
 class MainScreen extends StatefulWidget {
 
 
   MainScreen({super.key});
+
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -19,6 +21,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<Event> events = [];
+  Widget button = Container();
   final scrollController = ScrollController();
   final bloc = EventsBloc(
       repository: EventsRepository(
@@ -66,6 +69,38 @@ class _MainScreenState extends State<MainScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
                 events = state.events;
+              });
+            });
+            return Column(
+              children: getColumnEvents(),
+            );
+          } else if (state is ButtonEntry) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                button =
+                    ElevatedButton( onPressed: () {
+                      Navigator.pushNamed(context, "/profile");
+                    },
+                      child: Text("Войти"),
+                      style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                    );
+              });
+            });
+            return Column(
+              children: getColumnEvents(),
+            );
+          } else if (state is AvatarIsLoaded) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                button = FloatingActionButton(onPressed: () {
+                  Navigator.pushNamed(context, '/authorization');
+                },
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("assets/images/2.jpg"),
+                    radius: 200,
+                  ),
+                  heroTag: 'avatar',
+                );
               });
             });
             return Column(
@@ -120,17 +155,8 @@ class _MainScreenState extends State<MainScreen> {
       padding: EdgeInsets.all(16),
       child: Align(
         alignment: Alignment.topRight,
-        child: FloatingActionButton(onPressed: () {
-          Navigator.pushNamed(context, '/authorization');
-        },
-          child: CircleAvatar(
-            backgroundImage: AssetImage("assets/images/2.jpg"),
-            radius: 200,
-          ),
-          heroTag: 'avatar',
-        ),
+        child: this.button),
       ),
-    ),
       Container(
         padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
         child: Row(

@@ -1,16 +1,20 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'package:boardgm/apiclient/persons_api_client.dart';
+import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import '../model/event.dart';
 import '../repositories/events_repository.dart';
+import '../repositories/persons_repository.dart';
 part '../events/events_event.dart';
 part '../states/events_state.dart';
 
 
 class EventsBloc extends Bloc<EventsEvent, EventsState> {
   final EventsRepository repository;
+  late PersonsRepository personsRepository;
   int page = 0;
   List<Event> listEvents = [];
 
@@ -27,6 +31,13 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield EventsFirstLoading();
       }
       try {
+        // if (await Preference.checkToken()) {
+        //   personsRepository = PersonsRepository(apiClient: PersonsApiClient());
+        //   final profile = await personsRepository.getOwnProfile();
+        //   yield AvatarIsLoaded(profile.pathToAvatar);
+        // } else {
+        //   yield ButtonEntry();
+        // }
         final events = await repository.getMyEvents(page);
         yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
         page++;

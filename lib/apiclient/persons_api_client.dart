@@ -84,7 +84,7 @@ class PersonsApiClient {
     }
   }
 
-  Future<Profile> fetchGetProfile(String userNickname) async {
+  Future<Member> fetchGetProfile(String userNickname) async {
     var url = Uri.parse('$address/profile/$userNickname');
     final token = _getToken();
 
@@ -95,7 +95,24 @@ class PersonsApiClient {
     if (response.statusCode == 200) {
       print(response.body);
       final dynamic jsonProfile = jsonDecode(response.body);
-      return jsonProfile.map((json) => Profile.fromJson(json));
+      return jsonProfile.map((json) => Member.fromJson(json));
+    } else {
+      throw Exception('Error while get profile wile code ${response.statusCode}');
+    }
+  }
+
+  Future<Member> fetchGetOwnProfile() async {
+    var url = Uri.parse('$address/ownProfile');
+    final token = _getToken();
+
+    var response = await http.get(url, headers: {
+      authorization: bearer + token.toString()
+    });
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      final dynamic jsonProfile = jsonDecode(response.body);
+      return jsonProfile.map((json) => Member.fromJson(json));
     } else {
       throw Exception('Error while get profile wile code ${response.statusCode}');
     }

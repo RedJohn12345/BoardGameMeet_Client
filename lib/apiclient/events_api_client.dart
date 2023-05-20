@@ -251,4 +251,5 @@ class EventsApiClient {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('token');
   }
+
 }

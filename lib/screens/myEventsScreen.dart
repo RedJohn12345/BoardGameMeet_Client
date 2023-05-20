@@ -17,6 +17,7 @@ class MyEventsScreen extends StatefulWidget {
 class _MyEventsScreenState extends State<MyEventsScreen> {
 
   List<Event> myEvents = [];
+  Widget button = Container();
   final scrollController = ScrollController();
   final bloc = EventsBloc(
       repository: EventsRepository(
@@ -69,6 +70,38 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               return Column(
                 children: getColumnEvents(),
               );
+            }else if (state is ButtonEntry) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  button =
+                      ElevatedButton( onPressed: () {
+                        Navigator.pushNamed(context, "/profile");
+                      },
+                        child: Text("Войти"),
+                        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                      );
+                });
+              });
+              return Column(
+                children: getColumnEvents(),
+              );
+            } else if (state is AvatarIsLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  button = FloatingActionButton(onPressed: () {
+                    Navigator.pushNamed(context, '/authorization');
+                  },
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage("assets/images/2.jpg"),
+                      radius: 200,
+                    ),
+                    heroTag: 'avatar',
+                  );
+                });
+              });
+              return Column(
+                children: getColumnEvents(),
+              );
             } else if (state is EventsFirstLoading) {
               return Center(child: CircularProgressIndicator(),);
             } else if (state is EventsLoading) {
@@ -115,15 +148,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
       padding: EdgeInsets.all(16),
       child: Align(
         alignment: Alignment.topRight,
-        child: FloatingActionButton(onPressed: () {
-          Navigator.pushNamed(context, '/authorization');
-        },
-          child: CircleAvatar(
-            backgroundImage: AssetImage("assets/images/2.jpg"),
-            radius: 200,
-          ),
-          heroTag: 'avatar',
-        ),
+        child: button
       ),
     ),
       Flexible(

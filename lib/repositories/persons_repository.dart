@@ -17,8 +17,11 @@ class PersonsRepository {
   Future authorization(Member member) async =>
       apiClient.fetchAuthorization(member);
 
-  Future<Profile> getProfile(String userNickname) async =>
+  Future<Member> getProfile(String userNickname) async =>
       apiClient.fetchGetProfile(userNickname);
+
+  Future<Member> getOwnProfile() async =>
+      apiClient.fetchGetOwnProfile();
 
   Future updatePerson(UpdatePersonRequest request) async =>
       apiClient.fetchUpdatePerson(request);

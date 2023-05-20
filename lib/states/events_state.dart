@@ -23,6 +23,14 @@ class EventLoaded extends EventsState {
   EventLoaded(this.event);
 }
 
+class AvatarIsLoaded extends EventsState {
+  final String avatar;
+  AvatarIsLoaded(this.avatar);
+}
+
+class ButtonEntry extends EventsState {
+}
+
 class EventsError extends EventsState {
   final String errorMessage;
   EventsError({required this.errorMessage});
