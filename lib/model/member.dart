@@ -18,8 +18,9 @@ class Member {
 
 
   static fromJson(json) {
-    Member member =  Member(name: json['name'] as String, pathToAvatar: "assets/images/${json['avatarId'] as int}.jpg",
-    login: json['nickname'] as String, age: json['age'] as int, city: json['city'] as String,
+    int avatarId = json['avatarId'] == null ? 1 : json['avatarId'] as int;
+    Member member =  Member(name: json['name'] as String, pathToAvatar: "assets/images/$avatarId.jpg",
+    login: json['nickname'] as String, age: json['age'] == null ? 0 : json['age'] as int, city: json['city'] as String,
         sex: json['gender'] as String == "MALE" ? Sex.MAN : Sex.WOMAN);
     return member;
   }

@@ -120,7 +120,8 @@ class _MainScreenState extends State<MainScreen> {
         }
         ),
         floatingActionButton: FloatingActionButton(onPressed: () async {
-          await _checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
+          //await _checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
+          Navigator.pushNamed(context, '/authorization');
         },
           backgroundColor: Color(0xff50bc55),
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),

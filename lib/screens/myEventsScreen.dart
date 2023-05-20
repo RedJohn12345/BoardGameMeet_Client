@@ -75,7 +75,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                 setState(() {
                   button =
                       ElevatedButton( onPressed: () {
-                        Navigator.pushNamed(context, "/profile");
+                        Navigator.pushNamed(context, "/authorization");
                       },
                         child: Text("Войти"),
                         style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
@@ -92,7 +92,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     Navigator.pushNamed(context, '/authorization');
                   },
                     child: CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/2.jpg"),
+                      backgroundImage: AssetImage(state.avatar),
                       radius: 200,
                     ),
                     heroTag: 'avatar',
