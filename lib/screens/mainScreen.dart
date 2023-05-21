@@ -5,9 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../apiclient/events_api_client.dart';
 import '../bloc/events_bloc.dart';
 import '../model/event.dart';
-import '../model/item.dart';
 import '../repositories/events_repository.dart';
-import '../utils/Preference.dart';
 
 class MainScreen extends StatefulWidget {
 
@@ -120,8 +118,8 @@ class _MainScreenState extends State<MainScreen> {
         }
         ),
         floatingActionButton: FloatingActionButton(onPressed: () async {
-          //await _checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
-          Navigator.pushNamed(context, '/authorization');
+          await _checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
+          // Navigator.pushNamed(context, '/authorization');
         },
           backgroundColor: Color(0xff50bc55),
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),

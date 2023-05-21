@@ -144,7 +144,7 @@ class PersonsApiClient {
       "avatarId": request.avatarId
     });
 
-    var response = await http.post(url, body: msg,
+    var response = await http.put(url, body: msg,
       headers: {
         authorization: bearer + token.toString(),
         contentType: json
@@ -152,6 +152,10 @@ class PersonsApiClient {
     );
 
     if (response.statusCode == 200) {
+      print(response.body);
+      final body = jsonDecode(response.body);
+      final token = body['token'];
+      await _saveToken(token);
       return;
     } else {
       throw Exception('Error while update person with code ${response.statusCode}');

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../model/Sex.dart';
-import '../model/event.dart';
 import '../model/member.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -129,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       const Center(child: Text("Имя", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(member.name, style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
-      const Center(child: Text("Логин", style: TextStyle(color: Colors.black, fontSize: 26)),),
+      const Center(child: Text("Никнейм", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(member.login, style: TextStyle(color: Colors.black, fontSize: 24),),),
       const SizedBox(height: 16,),
       const Center(child: Text("Город", style: TextStyle(color: Colors.black, fontSize: 26)),),

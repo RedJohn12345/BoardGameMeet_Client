@@ -41,7 +41,7 @@ class EventsApiClient {
     if (token != null) {
       response = await http.get(url,
           headers: {authorization:
-          bearer + token.toString(),}
+          bearer + token.toString()}
       );
     } else {
      response = await http.get(url);
