@@ -35,7 +35,14 @@ class EventsApiClient {
 
   Future<List> fetchEvents(String city, String? search, int page) async {
     //final String url = '$_baseUrl/';
-    var url = Uri.parse('http://10.0.2.2:8080/events?city=$city&search=$search&page=$page&size=20');
+    final Uri url;
+    if (search != null) {
+      url = Uri.parse(
+          'http://10.0.2.2:8080/events?city=$city&search=$search&page=$page&size=20');
+    } else {
+      url = Uri.parse(
+          'http://10.0.2.2:8080/events?city=$city&page=$page&size=20');
+    }
     final token = await _checkToken() ? await _getToken(): null;
     var response;
     if (token != null) {

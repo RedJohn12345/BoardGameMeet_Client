@@ -25,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
       repository: EventsRepository(
           apiClient: EventsApiClient()
       )
-  )..add(LoadEvents("string", null));
+  )..add(LoadEvents("Voronezh", null));
 
   @override
   void initState() {
@@ -77,7 +77,7 @@ class _MainScreenState extends State<MainScreen> {
               setState(() {
                 button =
                     ElevatedButton( onPressed: () {
-                      Navigator.pushNamed(context, "/profile");
+                      Navigator.pushNamed(context, "/authorization");
                     },
                       child: Text("Войти"),
                       style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),

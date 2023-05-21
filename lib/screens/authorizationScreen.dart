@@ -79,7 +79,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                               children: [
                                 Expanded(
                                   child: ElevatedButton( onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/registration');
+                                    Navigator.pushNamed(context, '/registration');
                                   },
                                     child: Text("Зарегистрироваться"),
                                     style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),

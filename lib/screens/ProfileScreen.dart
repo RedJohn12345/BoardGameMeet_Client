@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: Color(0xff50bc55),
           actions: nickname == null ?[
             IconButton(onPressed: () {
-              Navigator.pushNamed(context, '/profileEdit', arguments: member);
+              Navigator.pushReplacementNamed(context, '/profileEdit', arguments: member);
             }, icon: Icon(Icons.settings))
           ] : [],
         ),

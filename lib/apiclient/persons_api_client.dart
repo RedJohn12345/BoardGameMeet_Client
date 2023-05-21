@@ -109,6 +109,7 @@ class PersonsApiClient {
     });
 
     if (response.statusCode == 200) {
+      await _deleteToken();
       return;
     } else {
       throw Exception('Error while exit profile with code ${response.statusCode}');
