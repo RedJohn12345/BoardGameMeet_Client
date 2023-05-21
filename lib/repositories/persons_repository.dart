@@ -35,7 +35,7 @@ class PersonsRepository {
   Future exitProfile() async =>
       apiClient.fetchExitProfile();
 
-  Future joinToEvent(Long eventId) async =>
+  Future joinToEvent(int? eventId) async =>
       apiClient.fetchJoinToEvent(eventId);
 
   Future leaveFromEvent(Long eventId) async =>

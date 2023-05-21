@@ -1,6 +1,7 @@
 import 'item.dart';
 
 class Event {
+  late int? id;
   late String name;
   late String game;
   late String city;
@@ -14,7 +15,7 @@ class Event {
   late int minAge;
   late int maxAge;
 
-  Event({this.name = "", this.game = "",
+  Event({required this.id, this.name = "", this.game = "",
     this.location = "", this.numberPlayers = 0,  this.maxNumberPlayers = 0, this.description = "",});
 
   /*Event({required this.name, required this.game, required this.date,
@@ -26,7 +27,7 @@ class Event {
   }
 
   static fromJson(json) {
-    Event event =  Event(name: json['name'] as String, game: json['game'] as String, location: json['address'] as String,
+    Event event =  Event(id: json['id'], name: json['name'] as String, game: json['game'] as String, location: json['address'] as String,
       numberPlayers: json['curPersonCount'] as int, maxNumberPlayers: json['maxPersonCount'] as int,
       description: "", );
     event.date = DateTime.parse(json['date'] as String);

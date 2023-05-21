@@ -54,7 +54,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
         )
     );
     return BlocProvider(
-
       create: (context) => bloc,
       child: Scaffold(
         appBar: AppBar(
@@ -131,7 +130,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                 final form = formKey.currentState!;
                 if (form.validate()) {
                   setState(() {
-                    Event event = Event(name: nameController.text, game:  gameController.text,
+                    Event event = Event(id: null, name: nameController.text, game:  gameController.text,
                     location: addressController.text, maxNumberPlayers: int.parse(countPlayersController.text),
                     description: descriptionController.text);
                     event.date = dateTimeWidget.selectedDate;

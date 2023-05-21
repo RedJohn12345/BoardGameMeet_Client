@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'package:boardgm/model/Sex.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
+import 'package:boardgm/utils/preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,8 +86,9 @@ class PersonsApiClient {
   }
 
   Future<Member> fetchGetProfile(String userNickname) async {
+    print("zxc1");
     var url = Uri.parse('$address/profile/$userNickname');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
@@ -117,6 +119,7 @@ class PersonsApiClient {
   }
 
   Future<Member> fetchGetOwnProfile() async {
+    print("zxc");
     var url = Uri.parse('$address/ownProfile');
     final token = await _getToken();
 
@@ -195,9 +198,9 @@ class PersonsApiClient {
     }
   }
 
-  Future fetchJoinToEvent(Long eventId) async {
+  Future fetchJoinToEvent(int? eventId) async {
     var url = Uri.parse('$address/joinEvent/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
 
     var response = await http.post(url, headers: {
       authorization: bearer + token.toString()

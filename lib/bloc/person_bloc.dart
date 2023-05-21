@@ -1,14 +1,10 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'package:boardgm/bloc/events_bloc.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/model/member.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import '../model/event.dart';
-import '../repositories/events_repository.dart';
 part '../events/persons_event.dart';
 part '../states/persons_state.dart';
 
@@ -57,7 +53,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       yield PersonsLoading();
       try {
         await repository.exitProfile();
-        print("hello");
+        print("exit profile");
         yield ExitSuccess();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
@@ -68,6 +64,16 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
         await repository.updatePerson(UpdatePersonRequest(event.member.name,
             event.member.login, event.member.city, event.member.age, event.member.sex, 3));
         yield UpdateProfileSuccess();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is WatchEvent) {
+      yield WatchingEvent();
+    } else if (event is JoinToEvent) {
+      yield PersonsLoading();
+      try {
+        await repository.joinToEvent(event.eventId);
+        yield JoinedToEvent();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }
