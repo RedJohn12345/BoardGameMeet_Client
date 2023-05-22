@@ -59,11 +59,7 @@ class _MapCityState extends State<MapCity> {
               northEast: Point(latitude: 71.155753, longitude: -177.650671),
               southWest: Point(latitude: 44.063222,  longitude: 19.940636)
           ),
-          suggestOptions: SuggestOptions(
-              suggestType: SuggestType.geo,
-              suggestWords: true,
-              userPosition: Point(latitude: 56.0321, longitude: 38)
-          )
+          suggestOptions: SuggestOptions(suggestType: SuggestType.geo)
       );
 
       await _addResult(await resultWithSession.result);

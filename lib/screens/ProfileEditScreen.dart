@@ -60,32 +60,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           Navigator.pushReplacementNamed(context, '/profile');
           return Future.value(true);
         },
-        //     () async {
-        //   final value = await showDialog<bool>(
-        //     context: context,
-        //     builder: (context) {
-        //       return AlertDialog(
-        //         title: const Text('Внимание'),
-        //         content: const Text('Все изменения будут утеряны'),
-        //         actions: [
-        //           ElevatedButton(
-        //               onPressed: () => Navigator.of(context).pop(true),
-        //               child: const Text('Да')
-        //           ),
-        //           ElevatedButton(
-        //               onPressed: () => Navigator.of(context).pop(false),
-        //               child: const Text('Нет')
-        //           )
-        //         ],
-        //       );
-        //     }
-        //   );
-        //   if (value != null) {
-        //     return Future.value(value);
-        //   } else {
-        //     return Future.value(false);
-        //   }
-        // },
         child: BlocProvider<PersonBloc>(
           create: (context) => bloc,
           child: Scaffold(
@@ -107,32 +81,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           padding: EdgeInsets.all(16),
                           child: Column(
                               children: [
-                                Center(
-                                  child: SizedBox(height: 140, width: 140,
-                                    child: FloatingActionButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, '/avatarChoose');
-                                      },
-                                      child: CircleAvatar(
-                                        backgroundImage: AssetImage(
-                                            member.pathToAvatar),
-                                        radius: 200,
-                                      ),
-                                    ),
+                                Flexible(
+                                child: ListView.builder(
+                                  itemCount: getParams(member).length,
+                                  itemBuilder: (_, index) =>
+                                  getParams(member)[index],
                                   ),
                                 ),
-                                const SizedBox(height: 16,),
-                                sexController,
-                                const SizedBox(height: 16,),
-                                NameWidget(controller: nameController,),
-                                const SizedBox(height: 16,),
-                                LoginWidget(controller: loginController,),
-                                const SizedBox(height: 16,),
-                                CityWidget(controller: cityController),
-                                const SizedBox(height: 16,),
-                                AgeWidget(controller: ageController),
-                                const SizedBox(height: 16,),
                                 Row(
                                     children: [
                                       Expanded(
@@ -176,5 +131,34 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           ),
         )
     );
+  }
+
+  List<Widget> getParams(Member member) {
+    return [Center(
+      child: SizedBox(height: 140, width: 140,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(
+                context, '/avatarChoose');
+          },
+          child: CircleAvatar(
+            backgroundImage: AssetImage(
+                member.pathToAvatar),
+            radius: 200,
+          ),
+        ),
+      ),
+    ),
+      const SizedBox(height: 16,),
+      sexController,
+      const SizedBox(height: 16,),
+      NameWidget(controller: nameController,),
+      const SizedBox(height: 16,),
+      LoginWidget(controller: loginController,),
+      const SizedBox(height: 16,),
+      CityWidget(controller: cityController, city: "Voronezh",),
+      const SizedBox(height: 16,),
+      AgeWidget(controller: ageController),
+      const SizedBox(height: 16,),];
   }
 }

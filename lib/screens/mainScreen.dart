@@ -18,6 +18,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+
   List<Event> events = [];
   Widget button = Container();
   final scrollController = ScrollController();

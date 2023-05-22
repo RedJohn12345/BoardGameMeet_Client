@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'package:boardgm/model/Sex.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
+import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,7 +44,7 @@ class PersonsApiClient {
       "password": member.password,
       "secretWord": member.secretWord,
       "gender": gender,
-      "city": member.city
+      "city": await YandexMapKitUtil.getCity()
     });
 
     var response = await http.post(url,
