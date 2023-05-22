@@ -21,7 +21,7 @@ class EventsRepository {
   Future createEvent(Event event) async =>
       apiClient.fetchCreateEvent(event);
 
-  Future<dynamic> getEvent(Long eventId) async =>
+  Future<dynamic> getEvent(int eventId) async =>
       apiClient.fetchEvent(eventId);
 
   Future updateEvent(UpdateEventRequest request) async =>

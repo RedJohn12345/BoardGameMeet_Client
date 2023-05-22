@@ -35,10 +35,10 @@ class PersonsRepository {
   Future exitProfile() async =>
       apiClient.fetchExitProfile();
 
-  Future joinToEvent(Long eventId) async =>
+  Future joinToEvent(int? eventId) async =>
       apiClient.fetchJoinToEvent(eventId);
 
-  Future leaveFromEvent(Long eventId) async =>
+  Future leaveFromEvent(int? eventId) async =>
       apiClient.fetchLeaveFromEvent(eventId);
 
   Future validateSecretWord(String secretWord) async =>

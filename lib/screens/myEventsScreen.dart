@@ -20,7 +20,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
   Widget button = Container();
   final scrollController = ScrollController();
   final bloc = EventsBloc(
-      repository: EventsRepository(
+      eventsRepository: EventsRepository(
           apiClient: EventsApiClient()
       )
   )..add(LoadMyEvents());
@@ -65,21 +65,6 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 setState(() {
                   myEvents = state.events;
-                });
-              });
-              return Column(
-                children: getColumnEvents(),
-              );
-            }else if (state is ButtonEntry) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                setState(() {
-                  button =
-                      ElevatedButton( onPressed: () {
-                        Navigator.pushNamed(context, "/authorization");
-                      },
-                        child: Text("Войти"),
-                        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
-                      );
                 });
               });
               return Column(
@@ -162,6 +147,9 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                   Card(
                     color: Colors.white,
                     child: ListTile(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/event', arguments: myEvents[index]);
+                      },
                       title: Text(myEvents[index].name),
                       subtitle: Text(
                           "${myEvents[index].game} - ${myEvents[index].date

@@ -32,7 +32,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   @override
   Widget build(BuildContext context) {
     final bloc =  PersonBloc(
-        repository: PersonsRepository(
+        personRepository: PersonsRepository(
             apiClient: PersonsApiClient()));
     return BlocProvider<PersonBloc>(
       create: (context) => bloc,

@@ -38,3 +38,9 @@ class ProfileLoaded extends PersonsState {
   final Member member;
   ProfileLoaded(this.member);
 }
+
+class WatchingEvent extends PersonsState {}
+
+class JoinedToEvent extends PersonsState {}
+
+class LeavingFromEvent extends PersonsState {}

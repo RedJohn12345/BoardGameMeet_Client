@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,12 +12,12 @@ part '../states/events_state.dart';
 
 
 class EventsBloc extends Bloc<EventsEvent, EventsState> {
-  final EventsRepository repository;
+  final EventsRepository eventsRepository;
   late PersonsRepository personsRepository;
   int page = 0;
   List<Event> listEvents = [];
 
-  EventsBloc({required this.repository}) : super(EventsInitial());
+  EventsBloc({required this.eventsRepository}) : super(EventsInitial());
 
   @override
   Stream<EventsState> mapEventToState(
@@ -38,7 +37,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         } else {
           yield ButtonEntry();
         }
-        final events = await repository.getMyEvents(page);
+        final events = await eventsRepository.getMyEvents(page);
         yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
         page++;
       } catch (e) {
@@ -58,7 +57,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         } else {
           yield ButtonEntry();
         }
-        final events = await repository.getEvents(event.city, event.search, page);
+        final events = await eventsRepository.getEvents(event.city, event.search, page);
         yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
         page++;
       } catch (e) {
@@ -67,7 +66,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     } else if (event is LoadEvent) {
       yield EventsLoading();
       try {
-        final responseEvent = await repository.getEvent(event.id);
+        final responseEvent = await eventsRepository.getEvent(event.id);
         yield EventLoaded(responseEvent);
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
@@ -75,7 +74,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     } else if (event is CreateEvent) {
       yield EventsLoading();
       try {
-        await repository.createEvent(event.event);
+        await eventsRepository.createEvent(event.event);
         yield EventCreated();
       } catch (e) {
         yield EventsError(errorMessage: e.toString());

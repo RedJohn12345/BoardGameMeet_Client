@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget button = Container();
   final scrollController = ScrollController();
   final bloc = EventsBloc(
-      repository: EventsRepository(
+      eventsRepository: EventsRepository(
           apiClient: EventsApiClient()
       )
   )..add(LoadEvents("Voronezh", null));
@@ -119,7 +119,7 @@ class _MainScreenState extends State<MainScreen> {
         }
         ),
         floatingActionButton: FloatingActionButton(onPressed: () async {
-          await _checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
+          await _checkToken() ? Navigator.pushNamed(context, '/editEvent', arguments: null) : Navigator.pushNamed(context, '/authorization');
           // Navigator.pushNamed(context, '/authorization');
         },
           backgroundColor: Color(0xff50bc55),
@@ -131,9 +131,11 @@ class _MainScreenState extends State<MainScreen> {
           selectedItemColor: Colors.black,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          onTap: (int index) {
+          onTap: (int index) async {
             if (index == 1) {
-              Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
+              await _checkToken()
+                  ? Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false)
+                  :Navigator.pushNamed(context, '/authorization');
             }
           },
           items: [

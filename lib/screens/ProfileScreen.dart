@@ -17,12 +17,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final bloc = PersonBloc(personRepository: PersonsRepository(apiClient: PersonsApiClient()));
+
   @override
   Widget build(BuildContext context) {
 
     String? nickname = ModalRoute.of(context)?.settings.arguments == null ? null : ModalRoute.of(context)?.settings.arguments as String;
     Member? member;
-    final bloc = PersonBloc(repository: PersonsRepository(apiClient: PersonsApiClient()));
 
     return BlocProvider<PersonBloc>(
       create: (context) => bloc..add(nickname == null ? LoadOwnProfile() : LoadProfile(nickname)),
@@ -68,7 +69,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 setState(() {
                                   bloc.add(ExitProfile());
                                 });
-                                Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                               },
                                 child: Text("Выйти"),
                                 style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
@@ -102,6 +102,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return Center(child: CircularProgressIndicator(),);
               } else if (state is PersonsError) {
                 return Center(child: Text(state.errorMessage),);
+              } else if (state is ExitSuccess) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                });
+                return const Center(child: CircularProgressIndicator(),);
               } else {
                 return Container();
               }

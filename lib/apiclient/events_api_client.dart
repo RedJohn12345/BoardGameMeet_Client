@@ -97,7 +97,7 @@ class EventsApiClient {
     }
   }
 
-  Future<Event> fetchEvent(Long eventId) async {
+  Future<Event> fetchEvent(int eventId) async {
     var url = Uri.parse('http://10.0.2.2:8080/event/$eventId');
     final token = await _getToken();
     var response = await http.get(url,

@@ -54,7 +54,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     cityController.text = member.city;
     sexController.sex = member.sex;
     final bloc = PersonBloc(
-        repository: PersonsRepository(apiClient: PersonsApiClient()));
+        personRepository: PersonsRepository(apiClient: PersonsApiClient()));
     return WillPopScope(
         onWillPop: () {
           Navigator.pushReplacementNamed(context, '/profile');
