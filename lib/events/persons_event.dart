@@ -44,3 +44,9 @@ class JoinToEvent extends PersonsEvent {
 
   JoinToEvent({required this.eventId});
 }
+
+class LeaveFromEvent extends PersonsEvent {
+  final int? eventId;
+
+  LeaveFromEvent(this.eventId);
+}

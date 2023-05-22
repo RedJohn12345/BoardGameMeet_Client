@@ -10,8 +10,8 @@ part '../states/persons_state.dart';
 
 
 class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
-  final PersonsRepository repository;
-  PersonBloc({required this.repository}) : super(PersonsInitial());
+  final PersonsRepository personRepository;
+  PersonBloc({required this.personRepository}) : super(PersonsInitial());
 
   @override
   Stream<PersonsState> mapEventToState(
@@ -20,7 +20,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
     if (event is RegistrationPerson) {
       yield PersonsLoading();
       try {
-        await repository.registration(event.member);
+        await personRepository.registration(event.member);
         yield RegistrationSuccess();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
@@ -28,7 +28,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
     } else if (event is AuthorizationPerson) {
       yield PersonsLoading();
       try {
-        await repository.authorization(event.member);
+        await personRepository.authorization(event.member);
         yield AuthorizationSuccess();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
@@ -36,7 +36,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
     } else if (event is LoadOwnProfile) {
       yield PersonsLoading();
       try {
-        Member member =  await repository.getOwnProfile();
+        Member member =  await personRepository.getOwnProfile();
         yield OwnProfileLoaded(member);
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
@@ -44,7 +44,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
     } else if (event is LoadProfile) {
       yield PersonsLoading();
       try {
-        Member member =  await repository.getProfile(event.nickname);
+        Member member =  await personRepository.getProfile(event.nickname);
         yield OwnProfileLoaded(member);
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
@@ -52,7 +52,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
     } else if (event is ExitProfile) {
       yield PersonsLoading();
       try {
-        await repository.exitProfile();
+        await personRepository.exitProfile();
         print("exit profile");
         yield ExitSuccess();
       } catch (e) {
@@ -61,7 +61,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
     } else if (event is UpdateProfile) {
       yield PersonsLoading();
       try {
-        await repository.updatePerson(UpdatePersonRequest(event.member.name,
+        await personRepository.updatePerson(UpdatePersonRequest(event.member.name,
             event.member.login, event.member.city, event.member.age, event.member.sex, 3));
         yield UpdateProfileSuccess();
       } catch (e) {
@@ -72,8 +72,16 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
     } else if (event is JoinToEvent) {
       yield PersonsLoading();
       try {
-        await repository.joinToEvent(event.eventId);
+        await personRepository.joinToEvent(event.eventId);
         yield JoinedToEvent();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is LeaveFromEvent) {
+      yield PersonsLoading();
+      try {
+        await personRepository.leaveFromEvent(event.eventId);
+        yield LeavingFromEvent();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }

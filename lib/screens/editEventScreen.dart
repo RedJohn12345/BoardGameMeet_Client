@@ -49,7 +49,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
   Widget build(BuildContext context) {
     DateTimeWidget dateTimeWidget = DateTimeWidget(controller: dateController, withHelper: true,);
     final bloc = EventsBloc(
-        repository: EventsRepository(
+        eventsRepository: EventsRepository(
             apiClient: EventsApiClient()
         )
     );

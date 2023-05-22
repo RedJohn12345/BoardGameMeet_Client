@@ -214,14 +214,14 @@ class PersonsApiClient {
     }
   }
 
-  Future fetchLeaveFromEvent(Long eventId) async {
+  Future fetchLeaveFromEvent(int? eventId) async {
     var url = Uri.parse('$address/leaveEvent/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
 
     var response = await http.post(url, headers: {
       authorization: bearer + token.toString()
     });
-    await _deleteToken();
+    //await _deleteToken();
     if (response.statusCode == 200) {
       return;
     } else {

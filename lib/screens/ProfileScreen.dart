@@ -17,7 +17,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final bloc = PersonBloc(repository: PersonsRepository(apiClient: PersonsApiClient()));
+  final bloc = PersonBloc(personRepository: PersonsRepository(apiClient: PersonsApiClient()));
 
   @override
   Widget build(BuildContext context) {

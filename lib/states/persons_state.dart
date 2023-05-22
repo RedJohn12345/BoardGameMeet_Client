@@ -42,3 +42,5 @@ class ProfileLoaded extends PersonsState {
 class WatchingEvent extends PersonsState {}
 
 class JoinedToEvent extends PersonsState {}
+
+class LeavingFromEvent extends PersonsState {}

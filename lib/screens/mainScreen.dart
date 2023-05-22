@@ -22,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget button = Container();
   final scrollController = ScrollController();
   final bloc = EventsBloc(
-      repository: EventsRepository(
+      eventsRepository: EventsRepository(
           apiClient: EventsApiClient()
       )
   )..add(LoadEvents("Voronezh", null));

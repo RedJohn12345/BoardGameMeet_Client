@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
@@ -32,7 +31,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
   Widget build(BuildContext context) {
     final member = (ModalRoute.of(context)?.settings.arguments) as Member;
     final bloc =  PersonBloc(
-    repository: PersonsRepository(
+    personRepository: PersonsRepository(
     apiClient: PersonsApiClient()));
     return BlocProvider<PersonBloc>(
       create: (context) => bloc,

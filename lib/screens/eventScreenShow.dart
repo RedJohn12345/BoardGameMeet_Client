@@ -19,7 +19,7 @@ class EventScreenShow extends StatefulWidget {
 class _EventScreenShowState extends State<EventScreenShow> {
 
   final bloc = PersonBloc(
-      repository: PersonsRepository(
+      personRepository: PersonsRepository(
           apiClient: PersonsApiClient()
       )
   );

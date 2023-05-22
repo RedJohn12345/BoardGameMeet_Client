@@ -1,8 +1,12 @@
 
+import 'package:boardgm/apiclient/persons_api_client.dart';
+import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../model/event.dart';
 import '../model/item.dart';
+import '../repositories/persons_repository.dart';
 
 class EventScreen extends StatefulWidget {
 
@@ -13,6 +17,12 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
+
+  final bloc = PersonBloc(
+          personRepository: PersonsRepository(
+          apiClient: PersonsApiClient()
+      )
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -65,63 +75,84 @@ class _EventScreenState extends State<EventScreen> {
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         margin: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Column(children: items,)));
 
-    return Scaffold(
-      appBar: AppBar(
-        title:
-            Text(event.name, style: TextStyle(fontSize: 24),),
-        //
-        centerTitle: true,
-        backgroundColor: Color(0xff50bc55),
-        actions: [
-          IconButton(onPressed: () {
-            Navigator.pushNamed(context, '/members');
-          },
-              icon: Icon(Icons.account_box_sharp))
-        ],
-      ),
-      backgroundColor: Color(0xff292929),
-      body:
-      Column(
-        children:[
-          Flexible(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20)),
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              child: ListView.builder(
-                  itemCount: params.length,
-                  itemBuilder: (_, index) =>
-                  params[index],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
+    return BlocProvider<PersonBloc>(
+      create: (context) => bloc,
+      child: Scaffold(
+        appBar: AppBar(
+          title:
+              Text(event.name, style: TextStyle(fontSize: 24),),
+          //
+          centerTitle: true,
+          backgroundColor: Color(0xff50bc55),
+          actions: [
+            IconButton(onPressed: () {
+              Navigator.pushNamed(context, '/members');
+            },
+                icon: Icon(Icons.account_box_sharp))
+          ],
+        ),
+        backgroundColor: Color(0xff292929),
+        body: BlocBuilder<PersonBloc, PersonsState>(
+          builder: (context, state) {
+            if (state is PersonsInitial) {
+              return Column(
                 children: [
-                  Expanded(
-                    child: ElevatedButton( onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/');
-                    },
-                      child: Text("Покинуть"),
-                      style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                  Flexible(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20)),
+                      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      child: ListView.builder(
+                        itemCount: params.length,
+                        itemBuilder: (_, index) =>
+                        params[index],
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 16,),
-                  Expanded(
-                    child: ElevatedButton( onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/');
-                    },
-                      child: Text("Чат"),
-                      style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(onPressed: () {
+                              bloc.add(LeaveFromEvent(event.id));
+                            },
+                              child: Text("Покинуть"),
+                              style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll<
+                                      Color>(Color(0xff50bc55))),
+                            ),
+                          ),
+                          const SizedBox(width: 16,),
+                          Expanded(
+                            child: ElevatedButton(onPressed: () {
+                              Navigator.pushReplacementNamed(context, '/');
+                            },
+                              child: Text("Чат"),
+                              style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll<
+                                      Color>(Color(0xff50bc55))),
+                            ),
+                          ),
+                        ]
                     ),
                   ),
-                ]
-            ),
-          ),
-      ],),
+                ],);
+            } else if (state is LeavingFromEvent) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
+              });
+              return const Center(child: CircularProgressIndicator(),);
+            } else if (state is PersonsError) {
+              return Center(child: Text(state.errorMessage),);
+            } else {
+              return const Center(child: CircularProgressIndicator(),);
+            }
+          }
+        )
+      ),
     );
   }
 }
