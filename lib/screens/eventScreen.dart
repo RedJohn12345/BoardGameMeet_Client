@@ -1,4 +1,3 @@
-
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
 
-  final bloc = PersonBloc(
+  final personBloc = PersonBloc(
           personRepository: PersonsRepository(
           apiClient: PersonsApiClient()
       )
@@ -27,7 +26,9 @@ class _EventScreenState extends State<EventScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final event = (ModalRoute.of(context)?.settings.arguments) as Event;
+    final list = (ModalRoute.of(context)?.settings.arguments) as List;
+    final event = list[0] as Event;
+    final route = list[1] as String;
 
     final List<Widget> items = [];
 
@@ -76,7 +77,7 @@ class _EventScreenState extends State<EventScreen> {
         margin: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Column(children: items,)));
 
     return BlocProvider<PersonBloc>(
-      create: (context) => bloc,
+      create: (context) => personBloc,
       child: Scaffold(
         appBar: AppBar(
           title:
@@ -117,7 +118,7 @@ class _EventScreenState extends State<EventScreen> {
                         children: [
                           Expanded(
                             child: ElevatedButton(onPressed: () {
-                              bloc.add(LeaveFromEvent(event.id));
+                              personBloc.add(LeaveFromEvent(event.id));
                             },
                               child: Text("Покинуть"),
                               style: const ButtonStyle(
@@ -142,7 +143,7 @@ class _EventScreenState extends State<EventScreen> {
                 ],);
             } else if (state is LeavingFromEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
+                Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
               });
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is PersonsError) {

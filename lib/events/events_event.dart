@@ -27,8 +27,8 @@ class CreateEvent extends EventsEvent {
   CreateEvent(this.event);
 }
 
-class LeaveFromEvent extends EventsEvent {
-  final int id;
-
-  LeaveFromEvent(this.id);
-}
+// class LeaveFromEvent extends EventsEvent {
+//   final int id;
+//
+//   LeaveFromEvent(this.id);
+// }

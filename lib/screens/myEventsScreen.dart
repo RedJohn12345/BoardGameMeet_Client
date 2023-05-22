@@ -148,7 +148,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     color: Colors.white,
                     child: ListTile(
                       onTap: () {
-                        Navigator.pushNamed(context, '/event', arguments: myEvents[index]);
+                        Navigator.pushNamed(context, '/event', arguments: [myEvents[index], '/my_events']);
                       },
                       title: Text(myEvents[index].name),
                       subtitle: Text(

@@ -97,8 +97,9 @@ class _EventScreenShowState extends State<EventScreenShow> {
                 ],);
             } else if (state is JoinedToEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
+                event.numberPlayers++;
                 Navigator.pushReplacementNamed(
-                    context, '/event', arguments: event);
+                    context, '/event', arguments: [event, '/home']);
               });
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is PersonsError) {
