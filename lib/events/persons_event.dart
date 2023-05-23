@@ -50,3 +50,9 @@ class LeaveFromEvent extends PersonsEvent {
 
   LeaveFromEvent(this.eventId);
 }
+
+class AllMembersOfEvent extends PersonsEvent {
+  final int eventId;
+
+  AllMembersOfEvent(this.eventId);
+}

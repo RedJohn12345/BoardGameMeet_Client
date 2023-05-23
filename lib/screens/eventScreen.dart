@@ -87,7 +87,7 @@ class _EventScreenState extends State<EventScreen> {
           backgroundColor: Color(0xff50bc55),
           actions: [
             IconButton(onPressed: () {
-              Navigator.pushNamed(context, '/members');
+              Navigator.pushNamed(context, '/members', arguments: event.id);
             },
                 icon: Icon(Icons.account_box_sharp))
           ],

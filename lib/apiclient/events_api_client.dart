@@ -63,21 +63,21 @@ class EventsApiClient {
     }
   }
 
-  Future fetchCreateEvent(Event event) async {
+  Future fetchCreateEvent(CreateEventRequest request) async {
     //final String url = '$_baseUrl/';
     var url = Uri.parse('http://10.0.2.2:8080/createEvent');
     final token = await _getToken();
 
     final msg = jsonEncode({
-    "name": event.name,
-    "game": event.game,
-    "city": event.city,
-    "address": event.location,
-    "date": event.date!.toIso8601String(),
-    "maxPersonCount": event.maxNumberPlayers,
-    "minAge": event.minAge,
-    "maxAge": event.maxAge,
-    "description": event.description
+    "name": request.name,
+    "game": request.game,
+    "city": request.city,
+    "address": request.address,
+    "date": request.date.toIso8601String(),
+    "maxPersonCount": request.maxPersonCount,
+    "minAge": request.minAge,
+    "maxAge": request.maxAge,
+    "description": request.description
     });
 
     print(msg);

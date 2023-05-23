@@ -1,6 +1,4 @@
 
-import 'dart:ffi';
-
 import '../apiclient/persons_api_client.dart';
 import '../model/dto/member_dto.dart';
 import '../model/member.dart';
@@ -26,7 +24,7 @@ class PersonsRepository {
   Future updatePerson(UpdatePersonRequest request) async =>
       apiClient.fetchUpdatePerson(request);
 
-  Future<List> getMembers(Long eventId) async =>
+  Future<List<MemberInEvent>> getMembers(int eventId) async =>
       apiClient.fetchGetMembers(eventId);
 
   Future deletePerson(String userNickname) async =>

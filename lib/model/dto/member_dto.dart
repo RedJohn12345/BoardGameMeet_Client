@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:ffi';
 
 import '../Sex.dart';
 
@@ -38,14 +37,14 @@ class UpdatePersonRequest {
 
 class MemberInEvent {
   late String nickname;
-  late int? avatarId;
-  late Bool isHost;
+  late int avatarPath;
+  late bool isHost;
 
-  MemberInEvent({required this.nickname, required this.avatarId, required this.isHost});
+  MemberInEvent({required this.nickname, required this.avatarPath, required this.isHost});
 
   static fromJson(json) {
     return MemberInEvent(nickname: json['nickname'] as String,
-                         avatarId: json['avatarId'] as int,
-                         isHost: json['host'] as Bool);
+                         avatarPath: 5,
+                         isHost: json['host'] as bool);
   }
 }
