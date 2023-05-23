@@ -39,6 +39,23 @@ class LoadProfile extends PersonsEvent {
 
 class WatchEvent extends PersonsEvent {}
 
+class InitialEvent extends PersonsEvent {}
+
+class ChangePasswordEvent extends PersonsEvent {
+  final String password;
+  final String passwordRepeat;
+  final String nickname;
+
+  ChangePasswordEvent(this.password, this.passwordRepeat, this.nickname);
+}
+
+class ValidateSecretWordEvent extends PersonsEvent {
+  final NickNameAndSecretWord nickNameAndSecretWord;
+
+  ValidateSecretWordEvent(this.nickNameAndSecretWord);
+
+}
+
 class JoinToEvent extends PersonsEvent {
   final int? eventId;
 

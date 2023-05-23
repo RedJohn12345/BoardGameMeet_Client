@@ -21,6 +21,9 @@ class ExitSuccess extends PersonsState {
 class AuthorizationSuccess extends PersonsState {
 }
 
+class ChangePasswordSuccess extends PersonsState {
+}
+
 class UpdateProfileSuccess extends PersonsState {
 }
 
@@ -49,4 +52,10 @@ class AllMembers extends PersonsState {
   final List<MemberInEvent> members;
 
   AllMembers(this.members);
+}
+
+class ValidateSecretWordResult extends PersonsState {
+  final bool valid;
+
+  ValidateSecretWordResult(this.valid);
 }

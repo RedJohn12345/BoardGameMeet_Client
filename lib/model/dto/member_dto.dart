@@ -48,3 +48,15 @@ class MemberInEvent {
                          isHost: json['host'] as bool);
   }
 }
+
+class NickNameAndSecretWord {
+  late String nickname;
+  late String secretWord;
+
+  NickNameAndSecretWord({required this.nickname, required this.secretWord});
+
+  static fromJson(json) {
+    return NickNameAndSecretWord(nickname: json['nickname'] as String,
+        secretWord: json['secretWord'] as String);
+  }
+}

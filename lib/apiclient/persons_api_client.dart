@@ -232,16 +232,15 @@ class PersonsApiClient {
     }
   }
 
-  Future<bool> fetchValidateSecretWord(String secretWord) async {
+  Future<bool> fetchValidateSecretWord(String nickname, String secretWord) async {
     var url = Uri.parse('$address/validateSecretWord');
-    final token = _getToken();
     final msg = jsonEncode({
-      "secretWord": secretWord
+      "secretWord": secretWord,
+      "nickname": nickname
     });
 
     var response = await http.post(url, body: msg,
       headers: {
-        authorization: bearer + token.toString(),
         contentType: json
       }
     );
@@ -249,21 +248,21 @@ class PersonsApiClient {
     if (response.statusCode == 200) {
       return true;
     } else {
+      print(response.statusCode);
       return false;
     }
   }
 
-  Future fetchChangePassword(String password, String repeatPassword) async {
+  Future fetchChangePassword(String password, String repeatPassword, String nickname) async {
     var url = Uri.parse('$address/changePassword');
-    final token = _getToken();
     final msg = jsonEncode({
       "newPassword": password,
-      "repeatPassword": repeatPassword
+      "repeatPassword": repeatPassword,
+      "nickname": nickname,
     });
 
     var response = await http.put(url, body: msg,
       headers: {
-        authorization: bearer + token.toString(),
         contentType: json
       }
     );

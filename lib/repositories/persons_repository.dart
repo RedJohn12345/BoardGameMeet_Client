@@ -39,9 +39,9 @@ class PersonsRepository {
   Future leaveFromEvent(int? eventId) async =>
       apiClient.fetchLeaveFromEvent(eventId);
 
-  Future validateSecretWord(String secretWord) async =>
-      apiClient.fetchValidateSecretWord(secretWord);
+  Future<bool> validateSecretWord(NickNameAndSecretWord nickNameAndSecretWord) async =>
+      apiClient.fetchValidateSecretWord(nickNameAndSecretWord.nickname, nickNameAndSecretWord.secretWord);
 
-  Future changePassword(String password, String repeatPassword) async =>
-      apiClient.fetchChangePassword(password, repeatPassword);
+  Future changePassword(String password, String repeatPassword, String nickname) async =>
+      apiClient.fetchChangePassword(password, repeatPassword, nickname);
 }

@@ -5,14 +5,14 @@ import 'package:flutter/widgets.dart';
 class PasswordWidget extends StatefulWidget {
 
   final TextEditingController controller;
-
+  TextEditingController? subController;
   bool withHelper = false;
 
   String hintText;
 
   PasswordWidget({
     Key? key,
-    required this.controller, this.withHelper = false, this.hintText = ""}): super(key: key);
+    required this.controller, this.withHelper = false, this.hintText = "", this.subController}): super(key: key);
 
   @override
   _PasswordWidgetState createState() {
@@ -49,6 +49,9 @@ class _PasswordWidgetState extends State<PasswordWidget> {
       }
       if (password != null && (password.contains(RegExp(r"[а-яА-Я]")))) {
         return "Разрешены только латинские буквы";
+      }
+      if (widget.subController != null && widget.subController!.text != password) {
+        return "Пароли не совпадают";
       }
       return null;
     }
