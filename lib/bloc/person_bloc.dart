@@ -99,6 +99,14 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }
+    } else if (event is DeleteEvent) {
+      try {
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        await eventRepository.deleteEvent(event.eventId);
+        yield DeletingEvent();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
     }
   }
 }

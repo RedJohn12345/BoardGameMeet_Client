@@ -171,9 +171,9 @@ class EventsApiClient {
     }
   }
 
-  Future fetchDeleteEvent(Long eventId) async {
+  Future fetchDeleteEvent(int eventId) async {
     var url = Uri.parse('$address/deleteEvent/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
 
     var response = await http.delete(url, headers: {
       authorization: bearer + token.toString()

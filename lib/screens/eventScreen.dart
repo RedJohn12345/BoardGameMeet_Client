@@ -120,7 +120,7 @@ class _EventScreenState extends State<EventScreen> {
                             visible: event.isHost,
                               child: Expanded(
                                 child: ElevatedButton(onPressed: () {
-
+                                  personBloc.add(DeleteEvent(event.id!));
                                 },
                                 child: Text("Удалить"),
                                 style: const ButtonStyle(
@@ -129,15 +129,18 @@ class _EventScreenState extends State<EventScreen> {
                                 ),
                               )
                           ),
-                          Expanded(
-                            child: ElevatedButton(onPressed: () {
-                              personBloc.add(LeaveFromEvent(event.id));
-                            },
-                              child: Text("Покинуть"),
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll<
-                                      Color>(Color(0xff50bc55))),
-                            ),
+                          Visibility(
+                            visible: !event.isHost,
+                            child: Expanded(
+                              child: ElevatedButton(onPressed: () {
+                                personBloc.add(LeaveFromEvent(event.id));
+                              },
+                                child: Text("Покинуть"),
+                                style: const ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(0xff50bc55))),
+                              ),
+                            )
                           ),
                           const SizedBox(width: 16,),
                           Expanded(
@@ -155,6 +158,11 @@ class _EventScreenState extends State<EventScreen> {
                   ),
                 ],);
             } else if (state is LeavingFromEvent) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
+              });
+              return const Center(child: CircularProgressIndicator(),);
+            } else if (state is DeletingEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
               });

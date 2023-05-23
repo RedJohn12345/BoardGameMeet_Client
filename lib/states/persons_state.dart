@@ -54,3 +54,5 @@ class AllMembers extends PersonsState {
 
   AllMembers(this.members);
 }
+
+class DeletingEvent extends PersonsState {}

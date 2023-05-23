@@ -60,3 +60,9 @@ class AllMembersOfEvent extends PersonsEvent {
 
   AllMembersOfEvent(this.eventId);
 }
+
+class DeleteEvent extends PersonsEvent {
+  final int eventId;
+
+  DeleteEvent(this.eventId);
+}
