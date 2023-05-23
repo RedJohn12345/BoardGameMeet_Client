@@ -61,7 +61,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<EventsBloc, EventsState>(
           builder: (context, state) {
-            if (state is EventsLoaded) {
+            if (state is MyEventsLoaded) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 setState(() {
                   myEvents = state.events;

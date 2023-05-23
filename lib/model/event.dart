@@ -11,14 +11,14 @@ class Event {
   late int maxNumberPlayers;
   late String description;
   Map<Item, bool> items = {};
-  late String hostNickname;
+  late bool isHost;
 
   late int minAge;
   late int maxAge;
 
   Event({required this.id, this.name = "", this.game = "",
     this.location = "", this.numberPlayers = 0,  this.maxNumberPlayers = 0, this.description = "",
-    required this.hostNickname});
+    required this.isHost});
 
   /*Event({required this.name, required this.game, required this.date,
     required this.location, required this.numberPlayers, required this.maxNumberPlayers, required this});*/
@@ -31,7 +31,7 @@ class Event {
   static fromJson(json) {
     Event event =  Event(id: json['id'], name: json['name'] as String, game: json['game'] as String, location: json['address'] as String,
       numberPlayers: json['curPersonCount'] as int, maxNumberPlayers: json['maxPersonCount'] as int,
-      description: "", hostNickname: json['hostNickname'] as String);
+      description: "", isHost: json['host'] as bool);
     event.date = DateTime.parse(json['date'] as String);
     return event;
   }

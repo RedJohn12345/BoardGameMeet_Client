@@ -39,7 +39,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
           yield ButtonEntry();
         }
         final events = await eventsRepository.getMyEvents(page);
-        yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
+        yield MyEventsLoaded(listEvents..addAll(events.cast<Event>()));
         page++;
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
@@ -59,7 +59,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
           yield ButtonEntry();
         }
         final events = await eventsRepository.getEvents(event.city, event.search, page);
-        yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
+        yield MainPageEventsLoaded(events);
         page++;
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
@@ -68,7 +68,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       yield EventsLoading();
       try {
         final responseEvent = await eventsRepository.getEvent(event.id);
-        yield EventLoaded(responseEvent);
+        yield EventLoaded_State(responseEvent);
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }

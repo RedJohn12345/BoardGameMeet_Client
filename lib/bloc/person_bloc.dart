@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'package:boardgm/apiclient/events_api_client.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/model/member.dart';
+import 'package:boardgm/repositories/events_repository.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+
+import '../model/event.dart';
 part '../events/persons_event.dart';
 part '../states/persons_state.dart';
 
@@ -73,7 +77,9 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       yield PersonsLoading();
       try {
         await personRepository.joinToEvent(event.eventId);
-        yield JoinedToEvent();
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        Event selectedEvent = await eventRepository.getEvent(event.eventId!);
+        yield JoinedToEvent(selectedEvent);
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }

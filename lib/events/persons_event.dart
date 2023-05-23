@@ -37,7 +37,11 @@ class LoadProfile extends PersonsEvent {
   LoadProfile(this.nickname);
 }
 
-class WatchEvent extends PersonsEvent {}
+class WatchEvent extends PersonsEvent {
+  final int eventId;
+
+  WatchEvent(this.eventId);
+}
 
 class JoinToEvent extends PersonsEvent {
   final int? eventId;

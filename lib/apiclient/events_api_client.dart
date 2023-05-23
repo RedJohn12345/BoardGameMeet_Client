@@ -33,7 +33,7 @@ class EventsApiClient {
     }
   }
 
-  Future<List> fetchEvents(String city, String? search, int page) async {
+  Future<List<MainPageEvent>> fetchEvents(String city, String? search, int page) async {
     //final String url = '$_baseUrl/';
     final Uri url;
     if (search != null) {
@@ -56,8 +56,12 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       // Парсим JSON-ответ и преобразуем его в список событий
-      final List<dynamic> eventsJson = jsonDecode(response.body);
-      return eventsJson.map((json) => Event.fromJson(json)).toList();
+      final List<dynamic> jsonEvents = jsonDecode(response.body);
+      List<MainPageEvent> mainPageEvents = [];
+      for(var jsonEvent in jsonEvents) {
+        mainPageEvents.add(MainPageEvent.fromJson(jsonEvent));
+      }
+      return mainPageEvents;
     } else {
       throw Exception(response.statusCode);
     }
@@ -106,7 +110,8 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       final dynamic eventJson = jsonDecode(response.body);
-      return eventJson.map((json) => Event.fromJson(json));
+      Event event = Event.fromJson(eventJson);
+      return event;
     } else {
       throw Exception("Ошибка при загрузке ивента с id=$eventId");
     }

@@ -116,6 +116,19 @@ class _EventScreenState extends State<EventScreen> {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                         children: [
+                          Visibility(
+                            visible: event.isHost,
+                              child: Expanded(
+                                child: ElevatedButton(onPressed: () {
+
+                                },
+                                child: Text("Удалить"),
+                                style: const ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(0xff50bc55))),
+                                ),
+                              )
+                          ),
                           Expanded(
                             child: ElevatedButton(onPressed: () {
                               personBloc.add(LeaveFromEvent(event.id));

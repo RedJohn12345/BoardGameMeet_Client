@@ -9,18 +9,23 @@ class EventsLoading extends EventsState {}
 
 class EventsFirstLoading extends EventsState {}
 
-class EventsLoaded extends EventsState {
+class MyEventsLoaded extends EventsState {
   final List<Event> events;
-  EventsLoaded(this.events);
+  MyEventsLoaded(this.events);
+}
+
+class MainPageEventsLoaded extends EventsState {
+  final List<MainPageEvent> events;
+  MainPageEventsLoaded(this.events);
 }
 
 class EventCreated extends EventsState {
 
 }
 
-class EventLoaded extends EventsState {
+class EventLoaded_State extends EventsState {
   final Event event;
-  EventLoaded(this.event);
+  EventLoaded_State(this.event);
 }
 
 class AvatarIsLoaded extends EventsState {
