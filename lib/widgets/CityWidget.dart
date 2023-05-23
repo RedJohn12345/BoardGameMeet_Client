@@ -23,103 +23,88 @@ class CityWidget extends StatefulWidget {
 
 class _CityWidgetState extends State<CityWidget> {
 
+  bool cityIsFind = true;
+  bool widgetSelect = false;
   @override
   void initState() {
     widget.controller.text = widget.city;
     super.initState();
   }
 
-  List<String> _suggestions = [];
-
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      TextFormField(
-        controller: widget.controller,
-        decoration: InputDecoration(
-          labelText: widget.withHelper ? "Город*" : "Город",
-          fillColor:  Color(0xff171717),
-          filled: true,
-          labelStyle: TextStyle(color: Colors.white60),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-          )
-        ),
-        keyboardType: TextInputType.name,
-        style: TextStyle(color: Colors.white),
-        validator: (value) {
-          if(value!.isEmpty) {
-            return 'Please enter a city';
-          } else if(!_suggestions.contains(value)) {
-            return 'Please select a city from the suggestions';
+      Focus(
+        onFocusChange: (hasFocus) {
+          if (hasFocus) widgetSelect = true;
+          if (!hasFocus) {
+            _onCityChanged(widget.controller.text);
+            widgetSelect = false;
           }
-          return null;
         },
-        onChanged: _onCityChanged,
+        child: TextFormField(
+          controller: widget.controller,
+          decoration: InputDecoration(
+            labelText: widget.withHelper ? "Город*" : "Город",
+            fillColor:  Color(0xff171717),
+            filled: true,
+            labelStyle: TextStyle(color: Colors.white60),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+            )
+          ),
+          keyboardType: TextInputType.name,
+          style: TextStyle(color: Colors.white),
+          validator: (value) {
+            if((value?.isEmpty ?? true) || widgetSelect) {
+              return 'Please enter a city';
+            } else if (!cityIsFind) {
+              return 'City is not found';
+            }
+            return null;
+          },
+        ),
       ),
-      ListView.builder(
-        itemCount: _suggestions.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(_suggestions[index]),
-            onTap: () {
-              widget.controller.text = _suggestions[index];
-              _suggestions = [];
-            },
-          );
-        },
-      )
     ],
   );
 
-  Future<void> _onCityChanged(String city) async {
+  Future _onCityChanged(city) async {
     print('Suggest query: $city');
     if (city.isEmpty) {
-      setState(() {
-        _suggestions = [];
-      });
+        return;
     } else {
-      final resultWithSession = YandexSuggest.getSuggestions(
-          text: city,
-          boundingBox: BoundingBox(
-              northEast: Point(latitude: 71.155753, longitude: -177.650671),
-              southWest: Point(latitude: 44.063222,  longitude: 19.940636)
-          ),
-          suggestOptions: SuggestOptions(suggestType: SuggestType.geo)
-      );
-
-      await _addResult(await resultWithSession.result, Geometry.fromBoundingBox(BoundingBox(
+      final resultWithSession = YandexSearch.searchByText(searchText: city, geometry: Geometry.fromBoundingBox(BoundingBox(
           northEast: Point(latitude: 71.155753, longitude: -177.650671),
-          southWest: Point(latitude: 44.063222,  longitude: 19.940636)
-      ),));
+          southWest: Point(latitude: 44.063222,  longitude: 180.940636)
+      ),), searchOptions: SearchOptions());
+
+      return await _addResult(await resultWithSession.result, city);
 
     }
 
+  }
+
+  _addResult(SearchSessionResult result, String city) async {
+      bool find = false;
+      result.items!.asMap().forEach((i, item) {
+        if (item.toponymMetadata != null && item.toponymMetadata!.address.addressComponents[SearchComponentKind.locality] != null) {
+          if (!find) {
+            find = true;
+            widget.controller.text =
+            item.toponymMetadata!.address.addressComponents[SearchComponentKind
+                .locality]!;
+          } else {
+            return;
+          }
+        }
+      });
+
+      setState(() {
+        cityIsFind = find;
+      });
 
   }
 
-  _addResult(SuggestSessionResult result, Geometry geometry) async {
-    var locations = [];
-    result.items!.asMap().forEach((i, item) {
-      locations.add(item.searchText);
-    });
-    var cities = Set<String>();
-    locations.asMap().forEach((key, value) async { 
-      SearchResultWithSession resultWithSession = YandexSearch.searchByText(searchText: value, geometry: geometry, searchOptions: SearchOptions());
-      SearchSessionResult result = await resultWithSession.result;
-      if (cities.length < 7) {
-        cities.add(result.items!.first.toponymMetadata!.address
-            .addressComponents[SearchComponentKind.locality]!);
-      }
-    });
-    
-    setState(() {
-      _suggestions = cities.toList();
-    });
-    
-
-
-  }
 }
 
 

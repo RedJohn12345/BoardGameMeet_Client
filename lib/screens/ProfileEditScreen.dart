@@ -53,6 +53,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     ageController.text = member.age == 0 ? "" : member.age.toString();
     cityController.text = member.city;
     sexController.sex = member.sex;
+    final params = getParams(member);
     final bloc = PersonBloc(
         personRepository: PersonsRepository(apiClient: PersonsApiClient()));
     return WillPopScope(
@@ -77,15 +78,15 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     return Center(
                       child: Form(
                         key: formKey,
-                        child: SingleChildScrollView(
+                        child: Container(
                           padding: EdgeInsets.all(16),
                           child: Column(
                               children: [
                                 Flexible(
                                 child: ListView.builder(
-                                  itemCount: getParams(member).length,
+                                  itemCount: params.length,
                                   itemBuilder: (_, index) =>
-                                  getParams(member)[index],
+                                  params[index],
                                   ),
                                 ),
                                 Row(
@@ -96,7 +97,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                           if (form.validate()) {
                                             Member profile = Member(
                                                 login: loginController.text, name: nameController.text, city: cityController.text,
-                                                age: ageController.text == "" ? 0 : int.parse(ageController.text), pathToAvatar: member.pathToAvatar, sex: sexController.sex);
+                                                age: ageController.text == "" ? 0 : int.parse(ageController.text), avatarId: member.avatarId, sex: sexController.sex);
                                             bloc.add(UpdateProfile(profile));
                                           }
                                         },
@@ -139,11 +140,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         child: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(
-                context, '/avatarChoose');
+                context, '/avatarChoose', arguments: member);
           },
           child: CircleAvatar(
             backgroundImage: AssetImage(
-                member.pathToAvatar),
+                member.getAvatar()),
             radius: 200,
           ),
         ),
@@ -156,7 +157,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       const SizedBox(height: 16,),
       LoginWidget(controller: loginController,),
       const SizedBox(height: 16,),
-      CityWidget(controller: cityController, city: "Voronezh",),
+      CityWidget(controller: cityController, city: member.city,),
       const SizedBox(height: 16,),
       AgeWidget(controller: ageController),
       const SizedBox(height: 16,),];

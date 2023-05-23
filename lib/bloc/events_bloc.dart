@@ -33,7 +33,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         if (await Preference.checkToken()) {
           personsRepository = PersonsRepository(apiClient: PersonsApiClient());
           final profile = await personsRepository.getOwnProfile();
-          yield AvatarIsLoaded(profile.pathToAvatar);
+          yield AvatarIsLoaded(profile.getAvatar());
         } else {
           yield ButtonEntry();
         }
@@ -53,7 +53,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         if (await Preference.checkToken()) {
           personsRepository = PersonsRepository(apiClient: PersonsApiClient());
           final profile = await personsRepository.getOwnProfile();
-          yield AvatarIsLoaded(profile.pathToAvatar);
+          yield AvatarIsLoaded(profile.getAvatar());
         } else {
           yield ButtonEntry();
         }

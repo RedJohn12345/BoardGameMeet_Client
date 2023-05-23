@@ -122,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Center(
         child: SizedBox(height: 140, width: 140,
           child: CircleAvatar(
-            backgroundImage: AssetImage(member.pathToAvatar),
+            backgroundImage: AssetImage(member.getAvatar()),
             radius: 200,
           ),
         ),

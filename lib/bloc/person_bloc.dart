@@ -62,7 +62,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       yield PersonsLoading();
       try {
         await personRepository.updatePerson(UpdatePersonRequest(event.member.name,
-            event.member.login, event.member.city, event.member.age, event.member.sex, 3));
+            event.member.login, event.member.city, event.member.age, event.member.sex, event.member.avatarId));
         yield UpdateProfileSuccess();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());

@@ -7,10 +7,6 @@ class MembersScreen extends StatelessWidget {
 
   final int numberPage = 1;
   final List<Member> members = [
-    Member(name: "Denis", pathToAvatar: "assets/images/2.jpg", login: "pangolin", city: "Voronezh", sex: Sex.MAN),
-    Member(name: "Ivan", pathToAvatar: "assets/images/2.jpg", login: "mneploxa", city: "Voronezh"),
-    Member(name: "Denis", pathToAvatar: "assets/images/2.jpg", login: "dunadan", city: "Voronezh", age: 21),
-    Member(name: "Vadim", pathToAvatar: "assets/images/2.jpg", login: "bezdeneg", city: "Voronezh"),
   ];
 
 
@@ -47,7 +43,7 @@ class MembersScreen extends StatelessWidget {
                               title: Text(members[index].name),
                               leading: SizedBox(height: 40, width: 40,
                                 child: CircleAvatar(
-                                  backgroundImage: AssetImage(members[index].pathToAvatar),
+                                  backgroundImage: AssetImage(members[index].getAvatar()),
                                   radius: 200,
                                 ),
                               ),

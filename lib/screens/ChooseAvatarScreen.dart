@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/event.dart';
+import '../model/member.dart';
 
 class ChooseAvatar extends StatefulWidget {
 
@@ -19,10 +20,16 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
     AssetImage('assets/images/3.jpg'),
   ];
 
-  String path = "assets/images/1.jpg";
+  int id = 1;
 
   @override
   Widget build(BuildContext context) {
+
+    final member = (ModalRoute
+        .of(context)
+        ?.settings
+        .arguments) as Member;
+
     return Scaffold(
       appBar: AppBar(
         title:
@@ -40,7 +47,7 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
               const SizedBox(height: 16,),
               SizedBox(height: 140, width: 140,
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(path),
+                  backgroundImage: AssetImage("assets/images/$id.jpg"),
                   radius: 200,
                 ),
               ),
@@ -63,7 +70,7 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            path = images[index].assetName;
+                            id = index + 1;
                           });
                         },
                         child: Container(
@@ -88,7 +95,8 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
                   children: [
                     Expanded(
                       child: ElevatedButton( onPressed: () {
-                          Navigator.pop(context);
+                          member.avatarId = id;
+                          Navigator.pushReplacementNamed(context, "/profileEdit", arguments: member);
                       },
                         child: Text("Сохранить"),
                         style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
