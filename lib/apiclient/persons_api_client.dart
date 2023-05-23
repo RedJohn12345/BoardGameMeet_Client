@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:boardgm/model/Sex.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/utils/yandexMapKit.dart';
@@ -180,9 +179,9 @@ class PersonsApiClient {
     }
   }
 
-  Future<List> fetchGetMembers(Long eventId) async {
+  Future<List<MemberInEvent>> fetchGetMembers(int eventId) async {
     var url = Uri.parse('$address/getAllMembersIn/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
 
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
@@ -190,7 +189,11 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonMembers = jsonDecode(response.body);
-      return jsonMembers.map((json) => MemberInEvent.fromJson(json)).toList();
+      List<MemberInEvent> members = [];
+      for (final jsonMember in jsonMembers) {
+        members.add(MemberInEvent.fromJson(jsonMember));
+      }
+      return members;
     } else {
       throw Exception('Ошибка при получении всех участников мероприятия '
           'с кодом ${response.statusCode}');

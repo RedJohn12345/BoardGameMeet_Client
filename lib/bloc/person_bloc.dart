@@ -85,6 +85,14 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }
+    } else if (event is AllMembersOfEvent) {
+      try {
+        final members = await personRepository.getMembers(event.eventId);
+        print('zxc');
+        yield AllMembers(members);
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
     }
   }
 }

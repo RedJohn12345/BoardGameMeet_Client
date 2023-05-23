@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:boardgm/apiclient/persons_api_client.dart';
+import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';

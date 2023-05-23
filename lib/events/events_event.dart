@@ -22,7 +22,7 @@ class LoadEvent extends EventsEvent {
 }
 
 class CreateEvent extends EventsEvent {
-  final Event event;
+  final CreateEventRequest event;
 
   CreateEvent(this.event);
 }

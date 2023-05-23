@@ -44,3 +44,9 @@ class WatchingEvent extends PersonsState {}
 class JoinedToEvent extends PersonsState {}
 
 class LeavingFromEvent extends PersonsState {}
+
+class AllMembers extends PersonsState {
+  final List<MemberInEvent> members;
+
+  AllMembers(this.members);
+}

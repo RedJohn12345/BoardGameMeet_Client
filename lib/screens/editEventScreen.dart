@@ -1,8 +1,8 @@
+import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/widgets/AddressWidget.dart';
 import 'package:boardgm/widgets/DateTimeWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../model/event.dart';
 import '../apiclient/events_api_client.dart';
 import '../bloc/events_bloc.dart';
 import '../repositories/events_repository.dart';
@@ -130,14 +130,18 @@ class _EditEventScreenState extends State<EditEventScreen> {
                 final form = formKey.currentState!;
                 if (form.validate()) {
                   setState(() {
-                    Event event = Event(id: null, name: nameController.text, game:  gameController.text,
-                    location: addressController.text, maxNumberPlayers: int.parse(countPlayersController.text),
-                    description: descriptionController.text);
-                    event.date = dateTimeWidget.selectedDate;
-                    event.minAge = ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0;
-                    event.maxAge = ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0;
-                    event.city = "Voronezh";
-                    bloc.add(CreateEvent(event));
+                    CreateEventRequest request = CreateEventRequest(
+                        name: nameController.text, game:  gameController.text,
+                        city: "Voronezh", address: addressController.text, date: dateTimeWidget.selectedDate,
+                        maxPersonCount: int.parse(countPlayersController.text),
+                        minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0,
+                        maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0,
+                        description: descriptionController.text);
+                    // request.date = dateTimeWidget.selectedDate;
+                    // request.minAge = ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0;
+                    // request.maxAge = ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0;
+                    // request.city = "Voronezh";
+                    bloc.add(CreateEvent(request));
                   });
                 }
               },

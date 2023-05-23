@@ -5,8 +5,6 @@ import 'package:boardgm/model/dto/event_dto.dart';
 import '../apiclient/events_api_client.dart';
 import '../model/item.dart';
 
-import '../model/event.dart';
-
 class EventsRepository {
   final EventsApiClient apiClient;
 
@@ -18,7 +16,7 @@ class EventsRepository {
   Future<List<dynamic>> getEvents(String city, String? search, int page) async =>
       apiClient.fetchEvents(city, search, page);
 
-  Future createEvent(Event event) async =>
+  Future createEvent(CreateEventRequest event) async =>
       apiClient.fetchCreateEvent(event);
 
   Future<dynamic> getEvent(int eventId) async =>
