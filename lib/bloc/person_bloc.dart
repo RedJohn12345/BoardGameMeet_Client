@@ -111,7 +111,7 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
     } else if (event is KickPerson) {
       try {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
-        await eventRepository.banPerson(event.eventId, event.nickname);
+        await eventRepository.kickPerson(event.eventId, event.nickname);
         yield KickingPerson();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());

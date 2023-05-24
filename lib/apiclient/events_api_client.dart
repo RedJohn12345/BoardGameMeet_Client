@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/item.dart';
 import 'package:http/http.dart' as http;
@@ -148,7 +147,7 @@ class EventsApiClient {
     }
   }
 
-  Future fetchBanPerson(int eventId, String userNickname) async {
+  Future fetchKickPerson(int eventId, String userNickname) async {
     var url = Uri.parse('$address/kickPerson');
     final token = await _getToken();
 
@@ -186,9 +185,9 @@ class EventsApiClient {
     }
   }
 
-  Future<List> fetchGetItems(Long eventId) async {
+  Future<List> fetchGetItems(int eventId) async {
     var url = Uri.parse('$address/getItemsIn/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
 
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
@@ -203,9 +202,9 @@ class EventsApiClient {
     }
   }
 
-  Future fetchEditItemsIn(Long eventId, List<Item> items) async {
+  Future fetchEditItemsIn(int eventId, List<Item> items) async {
     var url = Uri.parse('$address/editItemsIn/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
     var itemsMap = items.map((item) {
       return {
         "name": item.name,
@@ -229,9 +228,9 @@ class EventsApiClient {
     }
   }
 
-  Future fetchMarkItemsIn(Long eventId, List<Item> items) async {
+  Future fetchMarkItemsIn(int eventId, List<Item> items) async {
     var url = Uri.parse('$address/markItemsIn/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
     var itemsMap = items.map((item) {
       return {
         "marked": item.marked

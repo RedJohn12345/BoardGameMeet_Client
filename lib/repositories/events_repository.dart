@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:boardgm/model/dto/event_dto.dart';
 
 import '../apiclient/events_api_client.dart';
@@ -26,18 +24,18 @@ class EventsRepository {
   Future updateEvent(UpdateEventRequest request) async =>
       apiClient.fetchUpdateEvent(request);
 
-  Future banPerson(int eventId, String userNickname) async =>
-      apiClient.fetchBanPerson(eventId, userNickname);
+  Future kickPerson(int eventId, String userNickname) async =>
+      apiClient.fetchKickPerson(eventId, userNickname);
 
   Future deleteEvent(int eventId) async =>
       apiClient.fetchDeleteEvent(eventId);
 
-  Future getItems(Long eventId) async =>
+  Future getItems(int eventId) async =>
       apiClient.fetchGetItems(eventId);
 
-  Future editItems(Long eventId, List<Item> items) async =>
+  Future editItems(int eventId, List<Item> items) async =>
       apiClient.fetchEditItemsIn(eventId, items);
 
-  Future markItems(Long eventId, List<Item> items) async =>
+  Future markItems(int eventId, List<Item> items) async =>
       apiClient.fetchMarkItemsIn(eventId, items);
 }
