@@ -13,12 +13,12 @@ part '../events/persons_event.dart';
 part '../states/persons_state.dart';
 
 
-class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
+class PersonBloc extends Bloc<PersonsEvent, PersonState> {
   final PersonsRepository personRepository;
   PersonBloc({required this.personRepository}) : super(PersonsInitial());
 
   @override
-  Stream<PersonsState> mapEventToState(
+  Stream<PersonState> mapEventToState(
       PersonsEvent event,
       ) async* {
     if (event is RegistrationPerson) {
@@ -49,7 +49,8 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       yield PersonsLoading();
       try {
         Member member =  await personRepository.getProfile(event.nickname);
-        yield OwnProfileLoaded(member);
+        bool profileStatus = await personRepository.isMyProfile(event.nickname);
+        yield ProfileLoaded(member, profileStatus);
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }
@@ -66,7 +67,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       yield PersonsLoading();
       try {
         await personRepository.updatePerson(UpdatePersonRequest(event.member.name,
-            event.member.login, event.member.city, event.member.age, event.member.sex, event.member.avatarId));
+            event.member.nickname, event.member.city, event.member.age, event.member.sex, event.member.avatarId));
         yield UpdateProfileSuccess();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());

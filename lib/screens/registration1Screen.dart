@@ -62,7 +62,7 @@ class _Registration1ScreenState extends State<Registration1Screen> {
                       child: ElevatedButton( onPressed: () {
                         final form = formKey.currentState!;
                         if (form.validate()) {
-                          Member member = Member(name: nameController.text, login: loginController.text,
+                          Member member = Member(name: nameController.text, nickname: loginController.text,
                               password: passwordController.text, secretWord: secretWordController.text);
                           Navigator.pushReplacementNamed(context, '/registration+', arguments: member);
                         }

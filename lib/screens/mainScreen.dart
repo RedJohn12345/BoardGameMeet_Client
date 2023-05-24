@@ -92,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
                 button = FloatingActionButton(onPressed: () {
-                  Navigator.pushNamed(context, '/profile');
+                  Navigator.pushNamed(context, '/profile', arguments: state.nickname);
                 },
                   child: CircleAvatar(
                     backgroundImage: AssetImage(state.avatar),

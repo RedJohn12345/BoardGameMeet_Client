@@ -87,13 +87,13 @@ class _EventScreenState extends State<EventScreen> {
           backgroundColor: Color(0xff50bc55),
           actions: [
             IconButton(onPressed: () {
-              Navigator.pushNamed(context, '/members', arguments: event.id);
+              Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]);
             },
                 icon: Icon(Icons.account_box_sharp))
           ],
         ),
         backgroundColor: Color(0xff292929),
-        body: BlocBuilder<PersonBloc, PersonsState>(
+        body: BlocBuilder<PersonBloc, PersonState>(
           builder: (context, state) {
             if (state is PersonsInitial) {
               return Column(

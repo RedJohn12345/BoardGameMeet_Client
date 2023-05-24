@@ -40,7 +40,7 @@ class PersonsApiClient {
     String gender = member.sex == Sex.MAN ? "MALE" : "FEMALE";
     final msg = jsonEncode({
       "name": member.name,
-      "nickname": member.login,
+      "nickname": member.nickname,
       "password": member.password,
       "secretWord": member.secretWord,
       "gender": gender,
@@ -64,7 +64,7 @@ class PersonsApiClient {
   Future fetchAuthorization(Member member) async {
     var url = Uri.parse('http://10.0.2.2:8080/auth/login');
     final msg = jsonEncode({
-      "nickname": member.login,
+      "nickname": member.nickname,
       "password": member.password,
     });
 
@@ -234,7 +234,7 @@ class PersonsApiClient {
 
   Future<bool> fetchValidateSecretWord(String secretWord) async {
     var url = Uri.parse('$address/validateSecretWord');
-    final token = _getToken();
+    final token = await _getToken();
     final msg = jsonEncode({
       "secretWord": secretWord
     });
@@ -255,7 +255,7 @@ class PersonsApiClient {
 
   Future fetchChangePassword(String password, String repeatPassword) async {
     var url = Uri.parse('$address/changePassword');
-    final token = _getToken();
+    final token = await _getToken();
     final msg = jsonEncode({
       "newPassword": password,
       "repeatPassword": repeatPassword
@@ -272,6 +272,25 @@ class PersonsApiClient {
       return;
     } else {
       throw Exception('Ошибка при смене пароля с кодом ${response.statusCode}');
+    }
+  }
+
+  Future<bool> fetchIsMyProfile(String nickname) async {
+    var url = Uri.parse('$address/isProfileOf/$nickname');
+    final token = await _getToken();
+
+    var response = await http.get(url,
+      headers: {
+        authorization: bearer + token.toString()
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic jsonStatus = jsonDecode(response.body);
+      final status = jsonStatus['myProfile'] as bool;
+      return status;
+    } else {
+      throw Exception('Ошибка при получении статуса профиля ${response.statusCode}');
     }
   }
 

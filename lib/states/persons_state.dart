@@ -1,58 +1,59 @@
 part of '../bloc/person_bloc.dart';
 
 @immutable
-abstract class PersonsState {}
+abstract class PersonState {}
 
-class PersonsInitial extends PersonsState {}
+class PersonsInitial extends PersonState {}
 
-class PersonsLoading extends PersonsState {}
+class PersonsLoading extends PersonState {}
 
-class PersonsLoaded extends PersonsState {
+class PersonsLoaded extends PersonState {
   final List<Member> members;
   PersonsLoaded(this.members);
 }
 
-class RegistrationSuccess extends PersonsState {
+class RegistrationSuccess extends PersonState {
 }
 
-class ExitSuccess extends PersonsState {
+class ExitSuccess extends PersonState {
 }
 
-class AuthorizationSuccess extends PersonsState {
+class AuthorizationSuccess extends PersonState {
 }
 
-class UpdateProfileSuccess extends PersonsState {
+class UpdateProfileSuccess extends PersonState {
 }
 
-class PersonsError extends PersonsState {
+class PersonsError extends PersonState {
   final String errorMessage;
   PersonsError({required this.errorMessage});
 }
 
-class OwnProfileLoaded extends PersonsState {
+class OwnProfileLoaded extends PersonState {
   final Member member;
   OwnProfileLoaded(this.member);
 }
 
-class ProfileLoaded extends PersonsState {
+class ProfileLoaded extends PersonState {
   final Member member;
-  ProfileLoaded(this.member);
+  final bool isMyProfile;
+  ProfileLoaded(this.member, this.isMyProfile);
 }
 
-class WatchingEvent extends PersonsState {}
+class WatchingEvent extends PersonState {}
 
-class JoinedToEvent extends PersonsState {
+class JoinedToEvent extends PersonState {
   final Event event;
 
   JoinedToEvent(this.event);
 }
 
-class LeavingFromEvent extends PersonsState {}
+class LeavingFromEvent extends PersonState {}
 
-class AllMembers extends PersonsState {
+class AllMembers extends PersonState {
   final List<MemberInEvent> members;
 
   AllMembers(this.members);
 }
 
-class DeletingEvent extends PersonsState {}
+class DeletingEvent extends PersonState {}

@@ -37,14 +37,18 @@ class UpdatePersonRequest {
 
 class MemberInEvent {
   late String nickname;
-  late int avatarPath;
+  late int avatarId;
   late bool isHost;
 
-  MemberInEvent({required this.nickname, required this.avatarPath, required this.isHost});
+  MemberInEvent({required this.nickname, required this.avatarId, required this.isHost});
+
+  String getAvatar() {
+    return "assets/images/$avatarId.jpg";
+  }
 
   static fromJson(json) {
     return MemberInEvent(nickname: json['nickname'] as String,
-                         avatarPath: 5,
+                         avatarId: json['avatarId'] as int,
                          isHost: json['host'] as bool);
   }
 }

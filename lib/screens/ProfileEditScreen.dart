@@ -48,7 +48,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         ?.settings
         .arguments) as Member;
 
-    loginController.text = member.login;
+    loginController.text = member.nickname;
     nameController.text = member.name;
     ageController.text = member.age == 0 ? "" : member.age.toString();
     cityController.text = member.city;
@@ -72,7 +72,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 backgroundColor: Color(0xff50bc55),
               ),
               backgroundColor: Color(0xff292929),
-              body: BlocBuilder<PersonBloc, PersonsState>(
+              body: BlocBuilder<PersonBloc, PersonState>(
                 builder: (context, state) {
                   if (state is PersonsInitial) {
                     return Center(
@@ -96,7 +96,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                           final form = formKey.currentState!;
                                           if (form.validate()) {
                                             Member profile = Member(
-                                                login: loginController.text, name: nameController.text, city: cityController.text,
+                                                nickname: loginController.text, name: nameController.text, city: cityController.text,
                                                 age: ageController.text == "" ? 0 : int.parse(ageController.text), avatarId: member.avatarId, sex: sexController.sex);
                                             bloc.add(UpdateProfile(profile));
                                           }

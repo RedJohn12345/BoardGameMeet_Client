@@ -60,7 +60,7 @@ class _EventScreenShowState extends State<EventScreenShow> {
           backgroundColor: Color(0xff50bc55),
         ),
         backgroundColor: Color(0xff292929),
-        body: BlocBuilder<PersonBloc, PersonsState> (
+        body: BlocBuilder<PersonBloc, PersonState> (
           builder: (context, state) {
             if (state is WatchingEvent) {
               return Column(

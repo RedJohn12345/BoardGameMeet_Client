@@ -30,7 +30,8 @@ class EventLoaded_State extends EventsState {
 
 class AvatarIsLoaded extends EventsState {
   final String avatar;
-  AvatarIsLoaded(this.avatar);
+  final String nickname;
+  AvatarIsLoaded(this.avatar, this.nickname);
 }
 
 class ButtonEntry extends EventsState {
