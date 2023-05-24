@@ -148,8 +148,8 @@ class EventsApiClient {
     }
   }
 
-  Future fetchBanPerson(Long eventId, String userNickname) async {
-    var url = Uri.parse('${address}banPerson');
+  Future fetchBanPerson(int eventId, String userNickname) async {
+    var url = Uri.parse('$address/kickPerson');
     final token = await _getToken();
 
     final msg = jsonEncode({
@@ -157,7 +157,7 @@ class EventsApiClient {
       "userNickname": userNickname
     });
 
-    var response = await http.put(url, body: msg,
+    var response = await http.post(url, body: msg,
       headers: {
         authorization: bearer + token.toString(),
         contentType: json

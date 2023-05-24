@@ -26,7 +26,7 @@ class EventsRepository {
   Future updateEvent(UpdateEventRequest request) async =>
       apiClient.fetchUpdateEvent(request);
 
-  Future banPerson(Long eventId, String userNickname) async =>
+  Future banPerson(int eventId, String userNickname) async =>
       apiClient.fetchBanPerson(eventId, userNickname);
 
   Future deleteEvent(int eventId) async =>

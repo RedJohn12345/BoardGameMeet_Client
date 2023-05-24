@@ -69,7 +69,10 @@ class MembersScreen extends StatelessWidget {
                                       child: IconButton(icon: Icon(
                                           Icons.disabled_by_default_outlined),
                                         color: Colors.red,
-                                        onPressed: () {},)
+                                        onPressed: () {
+                                          bloc.add(KickPerson(state.members[index].nickname, id));
+                                        },
+                                      )
                                   ),
                                 ),
                               ),
@@ -78,6 +81,11 @@ class MembersScreen extends StatelessWidget {
                     ),
                   ],
                 );
+              } else if (state is KickingPerson) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pushReplacementNamed(context, '/members', arguments: [id, isHost]);
+                });
+                return Center(child: Text("error"),);
               } else if (state is PersonsError) {
                 return Center(child: Text(state.errorMessage),);
               } else {

@@ -57,3 +57,5 @@ class AllMembers extends PersonState {
 }
 
 class DeletingEvent extends PersonState {}
+
+class KickingPerson extends PersonState {}

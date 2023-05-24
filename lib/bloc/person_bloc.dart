@@ -13,13 +13,13 @@ part '../events/persons_event.dart';
 part '../states/persons_state.dart';
 
 
-class PersonBloc extends Bloc<PersonsEvent, PersonState> {
+class PersonBloc extends Bloc<PersonEvent, PersonState> {
   final PersonsRepository personRepository;
   PersonBloc({required this.personRepository}) : super(PersonsInitial());
 
   @override
   Stream<PersonState> mapEventToState(
-      PersonsEvent event,
+      PersonEvent event,
       ) async* {
     if (event is RegistrationPerson) {
       yield PersonsLoading();
@@ -105,6 +105,14 @@ class PersonBloc extends Bloc<PersonsEvent, PersonState> {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         await eventRepository.deleteEvent(event.eventId);
         yield DeletingEvent();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is KickPerson) {
+      try {
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        await eventRepository.banPerson(event.eventId, event.nickname);
+        yield KickingPerson();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }
