@@ -1,47 +1,50 @@
 part of '../bloc/person_bloc.dart';
 
 @immutable
-abstract class PersonsEvent {}
+abstract class PersonEvent {}
 
-class RegistrationPerson extends PersonsEvent {
+class RegistrationPerson extends PersonEvent {
   final Member member;
 
   RegistrationPerson(this.member);
 
 }
 
-class AuthorizationPerson extends PersonsEvent {
+class AuthorizationPerson extends PersonEvent {
   final Member member;
 
   AuthorizationPerson(this.member);
 
 }
 
-class LoadPersonsByEvent extends PersonsEvent {
+class LoadPersonsByEvent extends PersonEvent {
 }
 
-class ExitProfile extends PersonsEvent {}
+class ExitProfile extends PersonEvent {}
 
-class LoadOwnProfile extends PersonsEvent {
+class LoadOwnProfile extends PersonEvent {
 }
 
-class UpdateProfile extends PersonsEvent {
+class UpdateProfile extends PersonEvent {
   final Member member;
 
   UpdateProfile(this.member);
 }
 
-class LoadProfile extends PersonsEvent {
+class LoadProfile extends PersonEvent {
   final String nickname;
 
   LoadProfile(this.nickname);
 }
 
-class WatchEvent extends PersonsEvent {}
+class WatchEvent extends PersonEvent {
+  final int eventId;
 
-class InitialEvent extends PersonsEvent {}
+  WatchEvent(this.eventId);
+}
+class InitialEvent extends PersonEvent {}
 
-class ChangePasswordEvent extends PersonsEvent {
+class ChangePasswordEvent extends PersonEvent {
   final String password;
   final String passwordRepeat;
   final String nickname;
@@ -49,27 +52,40 @@ class ChangePasswordEvent extends PersonsEvent {
   ChangePasswordEvent(this.password, this.passwordRepeat, this.nickname);
 }
 
-class ValidateSecretWordEvent extends PersonsEvent {
+class ValidateSecretWordEvent extends PersonEvent {
   final NickNameAndSecretWord nickNameAndSecretWord;
 
   ValidateSecretWordEvent(this.nickNameAndSecretWord);
 
 }
 
-class JoinToEvent extends PersonsEvent {
+class JoinToEvent extends PersonEvent {
   final int? eventId;
 
   JoinToEvent({required this.eventId});
 }
 
-class LeaveFromEvent extends PersonsEvent {
+class LeaveFromEvent extends PersonEvent {
   final int? eventId;
 
   LeaveFromEvent(this.eventId);
 }
 
-class AllMembersOfEvent extends PersonsEvent {
+class AllMembersOfEvent extends PersonEvent {
   final int eventId;
 
   AllMembersOfEvent(this.eventId);
+}
+
+class DeleteEvent extends PersonEvent {
+  final int eventId;
+
+  DeleteEvent(this.eventId);
+}
+
+class KickPerson extends PersonEvent {
+  final String nickname;
+  final int eventId;
+
+  KickPerson(this.nickname, this.eventId);
 }

@@ -1,22 +1,26 @@
 import 'dart:async';
+import 'package:boardgm/apiclient/events_api_client.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/model/member.dart';
+import 'package:boardgm/repositories/events_repository.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+
+import '../model/event.dart';
 part '../events/persons_event.dart';
 part '../states/persons_state.dart';
 
 
-class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
+class PersonBloc extends Bloc<PersonEvent, PersonState> {
   final PersonsRepository personRepository;
   PersonBloc({required this.personRepository}) : super(PersonsInitial());
 
   @override
-  Stream<PersonsState> mapEventToState(
-      PersonsEvent event,
+  Stream<PersonState> mapEventToState(
+      PersonEvent event,
       ) async* {
     if (event is RegistrationPerson) {
       yield PersonsLoading();
@@ -46,7 +50,8 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       yield PersonsLoading();
       try {
         Member member =  await personRepository.getProfile(event.nickname);
-        yield OwnProfileLoaded(member);
+        bool profileStatus = await personRepository.isMyProfile(event.nickname);
+        yield ProfileLoaded(member, profileStatus);
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }
@@ -63,7 +68,7 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       yield PersonsLoading();
       try {
         await personRepository.updatePerson(UpdatePersonRequest(event.member.name,
-            event.member.login, event.member.city, event.member.age, event.member.sex, event.member.avatarId));
+            event.member.nickname, event.member.city, event.member.age, event.member.sex, event.member.avatarId));
         yield UpdateProfileSuccess();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
@@ -74,7 +79,9 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
       yield PersonsLoading();
       try {
         await personRepository.joinToEvent(event.eventId);
-        yield JoinedToEvent();
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        Event selectedEvent = await eventRepository.getEvent(event.eventId!);
+        yield JoinedToEvent(selectedEvent);
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }
@@ -110,6 +117,22 @@ class PersonBloc extends Bloc<PersonsEvent, PersonsState> {
     } else if (event is InitialEvent) {
       try {
         yield PersonsInitial();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is DeleteEvent) {
+      try {
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        await eventRepository.deleteEvent(event.eventId);
+        yield DeletingEvent();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is KickPerson) {
+      try {
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        await eventRepository.kickPerson(event.eventId, event.nickname);
+        yield KickingPerson();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }

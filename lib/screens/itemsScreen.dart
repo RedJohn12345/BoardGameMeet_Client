@@ -4,11 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../apiclient/persons_api_client.dart';
 import '../model/item.dart';
-import '../model/member.dart';
 import '../repositories/persons_repository.dart';
-import '../widgets/LoginWidget.dart';
 import '../widgets/NameWidget.dart';
-import '../widgets/PasswordWidget.dart';
 
 class ItemsScreen extends StatefulWidget {
 
@@ -46,7 +43,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
           backgroundColor: Color(0xff50bc55),
         ),
         backgroundColor: Color(0xff292929),
-        body: BlocBuilder<PersonBloc, PersonsState> (
+        body: BlocBuilder<PersonBloc, PersonState> (
           builder: (context, state) {
             if (state is PersonsInitial ) {
               return Padding(

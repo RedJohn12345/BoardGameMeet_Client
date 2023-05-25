@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../apiclient/events_api_client.dart';
 import '../bloc/events_bloc.dart';
-import '../model/event.dart';
+import '../model/dto/event_dto.dart';
 import '../repositories/events_repository.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
-  List<Event> events = [];
+  List<MainPageEvent> events = [];
   Widget button = Container();
   final scrollController = ScrollController();
   final bloc = EventsBloc(
@@ -64,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<EventsBloc, EventsState>(
         builder: (context, state) {
-          if (state is EventsLoaded) {
+          if (state is MainPageEventsLoaded) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
                 events = state.events;
@@ -92,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
                 button = FloatingActionButton(onPressed: () {
-                  Navigator.pushNamed(context, '/profile');
+                  Navigator.pushNamed(context, '/profile', arguments: state.nickname);
                 },
                   child: CircleAvatar(
                     backgroundImage: AssetImage(state.avatar),
@@ -189,12 +189,19 @@ class _MainScreenState extends State<MainScreen> {
                     color: Colors.white,
                     child: ListTile(
                         onTap: () {
-                          Navigator.pushNamed(context, '/eventShow', arguments: events[index]);
+                          MainPageEvent selectedEvent = events[index];
+                          Navigator.pushNamed(context, '/eventShow',
+                              arguments: [selectedEvent.name,
+                                          selectedEvent.game,
+                                          selectedEvent.date,
+                                          selectedEvent.address,
+                                          selectedEvent.viewCountPlayers(),
+                                          selectedEvent.id]);
                         },
                         title: Text(events[index].name),
                         subtitle: Text(
                             "${events[index].game} - ${events[index].date
-                                .toString()} - ${events[index].location}")
+                                .toString()} - ${events[index].address}")
                     ),
                   )
           ),

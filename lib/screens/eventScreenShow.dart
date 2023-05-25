@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
-import '../model/event.dart';
-
 class EventScreenShow extends StatefulWidget {
 
   EventScreenShow({super.key});
@@ -27,36 +25,42 @@ class _EventScreenShowState extends State<EventScreenShow> {
   @override
   Widget build(BuildContext context) {
 
-    final event = (ModalRoute.of(context)?.settings.arguments) as Event;
+    final arguments = (ModalRoute.of(context)?.settings.arguments) as List;
+    final name = arguments[0] as String;
+    final game = arguments[1] as String;
+    final date = arguments[2] as DateTime;
+    final address = arguments[3] as String;
+    final viewCountPlayers = arguments[4] as String;
+    final eventId = arguments[5] as int;
 
 
     final List<Widget> params = [
       const Center(child: Text("Игра", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      Center(child: Text(event.game, style: TextStyle(color: Colors.black, fontSize: 24)),),
+      Center(child: Text(game, style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Дата", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      Center(child: Text(event.date.toString(), style: TextStyle(color: Colors.black, fontSize: 24)),),
+      Center(child: Text(date.toString(), style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Место", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      Center(child: Text(event.location, style: TextStyle(color: Colors.black, fontSize: 24)),),
+      Center(child: Text(address, style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Количество игроков", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      Center(child: Text(event.viewCountPlayers(), style: TextStyle(color: Colors.black, fontSize: 24),),),
+      Center(child: Text(viewCountPlayers, style: TextStyle(color: Colors.black, fontSize: 24),),),
       const SizedBox(height: 16,),
     ];
 
     return BlocProvider<PersonBloc>(
-      create: (context) => bloc..add(WatchEvent()),
+      create: (context) => bloc..add(WatchEvent(eventId)),
       child: Scaffold(
         appBar: AppBar(
           title:
-              Text(event.name, style: TextStyle(fontSize: 24),),
+              Text(name, style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
           backgroundColor: Color(0xff50bc55),
         ),
         backgroundColor: Color(0xff292929),
-        body: BlocBuilder<PersonBloc, PersonsState> (
+        body: BlocBuilder<PersonBloc, PersonState> (
           builder: (context, state) {
             if (state is WatchingEvent) {
               return Column(
@@ -82,7 +86,7 @@ class _EventScreenShowState extends State<EventScreenShow> {
                           Expanded(
                             child: ElevatedButton(onPressed: () {
                               setState(() {
-                                bloc.add(JoinToEvent(eventId: event.id));
+                                bloc.add(JoinToEvent(eventId: eventId));
                               });
                             },
                               child: Text("Вступить"),
@@ -97,9 +101,9 @@ class _EventScreenShowState extends State<EventScreenShow> {
                 ],);
             } else if (state is JoinedToEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                event.numberPlayers++;
+                // event.numberPlayers++;
                 Navigator.pushReplacementNamed(
-                    context, '/event', arguments: [event, '/home']);
+                    context, '/event', arguments: [state.event, '/home']);
               });
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is PersonsError) {

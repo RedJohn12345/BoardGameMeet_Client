@@ -21,6 +21,12 @@ class LoadEvent extends EventsEvent {
   LoadEvent(this.id);
 }
 
+class EventLoaded_Event extends EventsEvent {
+  final Event event;
+
+  EventLoaded_Event(this.event);
+}
+
 class CreateEvent extends EventsEvent {
   final CreateEventRequest event;
 

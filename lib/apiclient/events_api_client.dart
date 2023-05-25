@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/item.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +32,7 @@ class EventsApiClient {
     }
   }
 
-  Future<List> fetchEvents(String city, String? search, int page) async {
+  Future<List<MainPageEvent>> fetchEvents(String city, String? search, int page) async {
     //final String url = '$_baseUrl/';
     final Uri url;
     if (search != null) {
@@ -56,8 +55,12 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       // Парсим JSON-ответ и преобразуем его в список событий
-      final List<dynamic> eventsJson = jsonDecode(response.body);
-      return eventsJson.map((json) => Event.fromJson(json)).toList();
+      final List<dynamic> jsonEvents = jsonDecode(response.body);
+      List<MainPageEvent> mainPageEvents = [];
+      for(var jsonEvent in jsonEvents) {
+        mainPageEvents.add(MainPageEvent.fromJson(jsonEvent));
+      }
+      return mainPageEvents;
     } else {
       throw Exception(response.statusCode);
     }
@@ -106,7 +109,8 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       final dynamic eventJson = jsonDecode(response.body);
-      return eventJson.map((json) => Event.fromJson(json));
+      Event event = Event.fromJson(eventJson);
+      return event;
     } else {
       throw Exception("Ошибка при загрузке ивента с id=$eventId");
     }
@@ -143,8 +147,8 @@ class EventsApiClient {
     }
   }
 
-  Future fetchBanPerson(Long eventId, String userNickname) async {
-    var url = Uri.parse('${address}banPerson');
+  Future fetchKickPerson(int eventId, String userNickname) async {
+    var url = Uri.parse('$address/kickPerson');
     final token = await _getToken();
 
     final msg = jsonEncode({
@@ -152,7 +156,7 @@ class EventsApiClient {
       "userNickname": userNickname
     });
 
-    var response = await http.put(url, body: msg,
+    var response = await http.post(url, body: msg,
       headers: {
         authorization: bearer + token.toString(),
         contentType: json
@@ -166,9 +170,9 @@ class EventsApiClient {
     }
   }
 
-  Future fetchDeleteEvent(Long eventId) async {
+  Future fetchDeleteEvent(int eventId) async {
     var url = Uri.parse('$address/deleteEvent/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
 
     var response = await http.delete(url, headers: {
       authorization: bearer + token.toString()
@@ -181,9 +185,9 @@ class EventsApiClient {
     }
   }
 
-  Future<List> fetchGetItems(Long eventId) async {
+  Future<List> fetchGetItems(int eventId) async {
     var url = Uri.parse('$address/getItemsIn/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
 
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
@@ -198,9 +202,9 @@ class EventsApiClient {
     }
   }
 
-  Future fetchEditItemsIn(Long eventId, List<Item> items) async {
+  Future fetchEditItemsIn(int eventId, List<Item> items) async {
     var url = Uri.parse('$address/editItemsIn/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
     var itemsMap = items.map((item) {
       return {
         "name": item.name,
@@ -224,9 +228,9 @@ class EventsApiClient {
     }
   }
 
-  Future fetchMarkItemsIn(Long eventId, List<Item> items) async {
+  Future fetchMarkItemsIn(int eventId, List<Item> items) async {
     var url = Uri.parse('$address/markItemsIn/$eventId');
-    final token = _getToken();
+    final token = await _getToken();
     var itemsMap = items.map((item) {
       return {
         "marked": item.marked

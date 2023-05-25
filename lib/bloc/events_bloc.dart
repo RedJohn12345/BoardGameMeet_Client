@@ -34,12 +34,12 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         if (await Preference.checkToken()) {
           personsRepository = PersonsRepository(apiClient: PersonsApiClient());
           final profile = await personsRepository.getOwnProfile();
-          yield AvatarIsLoaded(profile.getAvatar());
+          yield AvatarIsLoaded(profile.getAvatar(), profile.nickname);
         } else {
           yield ButtonEntry();
         }
         final events = await eventsRepository.getMyEvents(page);
-        yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
+        yield MyEventsLoaded(listEvents..addAll(events.cast<Event>()));
         page++;
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
@@ -54,12 +54,12 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         if (await Preference.checkToken()) {
           personsRepository = PersonsRepository(apiClient: PersonsApiClient());
           final profile = await personsRepository.getOwnProfile();
-          yield AvatarIsLoaded(profile.getAvatar());
+          yield AvatarIsLoaded(profile.getAvatar(), profile.nickname);
         } else {
           yield ButtonEntry();
         }
         final events = await eventsRepository.getEvents(event.city, event.search, page);
-        yield EventsLoaded(listEvents..addAll(events.cast<Event>()));
+        yield MainPageEventsLoaded(events);
         page++;
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
@@ -68,7 +68,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       yield EventsLoading();
       try {
         final responseEvent = await eventsRepository.getEvent(event.id);
-        yield EventLoaded(responseEvent);
+        yield EventLoaded_State(responseEvent);
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }

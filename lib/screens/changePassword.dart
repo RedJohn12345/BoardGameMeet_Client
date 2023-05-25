@@ -44,7 +44,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           backgroundColor: Color(0xff50bc55),
         ),
         backgroundColor: Color(0xff292929),
-        body: BlocBuilder<PersonBloc, PersonsState>(
+        body: BlocBuilder<PersonBloc, PersonState>(
           builder: (context, state) {
             if (state is PersonsInitial) {
             return Center(

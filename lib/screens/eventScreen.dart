@@ -2,6 +2,7 @@ import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/event.dart';
 import '../model/item.dart';
@@ -87,13 +88,13 @@ class _EventScreenState extends State<EventScreen> {
           backgroundColor: Color(0xff50bc55),
           actions: [
             IconButton(onPressed: () {
-              Navigator.pushNamed(context, '/members', arguments: event.id);
+              Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]);
             },
                 icon: Icon(Icons.account_box_sharp))
           ],
         ),
         backgroundColor: Color(0xff292929),
-        body: BlocBuilder<PersonBloc, PersonsState>(
+        body: BlocBuilder<PersonBloc, PersonState>(
           builder: (context, state) {
             if (state is PersonsInitial) {
               return Column(
@@ -116,15 +117,34 @@ class _EventScreenState extends State<EventScreen> {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                         children: [
-                          Expanded(
-                            child: ElevatedButton(onPressed: () {
-                              personBloc.add(LeaveFromEvent(event.id));
-                            },
-                              child: Text("Покинуть"),
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll<
-                                      Color>(Color(0xff50bc55))),
-                            ),
+                          Visibility(
+                            visible: event.isHost,
+                              //   () async {
+                              // return await _isAdmin();
+                              // },
+                              child: Expanded(
+                                child: ElevatedButton(onPressed: () {
+                                  personBloc.add(DeleteEvent(event.id!));
+                                },
+                                child: Text("Удалить"),
+                                style: const ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(0xff50bc55))),
+                                ),
+                              )
+                          ),
+                          Visibility(
+                            visible: !event.isHost,
+                            child: Expanded(
+                              child: ElevatedButton(onPressed: () {
+                                personBloc.add(LeaveFromEvent(event.id));
+                              },
+                                child: Text("Покинуть"),
+                                style: const ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(0xff50bc55))),
+                              ),
+                            )
                           ),
                           const SizedBox(width: 16,),
                           Expanded(
@@ -146,6 +166,11 @@ class _EventScreenState extends State<EventScreen> {
                 Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
               });
               return const Center(child: CircularProgressIndicator(),);
+            } else if (state is DeletingEvent) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
+              });
+              return const Center(child: CircularProgressIndicator(),);
             } else if (state is PersonsError) {
               return Center(child: Text(state.errorMessage),);
             } else {
@@ -155,5 +180,10 @@ class _EventScreenState extends State<EventScreen> {
         )
       ),
     );
+  }
+
+  static Future<bool> _isAdmin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('role') == 'USER_ADMIN';
   }
 }

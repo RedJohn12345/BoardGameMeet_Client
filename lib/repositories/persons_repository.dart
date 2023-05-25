@@ -44,4 +44,10 @@ class PersonsRepository {
 
   Future changePassword(String password, String repeatPassword, String nickname) async =>
       apiClient.fetchChangePassword(password, repeatPassword, nickname);
+
+  // Future changePassword(String password, String repeatPassword) async =>
+  //     apiClient.fetchChangePassword(password, repeatPassword);
+
+  Future<bool> isMyProfile(String nickname) async =>
+      apiClient.fetchIsMyProfile(nickname);
 }
