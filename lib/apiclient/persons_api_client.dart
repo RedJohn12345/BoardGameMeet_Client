@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:html';
 import 'package:boardgm/model/Sex.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/utils/yandexMapKit.dart';
@@ -78,7 +79,9 @@ class PersonsApiClient {
       print(response.body);
       final body = jsonDecode(response.body);
       final token = body['token'];
+      final role = body['role'] as String;
       await _saveToken(token);
+      await _saveRole(role);
       return;
     } else {
       throw Exception(response.statusCode);
@@ -294,7 +297,7 @@ class PersonsApiClient {
     }
   }
 
-  static Future<void> _saveToken(String token) async {
+  static Future _saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
   }
@@ -303,9 +306,15 @@ class PersonsApiClient {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
+
   static Future _deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
+  }
+
+  static Future _saveRole(String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('role', role);
   }
 
 }

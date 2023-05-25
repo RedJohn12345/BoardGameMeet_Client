@@ -2,6 +2,7 @@ import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/event.dart';
 import '../model/item.dart';
@@ -118,6 +119,9 @@ class _EventScreenState extends State<EventScreen> {
                         children: [
                           Visibility(
                             visible: event.isHost,
+                              //   () async {
+                              // return await _isAdmin();
+                              // },
                               child: Expanded(
                                 child: ElevatedButton(onPressed: () {
                                   personBloc.add(DeleteEvent(event.id!));
@@ -176,5 +180,10 @@ class _EventScreenState extends State<EventScreen> {
         )
       ),
     );
+  }
+
+  static Future<bool> _isAdmin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('role') == 'USER_ADMIN';
   }
 }
