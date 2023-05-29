@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
+import 'package:boardgm/model/item.dart';
 import 'package:boardgm/utils/preference.dart';
+import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -16,7 +18,9 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   final EventsRepository eventsRepository;
   late PersonsRepository personsRepository;
   int page = 0;
+  String? city;
   List<Event> listEvents = [];
+  List<MainPageEvent> listMainPageEvents = [];
 
   EventsBloc({required this.eventsRepository}) : super(EventsInitial());
 
@@ -55,11 +59,13 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
           personsRepository = PersonsRepository(apiClient: PersonsApiClient());
           final profile = await personsRepository.getOwnProfile();
           yield AvatarIsLoaded(profile.getAvatar(), profile.nickname);
+          city = profile.city;
         } else {
           yield ButtonEntry();
+          city = await YandexMapKitUtil.getCity();
         }
-        final events = await eventsRepository.getEvents(event.city, event.search, page);
-        yield MainPageEventsLoaded(events);
+        final events = await eventsRepository.getEvents(city!, event.search, page);
+        yield MainPageEventsLoaded(listMainPageEvents..addAll(events.cast<MainPageEvent>()));
         page++;
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
@@ -69,6 +75,8 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       try {
         final responseEvent = await eventsRepository.getEvent(event.id);
         yield EventLoaded_State(responseEvent);
+        final items = await eventsRepository.getItems(event.id);
+        yield ItemsLoaded(items.cast<Item>());
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }
@@ -77,6 +85,14 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       try {
         await eventsRepository.createEvent(event.event);
         yield EventCreated();
+      } catch (e) {
+        yield EventsError(errorMessage: e.toString());
+      }
+    } else if (event is UpdateEvent) {
+      yield EventsLoading();
+      try {
+        await eventsRepository.updateEvent(event.event);
+        yield EventUpdated();
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }

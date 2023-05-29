@@ -29,6 +29,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final id = (ModalRoute.of(context)?.settings.arguments) as int;
     final bloc =  PersonBloc(
         personRepository: PersonsRepository(
             apiClient: PersonsApiClient()));
@@ -50,48 +51,55 @@ class _ItemsScreenState extends State<ItemsScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    ListView.builder(
-                      //shrinkWrap: true,
-                        itemCount: items.length,
-                        itemBuilder: (_, index) =>
-                            Card(
-                              color: Colors.white,
-                              child: ListTile(
-                                  title: Text(items[index].name),
-                                  trailing: IconButton(icon: Icon(Icons.dangerous), onPressed: () {
-                                    items.removeAt(index);
-                                  },),
-                              ),
-                            )
+                    Expanded(
+                      flex: 5,
+                      child: ListView.builder(
+                        //shrinkWrap: true,
+                          itemCount: items.length,
+                          itemBuilder: (_, index) =>
+                              Card(
+                                color: Colors.white,
+                                child: ListTile(
+                                    title: Text(items[index].name),
+                                    trailing: IconButton(icon: Icon(Icons.dangerous), onPressed: () {
+                                      items.removeAt(index);
+                                    },),
+                                ),
+                              )
+                      ),
                     ),
                     const SizedBox(height: 16,),
-                    Center(
-                      child: Form(
-                        key: formKey,
-                        child: SingleChildScrollView(
-                          child: Row(
-                              children: [
-                                const SizedBox(width: 16,),
-                                Expanded(child: NameWidget(controller: itemController, withHelper: false, text: "Название предмета",)),
-                                const SizedBox(width: 16,),
-                                Expanded(
-                                  child: ElevatedButton( onPressed: () {
-                                    final form = formKey.currentState!;
-                                    if (form.validate()) {
-                                      items.add(Item(name: itemController.text, marked: false));
-                                    }
-                                  },
-                                    child: Text("Добавить"),
-                                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                    Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: Form(
+                          key: formKey,
+                          child: SingleChildScrollView(
+                            child: Row(
+                                children: [
+                                  const SizedBox(width: 16,),
+                                  Expanded(child: NameWidget(controller: itemController, withHelper: false, text: "Название предмета",)),
+                                  const SizedBox(width: 16,),
+                                  Expanded(
+                                    child: ElevatedButton( onPressed: () {
+                                      final form = formKey.currentState!;
+                                      if (form.validate()) {
+                                        items.add(Item(name: itemController.text, marked: false));
+                                      }
+                                    },
+                                      child: Text("Добавить"),
+                                      style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 16,),
-                              ]),
+                                  const SizedBox(width: 16,),
+                                ]),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 16,),
                     Expanded(
+                      flex: 1,
                       child: ElevatedButton( onPressed: () {
                         //
                       },

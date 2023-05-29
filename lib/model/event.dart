@@ -18,7 +18,7 @@ class Event {
 
   Event({required this.id, this.name = "", this.game = "",
     this.location = "", this.numberPlayers = 0,  this.maxNumberPlayers = 0, this.description = "",
-    required this.isHost});
+    required this.isHost, this.minAge = 0, this.maxAge = 0});
 
   /*Event({required this.name, required this.game, required this.date,
     required this.location, required this.numberPlayers, required this.maxNumberPlayers, required this});*/

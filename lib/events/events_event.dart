@@ -21,6 +21,12 @@ class LoadEvent extends EventsEvent {
   LoadEvent(this.id);
 }
 
+class LoadItems extends EventsEvent {
+  final int id;
+
+  LoadItems(this.id);
+}
+
 class EventLoaded_Event extends EventsEvent {
   final Event event;
 
@@ -31,6 +37,12 @@ class CreateEvent extends EventsEvent {
   final CreateEventRequest event;
 
   CreateEvent(this.event);
+}
+
+class UpdateEvent extends EventsEvent {
+  final UpdateEventRequest event;
+
+  UpdateEvent(this.event);
 }
 
 // class LeaveFromEvent extends EventsEvent {

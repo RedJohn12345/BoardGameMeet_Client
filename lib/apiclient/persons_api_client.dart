@@ -90,7 +90,6 @@ class PersonsApiClient {
   Future<Member> fetchGetProfile(String userNickname) async {
     var url = Uri.parse('$address/profile/$userNickname');
     final token = await Preference.getToken();
-
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
     });
@@ -122,7 +121,6 @@ class PersonsApiClient {
   Future<Member> fetchGetOwnProfile() async {
     var url = Uri.parse('$address/ownProfile');
     final token = await _getToken();
-
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
     });

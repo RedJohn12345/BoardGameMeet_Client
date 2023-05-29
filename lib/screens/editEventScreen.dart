@@ -1,4 +1,5 @@
 import 'package:boardgm/model/dto/event_dto.dart';
+import 'package:boardgm/model/event.dart';
 import 'package:boardgm/widgets/AddressWidget.dart';
 import 'package:boardgm/widgets/DateTimeWidget.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,17 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Event? event = (ModalRoute.of(context)?.settings.arguments == null) ? null : ModalRoute.of(context)?.settings.arguments as Event;
+    if (event != null) {
+      nameController.text = event.name;
+      gameController.text = event.game;
+      addressController.text = event.location;
+      countPlayersController.text = event.maxNumberPlayers.toString();
+      dateController.text = event.date!.toIso8601String();
+      descriptionController.text = event.description;
+      ageFromController.text = event.minAge == 0 ? "" : event.minAge.toString();
+      ageToController.text = event.maxAge == 0 ? "" : event.maxAge.toString();
+    }
     DateTimeWidget dateTimeWidget = DateTimeWidget(controller: dateController, withHelper: true,);
     final bloc = EventsBloc(
         eventsRepository: EventsRepository(
@@ -73,7 +85,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                   child: SingleChildScrollView(
                     padding: EdgeInsets.all(16),
                     child: Column(
-                        children: getColumn(bloc, dateTimeWidget)),
+                        children: getColumn(bloc, dateTimeWidget, event)),
                   ),
                 )
               );
@@ -88,6 +100,12 @@ class _EditEventScreenState extends State<EditEventScreen> {
           });
           return const Center(child: CircularProgressIndicator(),);
           }
+            else if (state is EventUpdated) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pop(context);
+              });
+              return const Center(child: CircularProgressIndicator(),);
+            }
         else {
               return Container();
             }
@@ -97,7 +115,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
     );
   }
 
-  List<Widget> getColumn(EventsBloc bloc, DateTimeWidget dateTimeWidget) {
+  List<Widget> getColumn(EventsBloc bloc, DateTimeWidget dateTimeWidget, Event? event) {
     return [
       NameWidget(controller: nameController, withHelper: true, text: "Название мероприятия"),
       const SizedBox(height: 16,),
@@ -130,18 +148,23 @@ class _EditEventScreenState extends State<EditEventScreen> {
                 final form = formKey.currentState!;
                 if (form.validate()) {
                   setState(() {
-                    CreateEventRequest request = CreateEventRequest(
-                        name: nameController.text, game:  gameController.text,
-                        city: "Voronezh", address: addressController.text, date: dateTimeWidget.selectedDate,
-                        maxPersonCount: int.parse(countPlayersController.text),
-                        minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0,
-                        maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0,
-                        description: descriptionController.text);
-                    // request.date = dateTimeWidget.selectedDate;
-                    // request.minAge = ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0;
-                    // request.maxAge = ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0;
-                    // request.city = "Voronezh";
-                    bloc.add(CreateEvent(request));
+                    if (event == null) {
+                      CreateEventRequest request = CreateEventRequest(
+                          name: nameController.text, game:  gameController.text,  address: addressController.text, date: dateTimeWidget.selectedDate,
+                          maxPersonCount: int.parse(countPlayersController.text),
+                          minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0,
+                          maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0,
+                          description: descriptionController.text);
+                      bloc.add(CreateEvent(request));
+                    } else {
+                      UpdateEventRequest request = UpdateEventRequest(id: event.id!,
+                          name: nameController.text, game:  gameController.text,  address: addressController.text, date: dateTimeWidget.selectedDate,
+                          maxPersonCount: int.parse(countPlayersController.text),
+                          minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0,
+                          maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0,
+                          description: descriptionController.text);
+                      bloc.add(UpdateEvent(request));
+                    }
                   });
                 }
               },

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/item.dart';
+import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,7 +17,6 @@ class EventsApiClient {
   static const address = 'http://10.0.2.2:8080';
 
   Future<List> fetchMyEvents(int page) async {
-    //final String url = '$_baseUrl/';
     var url = Uri.parse('http://10.0.2.2:8080/myEvents?page=$page&size=20');
     final token = await _getToken();
     var response = await http.get(url,
@@ -70,11 +70,11 @@ class EventsApiClient {
     //final String url = '$_baseUrl/';
     var url = Uri.parse('http://10.0.2.2:8080/createEvent');
     final token = await _getToken();
-
+    final city = await YandexMapKitUtil.getCityByAddress(request.address);
     final msg = jsonEncode({
     "name": request.name,
     "game": request.game,
-    "city": request.city,
+    "city": city,
     "address": request.address,
     "date": request.date.toIso8601String(),
     "maxPersonCount": request.maxPersonCount,
@@ -119,20 +119,21 @@ class EventsApiClient {
   Future fetchUpdateEvent(UpdateEventRequest request) async {
     var url = Uri.parse('http://10.0.2.2:8080/updateEvent');
     final token = await _getToken();
-
+    final city = await YandexMapKitUtil.getCityByAddress(request.address);
     final msg = jsonEncode({
       "id": request.id,
       "name": request.name,
       "game": request.game,
-      "city": request.city,
+      "city": city,
       "address": request.address,
-      "date": request.date,
+      "date": request.date.toIso8601String(),
       "maxPersonCount": request.maxPersonCount,
       "minAge": request.minAge,
       "maxAge": request.maxAge,
       "description": request.description
     });
 
+    print(msg);
     var response = await http.put(url, body: msg,
       headers: {
         authorization: bearer + token.toString(),

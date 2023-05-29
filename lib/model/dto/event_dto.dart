@@ -3,10 +3,9 @@ import 'dart:core';
 import 'dart:ffi';
 
 class UpdateEventRequest {
-  late Long id;
+  late int id;
   late String name;
   late String game;
-  late String city;
   late String address;
   late DateTime date;
   late int maxPersonCount;
@@ -14,14 +13,13 @@ class UpdateEventRequest {
   late int maxAge;
   late String description;
 
-  UpdateEventRequest(this.id, this.name, this.game, this.city, this.address,
-      this.date, this.maxPersonCount, this.minAge, this.maxAge, this.description);
+  UpdateEventRequest({required this.id, required this.name, required this.game, required this.address,
+      required this.date, required this.maxPersonCount, required this.minAge,  required this.maxAge, required this.description});
 }
 
 class CreateEventRequest {
   late String name;
   late String game;
-  late String city;
   late String address;
   late DateTime date;
   late int maxPersonCount;
@@ -29,8 +27,7 @@ class CreateEventRequest {
   late int? maxAge;
   late String description;
 
-  CreateEventRequest({required this.name, required this.game, required this.city,
-                      required this.address, required this.date, required this.maxPersonCount,
+  CreateEventRequest({required this.name, required this.game, required this.address, required this.date, required this.maxPersonCount,
                       required this.minAge, required this.maxAge, required this.description});
 }
 

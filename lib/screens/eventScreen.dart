@@ -56,16 +56,36 @@ class _EventScreenState extends State<EventScreen> {
     for (Item item in event.items.keys) {
       items.add(Container(
         decoration: BoxDecoration(border: Border.all(width: 2, color: Colors.black), borderRadius: BorderRadius.circular(20)),
-        child: CheckboxListTile(
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Text(item.name),
-            value: event.items[item],
-            onChanged: (bool? value) {
-              setState(() {
-                event.items[item] = value!;
-              });
-            },
-          ),
+        child: Column(
+          children: [
+            Visibility(
+                visible: event.isHost,
+                //   () async {
+                // return await _isAdmin();
+                // },
+                child: Expanded(
+                  child: ElevatedButton(onPressed: () {
+                    Navigator.pushNamed(context, "/items", arguments: event.id!);
+                  },
+                    child: Text("Редактировать список предметов"),
+                    style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll<
+                            Color>(Color(0xff50bc55))),
+                  ),
+                )
+            ),
+            CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                title: Text(item.name),
+                value: event.items[item],
+                onChanged: (bool? value) {
+                  setState(() {
+                    event.items[item] = value!;
+                  });
+                },
+              ),
+          ],
+        ),
       ),
       );
       items.add(const SizedBox(height: 10,),);
@@ -90,7 +110,14 @@ class _EventScreenState extends State<EventScreen> {
             IconButton(onPressed: () {
               Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]);
             },
-                icon: Icon(Icons.account_box_sharp))
+                icon: Icon(Icons.account_box_sharp)),
+            Visibility(
+                visible: event.isHost,
+                child: IconButton(onPressed: () {
+                  Navigator.pushNamed(context, '/editEvent', arguments: event);
+                },
+                    icon: Icon(Icons.edit)),
+            ),
           ],
         ),
         backgroundColor: Color(0xff292929),

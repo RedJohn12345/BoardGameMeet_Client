@@ -1,4 +1,5 @@
 import 'package:boardgm/model/Location.dart';
+import 'package:boardgm/utils/preference.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -8,6 +9,28 @@ class YandexMapKitUtil {
     //LocationPermission status = await Geolocator.checkPermission();
     return await getLocation(status);
   }
+
+  static Future<String> getCityByAddress(String address) async {
+    return await searchCityByAddress(address);
+  }
+
+  static Future<String> searchCityByAddress(address) async {
+
+    final resultWithSession = YandexSearch.searchByText(searchText: address, geometry: Geometry.fromBoundingBox(BoundingBox(
+        northEast: Point(latitude: 71.155753, longitude: -177.650671),
+        southWest: Point(latitude: 44.063222,  longitude: 180.940636)
+    ),), searchOptions: SearchOptions());
+
+    return await findCity(resultWithSession);
+
+  }
+
+  static Future<String> findCity(SearchResultWithSession resultWithSession) async {
+    var result = await resultWithSession.result;
+
+    return result.items!.first.toponymMetadata!.address.addressComponents[SearchComponentKind.locality]!;
+  }
+
 
   static Future getLocation(status) async {
     bool isMoscow = !(status == LocationPermission.always || status == LocationPermission.whileInUse);
