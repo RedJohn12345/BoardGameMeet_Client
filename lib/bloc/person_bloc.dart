@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:boardgm/apiclient/events_api_client.dart';
+import 'package:boardgm/bloc/events_bloc.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
+import 'package:boardgm/model/item.dart';
 import 'package:boardgm/model/member.dart';
 import 'package:boardgm/repositories/events_repository.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
@@ -133,6 +135,29 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         await eventRepository.kickPerson(event.eventId, event.nickname);
         yield KickingPerson();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is LoadEventForPerson) {
+      try {
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        var items = await eventRepository.getItems(event.eventId);
+        yield EventForPersonLoaded(items.cast<Item>());
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is EditItems) {
+      try {
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        await eventRepository.editItems(event.eventId, event.items);
+        yield ItemsEdited();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is BanPerson) {
+      try {
+        await personRepository.deletePerson(event.nickname);
+        yield PersonBanned();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }

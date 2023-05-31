@@ -77,6 +77,19 @@ class AllMembersOfEvent extends PersonEvent {
   AllMembersOfEvent(this.eventId);
 }
 
+class LoadEventForPerson extends PersonEvent {
+  final int eventId;
+
+  LoadEventForPerson(this.eventId);
+}
+
+class EditItems extends PersonEvent {
+  final int eventId;
+  final List<Item> items;
+
+  EditItems(this.eventId, this.items);
+}
+
 class DeleteEvent extends PersonEvent {
   final int eventId;
 
@@ -88,4 +101,9 @@ class KickPerson extends PersonEvent {
   final int eventId;
 
   KickPerson(this.nickname, this.eventId);
+}
+
+class BanPerson extends PersonEvent {
+  final String nickname;
+  BanPerson(this.nickname);
 }

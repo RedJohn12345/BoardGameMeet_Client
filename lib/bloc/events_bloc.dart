@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
-import 'package:boardgm/model/item.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:flutter/cupertino.dart';
@@ -75,8 +74,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       try {
         final responseEvent = await eventsRepository.getEvent(event.id);
         yield EventLoaded_State(responseEvent);
-        final items = await eventsRepository.getItems(event.id);
-        yield ItemsLoaded(items.cast<Item>());
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }

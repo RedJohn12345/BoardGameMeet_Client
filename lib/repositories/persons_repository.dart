@@ -6,8 +6,6 @@ import '../model/member.dart';
 class PersonsRepository {
   final PersonsApiClient apiClient;
   PersonsRepository({required this.apiClient});
-  Future<List<dynamic>> getMyEvents() async =>
-      apiClient.fetchMyEvents();
 
   Future registration(Member member) async =>
       apiClient.fetchRegistration(member);

@@ -4,6 +4,7 @@ import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/Sex.dart';
 import '../model/member.dart';
@@ -18,6 +19,16 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final bloc = PersonBloc(personRepository: PersonsRepository(apiClient: PersonsApiClient()));
+  bool isAdmin = false;
+
+  @override void initState() {
+    _setAdmin();
+    super.initState();
+  }
+
+  _setAdmin() async {
+    isAdmin = await _isAdmin();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +89,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ]
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                        children: [
+                          Visibility(
+                            visible: !state.isMyProfile || isAdmin,
+                            child: Expanded(
+                              child: ElevatedButton(onPressed: () {
+                                setState(() {
+                                  bloc.add(BanPerson(nickname));
+                                });
+                              },
+                                child: Text("Заблокировать"),
+                                style: const ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(0xff50bc55))),
+                              ),
+                            ),
+                          )
+                        ]
+                    ),
+                  ),
                 ],
               ),
             );
           } else if (state is PersonsLoading) {
             return Center(child: CircularProgressIndicator(),);
-          } else if (state is PersonsError) {
+          } else if (state is PersonBanned) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pop(context);
+            });
+            return Center(child: CircularProgressIndicator(),);
+          }  else if (state is PersonsError) {
             return Center(child: Text(state.errorMessage),);
           } else if (state is ExitSuccess) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -125,6 +163,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       member.age == 0 ? SizedBox() : Center(child: Text(member.age.toString(), style: TextStyle(color: Colors.black, fontSize: 24),),),
       const SizedBox(height: 16,),
     ];
+  }
+
+  static Future<bool> _isAdmin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('role') == 'USER_ADMIN';
   }
 
 }

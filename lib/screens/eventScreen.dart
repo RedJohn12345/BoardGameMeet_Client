@@ -23,6 +23,17 @@ class _EventScreenState extends State<EventScreen> {
           apiClient: PersonsApiClient()
       )
   );
+  List<Item> items = [];
+  bool isAdmin = false;
+
+  @override void initState() {
+    _setAdmin();
+    super.initState();
+  }
+
+  _setAdmin() async {
+    isAdmin = await _isAdmin();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +42,7 @@ class _EventScreenState extends State<EventScreen> {
     final event = list[0] as Event;
     final route = list[1] as String;
 
-    final List<Widget> items = [];
+    final List<Widget> itemsWidget = [];
 
     final List<Widget> params = [
       const Center(child: Text("Игра", style: TextStyle(color: Colors.black, fontSize: 26)),),
@@ -49,38 +60,31 @@ class _EventScreenState extends State<EventScreen> {
       const Center(child: Text("Количество игроков", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.viewCountPlayers(), style: TextStyle(color: Colors.black, fontSize: 24),),),
       const SizedBox(height: 16,),
-      Center(child: Text("Нужные предметы", style: TextStyle(color: Colors.black, fontSize: 26)),),
+      Row(
+        children: [
+          Expanded(
+              child: Center(child: Text("Нужные предметы", style: TextStyle(color: Colors.black, fontSize: 26)))),
+          event.isHost ? IconButton(onPressed: () {
+            Navigator.pushNamed(context, "/items", arguments: event);
+          }, icon: Icon(Icons.edit), color: Colors.black,
+          ) : SizedBox(),
+        ],
+      ),
       const SizedBox(height: 10,),
     ];
 
-    for (Item item in event.items.keys) {
-      items.add(Container(
+    for (Item item in items) {
+      itemsWidget.add(Container(
         decoration: BoxDecoration(border: Border.all(width: 2, color: Colors.black), borderRadius: BorderRadius.circular(20)),
         child: Column(
           children: [
-            Visibility(
-                visible: event.isHost,
-                //   () async {
-                // return await _isAdmin();
-                // },
-                child: Expanded(
-                  child: ElevatedButton(onPressed: () {
-                    Navigator.pushNamed(context, "/items", arguments: event.id!);
-                  },
-                    child: Text("Редактировать список предметов"),
-                    style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll<
-                            Color>(Color(0xff50bc55))),
-                  ),
-                )
-            ),
             CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
                 title: Text(item.name),
-                value: event.items[item],
+                value: item.marked,
                 onChanged: (bool? value) {
                   setState(() {
-                    event.items[item] = value!;
+                    item.marked = value!;
                   });
                 },
               ),
@@ -88,17 +92,17 @@ class _EventScreenState extends State<EventScreen> {
         ),
       ),
       );
-      items.add(const SizedBox(height: 10,),);
+      itemsWidget.add(const SizedBox(height: 10,),);
     }
 
-    params.add(Container(decoration: BoxDecoration(
+    params.add(itemsWidget.length == 0 ? SizedBox() : Container(decoration: BoxDecoration(
         color: Color(0xff50bc55),
         borderRadius: BorderRadius.circular(20)),
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-        margin: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Column(children: items,)));
+        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+        margin: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Column(children: itemsWidget,)));
 
     return BlocProvider<PersonBloc>(
-      create: (context) => personBloc,
+      create: (context) => personBloc..add(LoadEventForPerson(event.id!)),
       child: Scaffold(
         appBar: AppBar(
           title:
@@ -123,7 +127,12 @@ class _EventScreenState extends State<EventScreen> {
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<PersonBloc, PersonState>(
           builder: (context, state) {
-            if (state is PersonsInitial) {
+            if (state is EventForPersonLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  items = state.items;
+                });
+              });
               return Column(
                 children: [
                   Flexible(
@@ -145,7 +154,7 @@ class _EventScreenState extends State<EventScreen> {
                     child: Row(
                         children: [
                           Visibility(
-                            visible: event.isHost,
+                            visible: event.isHost || isAdmin,
                               //   () async {
                               // return await _isAdmin();
                               // },
@@ -213,4 +222,5 @@ class _EventScreenState extends State<EventScreen> {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('role') == 'USER_ADMIN';
   }
+
 }

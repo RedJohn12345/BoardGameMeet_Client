@@ -23,11 +23,6 @@ class EventCreated extends EventsState {
 
 }
 
-class ItemsLoaded extends EventsState {
-  final List<Item> items;
-  ItemsLoaded(this.items);
-}
-
 class EventUpdated extends EventsState {
 
 }

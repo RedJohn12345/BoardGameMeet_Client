@@ -96,7 +96,8 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
                     Expanded(
                       child: ElevatedButton( onPressed: () {
                           member.avatarId = id;
-                          Navigator.pushReplacementNamed(context, "/profileEdit", arguments: member);
+                          Navigator.pushNamedAndRemoveUntil(context, "/profileEdit", arguments: member,
+                                  (Route<dynamic> route) => route.settings.name != '/profileEdit' && route.settings.name != '/avatarChoose');
                       },
                         child: Text("Сохранить"),
                         style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),

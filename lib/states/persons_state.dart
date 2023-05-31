@@ -24,6 +24,14 @@ class AuthorizationSuccess extends PersonState {
 class ChangePasswordSuccess extends PersonState {
 }
 
+class EventForPersonLoaded extends PersonState {
+  final List<Item> items;
+  EventForPersonLoaded(this.items);
+}
+
+class ItemsEdited extends PersonState {
+}
+
 class UpdateProfileSuccess extends PersonState {
 }
 
@@ -68,3 +76,5 @@ class ValidateSecretWordResult extends PersonState {
 class DeletingEvent extends PersonState {}
 
 class KickingPerson extends PersonState {}
+
+class PersonBanned extends PersonState {}
