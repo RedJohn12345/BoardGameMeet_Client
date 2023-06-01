@@ -295,6 +295,30 @@ class PersonsApiClient {
     }
   }
 
+  Future<bool> fetchVerifyToken() async {
+    var url = Uri.parse('$address/verifyToken');
+    final token = await _getToken();
+    final nickname = await _getNickname();
+
+    final msg = jsonEncode({
+      "token": token.toString(),
+      "nickname": nickname
+    });
+
+    var response = await http.post(url, body: msg,
+      headers: {
+        contentType: json
+      }
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
   static Future _saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
@@ -313,6 +337,16 @@ class PersonsApiClient {
   static Future _saveRole(String role) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('role', role);
+  }
+
+  static Future _saveNickname(String nickname) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('nickname', nickname);
+  }
+
+  static Future<String?> _getNickname() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('nickname');
   }
 
 }

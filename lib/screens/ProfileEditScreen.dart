@@ -25,7 +25,7 @@ class ProfileEditScreen extends StatefulWidget {
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
   final formKey = GlobalKey<FormState>();
-  final loginController = TextEditingController();
+  final nicknameController = TextEditingController();
   final nameController = TextEditingController();
   final ageController = TextEditingController();
   final cityController = TextEditingController();
@@ -34,7 +34,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
   @override
   void dispose() {
-    loginController.dispose();
+    nicknameController.dispose();
     nameController.dispose();
     ageController.dispose();
     cityController.dispose();
@@ -48,7 +48,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         ?.settings
         .arguments) as Member;
 
-    loginController.text = member.nickname;
+    nicknameController.text = member.nickname;
     nameController.text = member.name;
     ageController.text = member.age == 0 ? "" : member.age.toString();
     cityController.text = member.city;
@@ -96,7 +96,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                           final form = formKey.currentState!;
                                           if (form.validate()) {
                                             Member profile = Member(
-                                                nickname: loginController.text, name: nameController.text, city: cityController.text,
+                                                nickname: nicknameController.text, name: nameController.text, city: cityController.text,
                                                 age: ageController.text == "" ? 0 : int.parse(ageController.text), avatarId: member.avatarId, sex: sexController.sex);
                                             bloc.add(UpdateProfile(profile));
                                           }
@@ -138,9 +138,15 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     return [Center(
       child: SizedBox(height: 140, width: 140,
         child: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(
-                context, '/avatarChoose', arguments: member);
+          onPressed: () async {
+            final memberResponse = await Navigator.pushNamed(
+                context, '/avatarChoose', arguments: member) as Member;
+            setState(() {
+              member.avatarId = memberResponse.avatarId;
+              member.nickname = nicknameController.text;
+              member.name = nameController.text;
+              member.city = cityController.text;
+            });
           },
           child: CircleAvatar(
             backgroundImage: AssetImage(
@@ -155,7 +161,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       const SizedBox(height: 16,),
       NameWidget(controller: nameController,),
       const SizedBox(height: 16,),
-      LoginWidget(controller: loginController,),
+      LoginWidget(controller: nicknameController,),
       const SizedBox(height: 16,),
       CityWidget(controller: cityController, city: member.city,),
       const SizedBox(height: 16,),

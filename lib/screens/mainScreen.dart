@@ -188,15 +188,19 @@ class _MainScreenState extends State<MainScreen> {
                   Card(
                     color: Colors.white,
                     child: ListTile(
-                        onTap: () {
-                          MainPageEvent selectedEvent = events[index];
-                          Navigator.pushNamed(context, '/eventShow',
-                              arguments: [selectedEvent.name,
-                                          selectedEvent.game,
-                                          selectedEvent.date,
-                                          selectedEvent.address,
-                                          selectedEvent.viewCountPlayers(),
-                                          selectedEvent.id]);
+                        onTap: () async {
+                          if (await _checkToken()) {
+                            MainPageEvent selectedEvent = events[index];
+                            Navigator.pushNamed(context, '/eventShow',
+                                arguments: [selectedEvent.name,
+                                  selectedEvent.game,
+                                  selectedEvent.date,
+                                  selectedEvent.address,
+                                  selectedEvent.viewCountPlayers(),
+                                  selectedEvent.id]);
+                          } else {
+                            Navigator.pushNamed(context, '/authorization');
+                          }
                         },
                         title: Text(events[index].name),
                         subtitle: Text(

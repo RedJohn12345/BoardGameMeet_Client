@@ -50,19 +50,21 @@ class _ItemsScreenState extends State<ItemsScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    ListView.builder(
-                      //shrinkWrap: true,
-                        itemCount: items.length,
-                        itemBuilder: (_, index) =>
-                            Card(
-                              color: Colors.white,
-                              child: ListTile(
-                                  title: Text(items[index].name),
-                                  trailing: IconButton(icon: Icon(Icons.dangerous), onPressed: () {
-                                    items.removeAt(index);
-                                  },),
-                              ),
-                            )
+                    Flexible(
+                      child: ListView.builder(
+                        //shrinkWrap: true,
+                          itemCount: items.length,
+                          itemBuilder: (_, index) =>
+                              Card(
+                                color: Colors.white,
+                                child: ListTile(
+                                    title: Text(items[index].name),
+                                    trailing: IconButton(icon: Icon(Icons.dangerous), onPressed: () {
+                                      items.removeAt(index);
+                                    },),
+                                ),
+                              )
+                      ),
                     ),
                     const SizedBox(height: 16,),
                     Center(
@@ -78,7 +80,10 @@ class _ItemsScreenState extends State<ItemsScreen> {
                                   child: ElevatedButton( onPressed: () {
                                     final form = formKey.currentState!;
                                     if (form.validate()) {
-                                      items.add(Item(name: itemController.text, marked: false));
+                                      setState(() {
+                                        items.add(Item(name: itemController.text, marked: false));
+                                      });
+
                                     }
                                   },
                                     child: Text("Добавить"),

@@ -119,6 +119,22 @@ class _EventScreenState extends State<EventScreen> {
                         children: [
                           Visibility(
                             visible: event.isHost,
+                            //   () async {
+                            // return await _isAdmin();
+                            // },
+                            child: Expanded(
+                              child: ElevatedButton(onPressed: () {
+                                Navigator.pushNamed(context, "/items");
+                              },
+                                child: Text("Предметс"),
+                                style: const ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(0xff50bc55))),
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: event.isHost,
                               //   () async {
                               // return await _isAdmin();
                               // },
@@ -131,7 +147,7 @@ class _EventScreenState extends State<EventScreen> {
                                     backgroundColor: MaterialStatePropertyAll<
                                         Color>(Color(0xff50bc55))),
                                 ),
-                              )
+                              ),
                           ),
                           Visibility(
                             visible: !event.isHost,
@@ -149,7 +165,7 @@ class _EventScreenState extends State<EventScreen> {
                           const SizedBox(width: 16,),
                           Expanded(
                             child: ElevatedButton(onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/');
+                              Navigator.pushReplacementNamed(context, '/chat');
                             },
                               child: Text("Чат"),
                               style: const ButtonStyle(

@@ -15,7 +15,6 @@ class Member {
     this.password = "", this.secretWord = ""
   });
 
-
   static fromJson(json) {
 
     Member member =  Member(name: json['name'] as String, avatarId: json['avatarId'] == null ? 1 : json['avatarId'] as int,

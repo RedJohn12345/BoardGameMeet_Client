@@ -1,12 +1,13 @@
 import 'package:boardgm/screens/ChooseAvatarScreen.dart';
-import 'package:boardgm/screens/MapCity.dart';
 import 'package:boardgm/screens/ProfileEditScreen.dart';
 import 'package:boardgm/screens/ProfileScreen.dart';
 import 'package:boardgm/screens/WelcomeScreen.dart';
 import 'package:boardgm/screens/changePassword.dart';
+import 'package:boardgm/screens/chatScreen.dart';
 import 'package:boardgm/screens/editEventScreen.dart';
 import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
+import 'package:boardgm/screens/itemsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/MembersScreen.dart';
@@ -82,6 +83,8 @@ class _FlutterAppState extends State<FlutterApp> {
           '/avatarChoose': (context) => ChooseAvatar(),
           '/editEvent': (context) => EditEventScreen(),
           '/welcome': (context) => WelcomeScreen(),
+          '/items': (context) => ItemsScreen(),
+          '/chat': (context) => MyApp()
         },
       );
     }
