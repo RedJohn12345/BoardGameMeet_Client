@@ -1,4 +1,3 @@
-import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -93,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
                 button = FloatingActionButton(onPressed: () {
-                  Navigator.pushNamed(context, '/profile', arguments: state.nickname);
+                  Navigator.pushNamed(context, '/profile', arguments: [null, null, state.nickname]);
                 },
                   child: CircleAvatar(
                     backgroundImage: AssetImage(state.avatar),

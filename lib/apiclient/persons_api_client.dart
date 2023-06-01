@@ -7,7 +7,6 @@ import 'package:boardgm/utils/preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/event.dart';
 import '../model/member.dart';
 
 class PersonsApiClient {
@@ -27,7 +26,8 @@ class PersonsApiClient {
       "password": member.password,
       "secretWord": member.secretWord,
       "gender": gender,
-      "city": await YandexMapKitUtil.getCity()
+      "city": await YandexMapKitUtil.getCity(),
+      "age": member.age
     });
 
     var response = await http.post(url,
@@ -149,7 +149,7 @@ class PersonsApiClient {
 
   Future fetchDeletePerson(String userNickname) async {
     var url = Uri.parse('$address/admin/deletePerson/$userNickname');
-    final token = _getToken();
+    final token = await _getToken();
 
     var response = await http.delete(url,headers: {
       authorization: bearer + token.toString()

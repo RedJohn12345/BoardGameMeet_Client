@@ -111,8 +111,11 @@ class _EventScreenState extends State<EventScreen> {
           centerTitle: true,
           backgroundColor: Color(0xff50bc55),
           actions: [
-            IconButton(onPressed: () {
-              Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]);
+            IconButton(onPressed: () async {
+              final membersCount = await Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]) as int;
+              setState(() {
+                event.numberPlayers = membersCount;
+              });
             },
                 icon: Icon(Icons.account_box_sharp)),
             Visibility(

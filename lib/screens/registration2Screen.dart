@@ -66,7 +66,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
                                 Expanded(
                                   child: ElevatedButton( onPressed: () {
                                     member.sex = sexController.sex;
-                                    member.age = ageController.text.isNotEmpty ? int.parse(ageController.text) : 0;
+                                    member.age = ageController.text.isNotEmpty ? int.parse(ageController.text) : null;
                                     bloc.add(RegistrationPerson(member));
 
                                   },

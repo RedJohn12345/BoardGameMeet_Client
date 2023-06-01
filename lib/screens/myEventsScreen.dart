@@ -74,7 +74,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 setState(() {
                   button = FloatingActionButton(onPressed: () {
-                    Navigator.pushNamed(context, '/profile', arguments: state.nickname);
+                    Navigator.pushNamed(context, '/profile', arguments: [null, null, state.nickname]);
                   },
                     child: CircleAvatar(
                       backgroundImage: AssetImage(state.avatar),

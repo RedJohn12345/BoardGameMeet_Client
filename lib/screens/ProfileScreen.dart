@@ -33,7 +33,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
 
-    String nickname = ModalRoute.of(context)?.settings.arguments as String;
+    final arguments = (ModalRoute.of(context)?.settings.arguments) as List;
+    final eventId = arguments[0] as int?;
+    final isHost = arguments[1] as bool?;
+    final nickname = arguments[2] as String;
     // Member? member;
 
     return BlocProvider<PersonBloc>(
@@ -118,7 +121,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return Center(child: CircularProgressIndicator(),);
           } else if (state is PersonBanned) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: [eventId, isHost],
+                      (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
             });
             return Center(child: CircularProgressIndicator(),);
           }  else if (state is PersonsError) {

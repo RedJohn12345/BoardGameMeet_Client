@@ -58,7 +58,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         personRepository: PersonsRepository(apiClient: PersonsApiClient()));
     return WillPopScope(
         onWillPop: () {
-          Navigator.pushReplacementNamed(context, '/profile', arguments: member.nickname);
+          Navigator.pushReplacementNamed(context, '/profile', arguments: [null, null, member.nickname]);
           return Future.value(true);
         },
         child: BlocProvider<PersonBloc>(
@@ -121,7 +121,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     return Center(child: Text(state.errorMessage),);
                   } else if (state is UpdateProfileSuccess) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pushReplacementNamed(context, '/profile', arguments: member.nickname);
+                      Navigator.pushReplacementNamed(context, '/profile', arguments: [null, null, member.nickname]);
                     });
                     return const Center(child: CircularProgressIndicator(),);
                   } else {

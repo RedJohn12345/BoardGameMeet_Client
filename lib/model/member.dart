@@ -4,7 +4,7 @@ class Member {
   late String name;
   late String nickname;
   late int avatarId;
-  late int age;
+  late int? age;
   late String city;
   late Sex sex;
   late String password;
