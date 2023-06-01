@@ -111,7 +111,8 @@ class MyHomePageState extends State<MyHomePage> {
               stompClient.send(destination: '/app/chat', body: json.encode(
                   {
                     "text": editingController.text,
-                    "eventId": 1
+                    "eventId": 1,
+                    "personNickname": "Dunadan"
                   })
               );
             },

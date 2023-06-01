@@ -62,7 +62,8 @@ class _FlutterAppState extends State<FlutterApp> {
     if (isFirst == null)
       return CircularProgressIndicator();
     else {
-      final String page = isFirst! ? '/welcome' : '/home';
+      // final String page = isFirst! ? '/welcome' : '/home';
+      final String page = '/chat';
 
       return MaterialApp(
         title: 'Board Game Meet',
