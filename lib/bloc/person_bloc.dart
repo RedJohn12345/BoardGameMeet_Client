@@ -148,6 +148,7 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       }
     } else if (event is EditItems) {
       try {
+        await personRepository.deleteItems(event.eventId);
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         await eventRepository.editItems(event.eventId, event.items);
         yield ItemsEdited();

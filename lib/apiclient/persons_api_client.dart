@@ -276,6 +276,23 @@ class PersonsApiClient {
     }
   }
 
+  Future fetchDeleteItems(int? eventId) async {
+    var url = Uri.parse('$address/deleteItemsIn/$eventId');
+    final token = await _getToken();
+
+    var response = await http.delete(url,
+      headers: {
+        authorization: bearer + token.toString()
+      }
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Ошибка при удалении итемов ${response.statusCode}');
+    }
+  }
+
   static Future _saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);

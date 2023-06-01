@@ -48,4 +48,7 @@ class PersonsRepository {
 
   Future<bool> isMyProfile(String nickname) async =>
       apiClient.fetchIsMyProfile(nickname);
+
+  Future deleteItems(int? eventId) async =>
+      apiClient.fetchDeleteItems(eventId);
 }
