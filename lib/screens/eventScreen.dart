@@ -63,6 +63,7 @@ class _EventScreenState extends State<EventScreen> {
             onChanged: (bool? value) {
               setState(() {
                 event.items[item] = value!;
+                personBloc.add(MarkItem(event.id!, item));
               });
             },
           ),
