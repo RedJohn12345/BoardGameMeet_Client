@@ -89,3 +89,10 @@ class KickPerson extends PersonEvent {
 
   KickPerson(this.nickname, this.eventId);
 }
+
+class MarkItem extends PersonEvent {
+  final int eventId;
+  final Item item;
+
+  MarkItem(this.eventId, this.item);
+}

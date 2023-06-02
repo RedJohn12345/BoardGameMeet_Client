@@ -1,4 +1,7 @@
+import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/model/Location.dart';
+import 'package:boardgm/model/member.dart';
+import 'package:boardgm/utils/preference.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -32,5 +35,18 @@ class YandexMapKitUtil {
 
     return res[0];
 
+  }
+
+  static Future getCityToSearch() async {
+    var city;
+    if (await Preference.checkToken()) {
+      PersonsApiClient apiClient = PersonsApiClient();
+      Member member = await apiClient.fetchGetOwnProfile();
+      city = member.city;
+    } else {
+      city = await getCity();
+    }
+
+    return city;
   }
 }

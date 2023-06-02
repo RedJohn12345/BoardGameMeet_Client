@@ -7,6 +7,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/event.dart';
+import '../model/item.dart';
 import '../repositories/events_repository.dart';
 import '../repositories/persons_repository.dart';
 part '../events/events_event.dart';
@@ -59,7 +60,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         } else {
           yield ButtonEntry();
         }
-        final events = await eventsRepository.getEvents(event.city, event.search, page);
+        final events = await eventsRepository.getEvents(event.search, page);
         yield MainPageEventsLoaded(events);
         page++;
       } catch (e) {
@@ -82,11 +83,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield EventsError(errorMessage: e.toString());
       }
     }
-  }
-
-  static Future<bool> _checkNickname() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('nickname') != null;
   }
 
 }

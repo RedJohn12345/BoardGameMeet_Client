@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/item.dart';
+import 'package:boardgm/utils/preference.dart';
+import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +20,7 @@ class EventsApiClient {
   Future<List> fetchMyEvents(int page) async {
     //final String url = '$_baseUrl/';
     var url = Uri.parse('http://10.0.2.2:8080/myEvents?page=$page&size=20');
-    final token = await _getToken();
+    final token = await Preference.getToken();
     var response = await http.get(url,
         headers: {authorization:
         bearer + token.toString()},);
@@ -32,9 +34,10 @@ class EventsApiClient {
     }
   }
 
-  Future<List<MainPageEvent>> fetchEvents(String city, String? search, int page) async {
+  Future<List<MainPageEvent>> fetchEvents(String? search, int page) async {
     //final String url = '$_baseUrl/';
     final Uri url;
+    final city = await YandexMapKitUtil.getCityToSearch();
     if (search != null) {
       url = Uri.parse(
           'http://10.0.2.2:8080/events?city=$city&search=$search&page=$page&size=20');
@@ -42,7 +45,7 @@ class EventsApiClient {
       url = Uri.parse(
           'http://10.0.2.2:8080/events?city=$city&page=$page&size=20');
     }
-    final token = await _checkToken() ? await _getToken(): null;
+    final token = await Preference.checkToken() ? await Preference.getToken(): null;
     var response;
     if (token != null) {
       response = await http.get(url,
@@ -69,7 +72,7 @@ class EventsApiClient {
   Future fetchCreateEvent(CreateEventRequest request) async {
     //final String url = '$_baseUrl/';
     var url = Uri.parse('http://10.0.2.2:8080/createEvent');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     final msg = jsonEncode({
     "name": request.name,
@@ -102,7 +105,7 @@ class EventsApiClient {
 
   Future<Event> fetchEvent(int eventId) async {
     var url = Uri.parse('http://10.0.2.2:8080/event/$eventId');
-    final token = await _getToken();
+    final token = await Preference.getToken();
     var response = await http.get(url,
         headers: {authorization:
         bearer + token.toString(),});
@@ -118,7 +121,7 @@ class EventsApiClient {
 
   Future fetchUpdateEvent(UpdateEventRequest request) async {
     var url = Uri.parse('http://10.0.2.2:8080/updateEvent');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     final msg = jsonEncode({
       "id": request.id,
@@ -149,7 +152,7 @@ class EventsApiClient {
 
   Future fetchKickPerson(int eventId, String userNickname) async {
     var url = Uri.parse('$address/kickPerson');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     final msg = jsonEncode({
       "eventId": eventId,
@@ -172,7 +175,7 @@ class EventsApiClient {
 
   Future fetchDeleteEvent(int eventId) async {
     var url = Uri.parse('$address/deleteEvent/$eventId');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.delete(url, headers: {
       authorization: bearer + token.toString()
@@ -187,7 +190,7 @@ class EventsApiClient {
 
   Future<List> fetchGetItems(int eventId) async {
     var url = Uri.parse('$address/getItemsIn/$eventId');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
@@ -204,7 +207,7 @@ class EventsApiClient {
 
   Future fetchEditItemsIn(int eventId, List<Item> items) async {
     var url = Uri.parse('$address/editItemsIn/$eventId');
-    final token = await _getToken();
+    final token = await Preference.getToken();
     var itemsMap = items.map((item) {
       return {
         "name": item.name,
@@ -228,15 +231,14 @@ class EventsApiClient {
     }
   }
 
-  Future fetchMarkItemsIn(int eventId, List<Item> items) async {
+  Future fetchMarkItemIn(int eventId, Item item) async {
     var url = Uri.parse('$address/markItemsIn/$eventId');
-    final token = await _getToken();
-    var itemsMap = items.map((item) {
-      return {
-        "marked": item.marked
-      };
-    }).toList();
-    final msg = jsonEncode(itemsMap);
+    final token = await Preference.getToken();
+
+    final msg = jsonEncode({
+      "itemId": item.id,
+      "markedStatus": item.marked
+    });
 
     var response = await http.put(url, body: msg,
         headers: {
@@ -253,14 +255,5 @@ class EventsApiClient {
     }
   }
 
-  static Future<String?> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
-
-  static Future<bool> _checkToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.containsKey('token');
-  }
 
 }

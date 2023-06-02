@@ -51,6 +51,4 @@ class PersonsRepository {
   Future<bool> isMyProfile(String nickname) async =>
       apiClient.fetchIsMyProfile(nickname);
 
-  Future<bool> verifyToken() async =>
-      apiClient.fetchVerifyToken();
 }

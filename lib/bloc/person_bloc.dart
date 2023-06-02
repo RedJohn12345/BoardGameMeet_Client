@@ -11,6 +11,7 @@ import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/event.dart';
+import '../model/item.dart';
 part '../events/persons_event.dart';
 part '../states/persons_state.dart';
 
@@ -133,6 +134,13 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         await eventRepository.kickPerson(event.eventId, event.nickname);
         yield KickingPerson();
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    } else if (event is MarkItem) {
+      try {
+        final eventsRepository = EventsRepository(apiClient: EventsApiClient());
+        await eventsRepository.markItem(event.eventId, event.item);
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }

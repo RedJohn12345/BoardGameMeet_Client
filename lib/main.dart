@@ -85,7 +85,7 @@ class _FlutterAppState extends State<FlutterApp> {
           '/editEvent': (context) => EditEventScreen(),
           '/welcome': (context) => WelcomeScreen(),
           '/items': (context) => ItemsScreen(),
-          '/chat': (context) => MyApp()
+          '/chat': (context) => ChatScreen()
         },
       );
     }
