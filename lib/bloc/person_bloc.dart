@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/event.dart';
 part '../events/persons_event.dart';
@@ -61,7 +62,6 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       yield PersonsLoading();
       try {
         await personRepository.exitProfile();
-        print("exit profile");
         yield ExitSuccess();
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());

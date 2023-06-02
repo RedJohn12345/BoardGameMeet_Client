@@ -170,7 +170,7 @@ class _EventScreenState extends State<EventScreen> {
                                     backgroundColor: MaterialStatePropertyAll<
                                         Color>(Color(0xff50bc55))),
                                 ),
-                              )
+                              ),
                           ),
                           Visibility(
                             visible: !event.isHost,
@@ -188,7 +188,7 @@ class _EventScreenState extends State<EventScreen> {
                           const SizedBox(width: 16,),
                           Expanded(
                             child: ElevatedButton(onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/');
+                              Navigator.pushReplacementNamed(context, '/chat');
                             },
                               child: Text("Чат"),
                               style: const ButtonStyle(
@@ -225,5 +225,4 @@ class _EventScreenState extends State<EventScreen> {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('role') == 'USER_ADMIN';
   }
-
 }

@@ -6,6 +6,7 @@ import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/event.dart';
 import '../repositories/events_repository.dart';
 import '../repositories/persons_repository.dart';
@@ -95,4 +96,10 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       }
     }
   }
+
+  static Future<bool> _checkNickname() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('nickname') != null;
+  }
+
 }

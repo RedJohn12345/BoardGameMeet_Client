@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../model/event.dart';
 import '../model/member.dart';
 
 class ChooseAvatar extends StatefulWidget {
@@ -105,10 +104,10 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
                     ),]
               ),
 
-              const SizedBox(height: 16,),
-            ],
+                const SizedBox(height: 16,),
+              ],
+            ),
           ),
-        ),
 
 
     );
