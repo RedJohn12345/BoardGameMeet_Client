@@ -23,6 +23,7 @@ class _NameWidgetState extends State<NameWidget> {
   @override
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
+    maxLength: 30,
     decoration: InputDecoration(
       labelText: widget.withHelper ? "${widget.text}*" : widget.text,
       fillColor:  Color(0xff171717),

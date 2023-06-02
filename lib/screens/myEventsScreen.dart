@@ -99,7 +99,9 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               return Container();
             }
           }),
-        floatingActionButton: FloatingActionButton(onPressed: () {},
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          Navigator.pushNamed(context, '/editEvent', arguments: null);
+        },
           backgroundColor: Color(0xff50bc55),
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),
         ),
@@ -150,7 +152,8 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                       onTap: () {
                         Navigator.pushNamed(context, '/event', arguments: [myEvents[index], '/my_events']);
                       },
-                      title: Text(myEvents[index].name),
+                      title: myEvents[index].date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch
+                          ? Text(myEvents[index].name) : Text("${myEvents[index].name}(Прошел)") ,
                       subtitle: Text(
                           "${myEvents[index].game} - ${myEvents[index].date
                               .toString()} - ${myEvents[index].location}"),

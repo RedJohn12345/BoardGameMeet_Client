@@ -26,6 +26,7 @@ class _PasswordWidgetState extends State<PasswordWidget> {
   @override
   Widget build(BuildContext context) => TextFormField(
       obscureText: isHidden,
+      maxLength: 30,
       obscuringCharacter: "*",
       decoration: InputDecoration(
           labelText: widget.hintText == "" ? (widget.withHelper ? "Пароль*" : "Пароль") : (widget.hintText + "*"),

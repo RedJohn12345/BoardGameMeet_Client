@@ -22,6 +22,7 @@ class _SecretWordWidgetState extends State<SecretWordWidget> {
   @override
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
+      maxLength: 30,
     decoration: InputDecoration(
       labelText: widget.withHelper ? "Секретное слово*" : "Секретное слово*",
       fillColor:  Color(0xff171717),

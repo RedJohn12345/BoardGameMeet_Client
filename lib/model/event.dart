@@ -5,7 +5,7 @@ class Event {
   late String name;
   late String game;
   late String city;
-  late DateTime? date;
+  late DateTime date;
   late String location;
   late int numberPlayers;
   late int maxNumberPlayers;

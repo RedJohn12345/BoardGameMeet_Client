@@ -21,6 +21,7 @@ class _AddressWidgetState extends State<AddressWidget> {
   @override
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
+      maxLength: 30,
     decoration: InputDecoration(
       labelText: widget.withHelper ? "Адрес*" : "Адрес",
       fillColor:  Color(0xff171717),

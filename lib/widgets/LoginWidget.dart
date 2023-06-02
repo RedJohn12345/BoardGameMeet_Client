@@ -22,6 +22,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   Widget build(BuildContext context) => TextFormField(
     controller: widget.controller,
+      maxLength: 30,
     decoration: InputDecoration(
       labelText: widget.withHelper ? "Никнейм*" : "Никнейм",
       labelStyle: TextStyle(color: Colors.white60),
