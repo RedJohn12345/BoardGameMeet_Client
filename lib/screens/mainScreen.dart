@@ -46,14 +46,14 @@ class _MainScreenState extends State<MainScreen> {
   void _scrollListener() {
     // Проверяем, если мы прокрутили до конца списка
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      bloc.add(LoadEvents("string", null));
+      bloc.add(LoadEvents(searchController.text));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EventsBloc>(
-      create: (context) => bloc..add(LoadEvents("Voronezh", searchController.text)),
+      create: (context) => bloc..add(LoadEvents(searchController.text)),
       child: Scaffold(
         appBar: AppBar(
           title:

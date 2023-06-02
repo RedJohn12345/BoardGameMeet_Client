@@ -9,10 +9,9 @@ class LoadMyEvents extends EventsEvent {
 }
 
 class LoadEvents extends EventsEvent {
-  final String city;
   final String? search;
 
-  LoadEvents(this.city, this.search);
+  LoadEvents(this.search);
 }
 
 class LoadEvent extends EventsEvent {
