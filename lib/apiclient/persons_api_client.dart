@@ -145,7 +145,10 @@ class PersonsApiClient {
       print(response.body);
       final body = jsonDecode(response.body);
       final token = body['token'];
+      final nickname = body['nickname'];
+
       await Preference.saveToken(token);
+      await Preference.saveNickname(nickname);
       return;
     } else {
       throw Exception('Error while update person with code ${response.statusCode}');
