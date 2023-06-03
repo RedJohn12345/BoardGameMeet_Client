@@ -1,5 +1,6 @@
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
+import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +33,7 @@ class _EventScreenState extends State<EventScreen> {
   }
 
   _setAdmin() async {
-    isAdmin = await _isAdmin();
+    isAdmin = await Preference.isAdmin();
   }
 
   @override
@@ -189,7 +190,7 @@ class _EventScreenState extends State<EventScreen> {
                           const SizedBox(width: 16,),
                           Expanded(
                             child: ElevatedButton(onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/chat');
+                              Navigator.pushNamed(context, '/chat', arguments: event.id);
                             },
                               child: Text("Чат"),
                               style: const ButtonStyle(
@@ -220,10 +221,5 @@ class _EventScreenState extends State<EventScreen> {
         )
       ),
     );
-  }
-
-  static Future<bool> _isAdmin() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('role') == 'USER_ADMIN';
   }
 }

@@ -1,3 +1,4 @@
+import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget button = Container();
   final scrollController = ScrollController();
   final searchController = TextEditingController();
+  String? search;
   final bloc = EventsBloc(
       eventsRepository: EventsRepository(
           apiClient: EventsApiClient()
@@ -46,14 +48,15 @@ class _MainScreenState extends State<MainScreen> {
   void _scrollListener() {
     // Проверяем, если мы прокрутили до конца списка
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      bloc.add(LoadEvents(searchController.text));
+      bloc.add(LoadEvents(search));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    search = (ModalRoute.of(context)?.settings.arguments) == null ? null : (ModalRoute.of(context)?.settings.arguments) as String;
     return BlocProvider<EventsBloc>(
-      create: (context) => bloc..add(LoadEvents(searchController.text)),
+      create: (context) => bloc..add(LoadEvents(search)),
       child: Scaffold(
         appBar: AppBar(
           title:
@@ -120,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
         }
         ),
         floatingActionButton: FloatingActionButton(onPressed: () async {
-          await _checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
+          await Preference.checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
         },
           backgroundColor: Color(0xff50bc55),
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),
@@ -133,7 +136,7 @@ class _MainScreenState extends State<MainScreen> {
           showUnselectedLabels: false,
           onTap: (int index) async {
             if (index == 1) {
-              await _checkToken()
+              await Preference.checkToken()
                   ? Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false)
                   :Navigator.pushNamed(context, '/authorization');
             }
@@ -174,7 +177,13 @@ class _MainScreenState extends State<MainScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              //IconButton(onPressed: (){}, icon: Icon(Icons.search))
+              IconButton(
+                  onPressed: () {
+                    if (searchController.text.isEmpty) return;
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        '/home', (route) => false, arguments: searchController.text);
+                  },
+                  icon: Icon(Icons.search)),
             ]),
       ),
       Flexible(
@@ -188,8 +197,7 @@ class _MainScreenState extends State<MainScreen> {
                   Card(
                     color: Colors.white,
                     child: ListTile(
-                        onTap: () async {
-                          if (await _checkToken()) {
+                        onTap: () {
                             MainPageEvent selectedEvent = events[index];
                             Navigator.pushNamed(context, '/eventShow',
                                 arguments: [selectedEvent.name,
@@ -198,9 +206,6 @@ class _MainScreenState extends State<MainScreen> {
                                   selectedEvent.address,
                                   selectedEvent.viewCountPlayers(),
                                   selectedEvent.id]);
-                          } else {
-                            Navigator.pushNamed(context, '/authorization');
-                          }
                         },
                         title: Text(events[index].name),
                         subtitle: Text(
@@ -211,11 +216,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),];
-  }
-
-  static Future<bool> _checkToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.containsKey('token');
   }
 
 }

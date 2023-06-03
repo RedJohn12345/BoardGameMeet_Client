@@ -88,7 +88,17 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }
-    } else if (event is LeaveFromEvent) {
+    } else if (event is AdminShowEvent) {
+      yield PersonsLoading();
+      try {
+        var eventRepository = EventsRepository(apiClient: EventsApiClient());
+        Event selectedEvent = await eventRepository.getEvent(event.eventId!);
+        yield AdminShowedEvent(selectedEvent);
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
+      }
+    }
+    else if (event is LeaveFromEvent) {
       yield PersonsLoading();
       try {
         await personRepository.leaveFromEvent(event.eventId);

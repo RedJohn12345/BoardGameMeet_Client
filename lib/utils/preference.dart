@@ -48,4 +48,9 @@ class Preference {
     return prefs.getString('nickname');
   }
 
+  static Future<bool> isAdmin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('role') == 'USER_ADMIN';
+  }
+
 }

@@ -2,13 +2,19 @@ import 'dart:convert';
 
 
 import 'package:boardgm/model/dto/member_dto.dart';
+import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/widgets/ChatWidget.dart';
 import 'package:boardgm/widgets/NameWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
+
+import '../apiclient/events_api_client.dart';
+import '../bloc/events_bloc.dart';
+import '../repositories/events_repository.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -21,19 +27,14 @@ class ChatScreen extends StatefulWidget {
 
 class ChatScreenState extends State<ChatScreen> {
   TextEditingController messageController = TextEditingController();
-  List<ChatBubble> chatsBubbles = [
-    ChatBubble(text: "hello", isCurrentUser: true, interlocutor: Interlocutor(nickname: "denis", name: "denis", avatarId: 2)),
-    ChatBubble(text: "hello", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denis2", avatarId: 3)),
-    ChatBubble(text: "hello ", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denisgjh2", avatarId: 3)),
-    ChatBubble(text: "hello", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denisfsdf2", avatarId: 2)),
-    ChatBubble(text: "hellofdsfsdfdsfdsfdsf fhdjfdkskjgfdghdsghldf", isCurrentUser: false, interlocutor: Interlocutor(nickname: "deniadsfds", name: "dfdsfenis2", avatarId: 1)),
-    ChatBubble(text: "hello", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "densdfis2", avatarId: 2)),
-    ChatBubble(text: "hello ", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denisgjh2", avatarId: 3)),
-    ChatBubble(text: "hello", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denisfsdf2", avatarId: 2)),
-    ChatBubble(text: "hellof", isCurrentUser: false, interlocutor: Interlocutor(nickname: "deniadsfds", name: "dfdsfenis2", avatarId: 1)),
-    ChatBubble(text: "hello", isCurrentUser: true, interlocutor: Interlocutor(nickname: "denis", name: "densdfis2", avatarId: 2)),
-
-  ];
+  List<Widget> chatBubbles = [];
+  final scrollController = ScrollController();
+  final bloc = EventsBloc(
+      eventsRepository: EventsRepository(
+          apiClient: EventsApiClient()
+      )
+  );
+  late int eventId;
 
   late StompClient stompClient = StompClient(
       config: StompConfig(
@@ -49,7 +50,16 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    //scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    scrollController.addListener(_scrollListener);
     _setUpStompClient();
+  }
+
+  void _scrollListener() {
+    // Проверяем, если мы прокрутили до конца списка
+    if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
+      bloc.add(LoadMessages(eventId));
+    }
   }
 
   void onConnectCallback(StompFrame connectFrame) {
@@ -62,7 +72,12 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void frameCallback(StompFrame frame) {
-    print(frame.body);
+    var json = jsonDecode(frame.body!);
+    if (json['eventId'] as int == eventId) {
+      setState(() {
+        chatBubbles.insert(0, ChatBubble.fromJson(json));
+      });
+    }
   }
 
   @override
@@ -74,47 +89,68 @@ class ChatScreenState extends State<ChatScreen> {
 
       @override
   Widget build(BuildContext context) {
-        return Scaffold(
-            appBar: AppBar(
-              title:
-              Text("Чат", style: TextStyle(fontSize: 24),),
-              //
-              centerTitle: true,
-              backgroundColor: Color(0xff50bc55),
-            ),
-            backgroundColor: Color(0xff292929),
-          body: Column(
-            children: [
-              Flexible(
-                child: ListView.builder(
-                  //shrinkWrap: true,
-                    itemCount: chatsBubbles.length,
-                    itemBuilder: (_, index) =>
-                       chatsBubbles[index]
-                ),
+    eventId = (ModalRoute.of(context)?.settings.arguments) as int;
+
+        return BlocProvider(
+          create: (context) => bloc..add(LoadMessages(eventId)),
+          child: Scaffold(
+              appBar: AppBar(
+                title:
+                Text("Чат", style: TextStyle(fontSize: 24),),
+                //
+                centerTitle: true,
+                backgroundColor: Color(0xff50bc55),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 100, 16),
-                child: NameWidget(controller: messageController, text: "Сообщение",)
-              )
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: new Icon(Icons.send),
-            onPressed: () {
-              //if (messageController.text.isEmpty) return;
-              print('pressed');
-              // channel.sink.add('test');
-              // print(stompClient.connected);
-              Restart.restartApp();
-              stompClient.send(destination: '/app/chat', body: json.encode(
-                  {
-                    "text": messageController.text,
-                    "eventId": 1,
-                    "personNickname": "Dunadan"
-                  })
-              );
-            },
+              backgroundColor: Color(0xff292929),
+            body: BlocBuilder<EventsBloc, EventsState>(
+              builder: (context, state) {
+                if (state is MessagesLoaded) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      chatBubbles = state.messages;
+                    });
+                  });
+                  return Column(
+                    children: [
+                      Flexible(
+                        child: ListView.builder(
+                            reverse: true,
+                            itemCount: chatBubbles.length,
+                            itemBuilder: (_, index) =>
+                            chatBubbles[index]
+                        ),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 100, 16),
+                          child: NameWidget(
+                            controller: messageController, text: "Сообщение",)
+                      )
+                    ],
+                  );
+                } else if (state is EventsFirstLoading) {
+                  return Center(child: CircularProgressIndicator(),);
+                } else if (state is EventsError) {
+                  return Center(child: Text(state.errorMessage),);
+                } else {
+                  return Container();
+                }
+              }
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: new Icon(Icons.send),
+              onPressed: () async {
+                if (messageController.text.isEmpty) return;
+                print('pressed');
+                stompClient.send(destination: '/app/chat', body: json.encode(
+                    {
+                      "text": messageController.text,
+                      "eventId": eventId,
+                      "personNickname": await Preference.getNickname()
+                    })
+                );
+                messageController.clear();
+              },
+            ),
           ),
         );
   }

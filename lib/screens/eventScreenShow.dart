@@ -5,6 +5,8 @@ import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../utils/preference.dart';
+
 
 class EventScreenShow extends StatefulWidget {
 
@@ -21,6 +23,16 @@ class _EventScreenShowState extends State<EventScreenShow> {
           apiClient: PersonsApiClient()
       )
   );
+  bool isAdmin = false;
+
+  @override void initState() {
+    _setAdmin();
+    super.initState();
+  }
+
+  _setAdmin() async {
+    isAdmin = await Preference.isAdmin();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,12 +106,33 @@ class _EventScreenShowState extends State<EventScreenShow> {
                                   backgroundColor: MaterialStatePropertyAll<
                                       Color>(Color(0xff50bc55))),
                             ),
+
+                          ),
+                          Visibility(
+                            visible: isAdmin,
+                            child: ElevatedButton(onPressed: () {
+                              setState(() {
+                                bloc.add(AdminShowEvent(eventId: eventId));
+                              });
+                            },
+                              child: Text("Посмотреть"),
+                              style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll<
+                                      Color>(Color(0xff50bc55))),
+                            ),
                           ),
                         ]
                     ),
                   ),
                 ],);
             } else if (state is JoinedToEvent) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                // event.numberPlayers++;
+                Navigator.pushReplacementNamed(
+                    context, '/event', arguments: [state.event, '/home']);
+              });
+              return const Center(child: CircularProgressIndicator(),);
+            } else if (state is AdminShowedEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 // event.numberPlayers++;
                 Navigator.pushReplacementNamed(

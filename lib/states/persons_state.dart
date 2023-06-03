@@ -59,6 +59,12 @@ class JoinedToEvent extends PersonState {
   JoinedToEvent(this.event);
 }
 
+class AdminShowedEvent extends PersonState {
+  final Event event;
+
+  AdminShowedEvent(this.event);
+}
+
 class LeavingFromEvent extends PersonState {}
 
 class AllMembers extends PersonState {

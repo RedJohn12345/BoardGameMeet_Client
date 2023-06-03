@@ -66,4 +66,10 @@ class ChatBubble extends StatelessWidget {
           ),
         );
   }
+
+  static fromJson(json) {
+    Interlocutor interlocutor = Interlocutor(name: json['name'] as String, avatarId: json['avatarId'] as int);
+    ChatBubble bubble =  ChatBubble(text: json['text'] as String, isCurrentUser: json['myNickname'] as bool, interlocutor: interlocutor,);
+    return bubble;
+  }
 }

@@ -45,3 +45,8 @@ class EventsError extends EventsState {
   final String errorMessage;
   EventsError({required this.errorMessage});
 }
+
+class MessagesLoaded extends EventsState {
+  final List<ChatBubble> messages;
+  MessagesLoaded(this.messages);
+}

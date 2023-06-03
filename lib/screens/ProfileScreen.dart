@@ -58,63 +58,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ] : [],
               ),
               backgroundColor: Color(0xff292929),
-              body: Column(
-                children: [
-                  Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20)),
-                      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      child: Column(
-                        children: getParams(state.member),
-                      )
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                        children: [
-                          Visibility(
-                            visible: state.isMyProfile,
-                              child: Expanded(
-                            child: ElevatedButton(onPressed: () {
-                              setState(() {
-                                bloc.add(ExitProfile());
-                              });
-                            },
-                              child: Text("Выйти"),
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll<
-                                      Color>(Color(0xff50bc55))),
-                            ),
-                          ),
-                          )
-                        ]
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                        margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                        child: Column(
+                          children: getParams(state.member),
+                        )
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                        children: [
-                          Visibility(
-                            visible: !state.isMyProfile || isAdmin,
-                            child: Expanded(
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                          children: [
+                            Visibility(
+                              visible: state.isMyProfile,
+                                child: Expanded(
                               child: ElevatedButton(onPressed: () {
                                 setState(() {
-                                  bloc.add(BanPerson(nickname));
+                                  bloc.add(ExitProfile());
                                 });
                               },
-                                child: Text("Заблокировать"),
+                                child: Text("Выйти"),
                                 style: const ButtonStyle(
                                     backgroundColor: MaterialStatePropertyAll<
                                         Color>(Color(0xff50bc55))),
                               ),
                             ),
-                          )
-                        ]
+                            )
+                          ]
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                          children: [
+                            Visibility(
+                              visible: !state.isMyProfile || isAdmin,
+                              child: Expanded(
+                                child: ElevatedButton(onPressed: () {
+                                  setState(() {
+                                    bloc.add(BanPerson(nickname));
+                                  });
+                                },
+                                  child: Text("Заблокировать"),
+                                  style: const ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll<
+                                          Color>(Color(0xff50bc55))),
+                                ),
+                              ),
+                            )
+                          ]
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           } else if (state is PersonsLoading) {

@@ -38,8 +38,9 @@ class UpdateEvent extends EventsEvent {
   UpdateEvent(this.event);
 }
 
-// class LeaveFromEvent extends EventsEvent {
-//   final int id;
-//
-//   LeaveFromEvent(this.id);
-// }
+class LoadMessages extends EventsEvent {
+
+  final int eventId;
+  LoadMessages(this.eventId);
+
+}

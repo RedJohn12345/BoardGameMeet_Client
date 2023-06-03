@@ -4,6 +4,7 @@ import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/item.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/utils/yandexMapKit.dart';
+import 'package:boardgm/widgets/ChatWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -254,5 +255,20 @@ class EventsApiClient {
     }
   }
 
+  Future<List> fetchMessages(int eventId, int page) async {
+    var url = Uri.parse('http://10.0.2.2:8080/messagesIn/$eventId?page=$page&size=7');
+    final token = await Preference.getToken();
+    var response = await http.get(url,
+      headers: {authorization:
+      bearer + token.toString()},);
+
+    if (response.statusCode == 200) {
+      // Парсим JSON-ответ и преобразуем его в список событий
+      final List<dynamic> messagesJson = jsonDecode(response.body);
+      return messagesJson.map((json) => ChatBubble.fromJson(json)).toList();
+    } else {
+      throw Exception('Ошибка при загрузке сообщений');
+    }
+  }
 
 }

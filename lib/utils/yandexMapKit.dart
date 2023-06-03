@@ -72,4 +72,5 @@ class YandexMapKitUtil {
 
     return city;
   }
+
 }

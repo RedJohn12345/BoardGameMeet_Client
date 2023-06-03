@@ -38,4 +38,7 @@ class EventsRepository {
 
   Future markItem(int eventId, Item item) async =>
       apiClient.fetchMarkItemIn(eventId, item);
+
+  Future<List<dynamic>> getMessages(int eventId, int page) async =>
+      apiClient.fetchMessages(eventId, page);
 }

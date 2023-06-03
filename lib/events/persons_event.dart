@@ -65,6 +65,12 @@ class JoinToEvent extends PersonEvent {
   JoinToEvent({required this.eventId});
 }
 
+class AdminShowEvent extends PersonEvent {
+  final int? eventId;
+
+  AdminShowEvent({required this.eventId});
+}
+
 class LeaveFromEvent extends PersonEvent {
   final int? eventId;
 
