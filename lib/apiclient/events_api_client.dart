@@ -231,7 +231,7 @@ class EventsApiClient {
   }
 
   Future fetchMarkItemIn(int eventId, Item item) async {
-    var url = Uri.parse('$address/markItemsIn/$eventId');
+    var url = Uri.parse('$address/markItemIn/$eventId');
     final token = await Preference.getToken();
 
     final msg = jsonEncode({
