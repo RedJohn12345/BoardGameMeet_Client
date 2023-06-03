@@ -1,4 +1,5 @@
 import 'package:boardgm/bloc/person_bloc.dart';
+import 'package:boardgm/utils/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,60 +49,15 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
         body: BlocBuilder<PersonBloc, PersonState> (
           builder: (context, state) {
             if (state is PersonsInitial ) {
-              return Center(
-                child: Form(
-                  key: formKey,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                        children: [
-                          LoginWidget(controller: loginController),
-                          const SizedBox(height: 16,),
-                          PasswordWidget(controller: passwordController,),
-                          const SizedBox(height: 16,),
-                          Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton( onPressed: () {
-                                    final form = formKey.currentState!;
-                                    if (form.validate()) {
-                                      Member member = Member(nickname: loginController.text, password: passwordController.text);
-                                      bloc.add(AuthorizationPerson(member));
-                                    }
-                                  },
-                                    child: Text("Войти"),
-                                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
-                                  ),
-                                ),]
-                          ),
-                          const SizedBox(height: 16,),
-                          Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton( onPressed: () {
-                                    Navigator.pushNamed(context, '/registration');
-                                  },
-                                    child: Text("Зарегистрироваться"),
-                                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
-                                  ),
-                                ),]
-                          ),
-                          const SizedBox(height: 16,),
-                          TextButton(
-                            child: Text("Восстановление пароля", style: TextStyle(fontSize: 21, color: Colors.blue,), textAlign: TextAlign.center,),
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/changePassword');
-                            },
-                          ),
-                          const SizedBox(height: 16,),
-                        ]),
-                  ),
-                ),
-              );
+              return buildCenter(bloc, context);
             } else if (state is PersonsLoading) {
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is PersonsError) {
-              return Center(child: Text(state.errorMessage),);
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await DialogUtil.showErrorDialog(context, state.getErrorMessageWithoutException());
+              });
+              return buildCenter(bloc, context);
+              //return Center(child: Text(state.errorMessage),);
             } else if (state is AuthorizationSuccess) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
@@ -114,5 +70,58 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
         )
       ),
     );
+  }
+
+  Center buildCenter(PersonBloc bloc, BuildContext context) {
+    return Center(
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                      children: [
+                        LoginWidget(controller: loginController),
+                        const SizedBox(height: 16,),
+                        PasswordWidget(controller: passwordController,),
+                        const SizedBox(height: 16,),
+                        Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton( onPressed: () {
+                                  final form = formKey.currentState!;
+                                  if (form.validate()) {
+                                    Member member = Member(nickname: loginController.text, password: passwordController.text);
+                                    bloc.add(AuthorizationPerson(member));
+                                  }
+                                },
+                                  child: Text("Войти"),
+                                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                ),
+                              ),]
+                        ),
+                        const SizedBox(height: 16,),
+                        Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton( onPressed: () {
+                                  Navigator.pushNamed(context, '/registration');
+                                },
+                                  child: Text("Зарегистрироваться"),
+                                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                ),
+                              ),]
+                        ),
+                        const SizedBox(height: 16,),
+                        TextButton(
+                          child: Text("Восстановление пароля", style: TextStyle(fontSize: 21, color: Colors.blue,), textAlign: TextAlign.center,),
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/changePassword');
+                          },
+                        ),
+                        const SizedBox(height: 16,),
+                      ]),
+                ),
+              ),
+            );
   }
 }

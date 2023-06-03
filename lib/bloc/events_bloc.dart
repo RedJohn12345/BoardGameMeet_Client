@@ -99,6 +99,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       }
     }
     if (event is LoadMessages) {
+      print("hola");
       if (page == 0) {
         yield EventsFirstLoading();
       }

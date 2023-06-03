@@ -22,8 +22,8 @@ class PersonsRepository {
   Future updatePerson(UpdatePersonRequest request) async =>
       apiClient.fetchUpdatePerson(request);
 
-  Future<List<MemberInEvent>> getMembers(int eventId) async =>
-      apiClient.fetchGetMembers(eventId);
+  Future<List<MemberInEvent>> getMembers(int eventId, int page) async =>
+      apiClient.fetchGetMembers(eventId, page);
 
   Future deletePerson(String userNickname) async =>
       apiClient.fetchDeletePerson(userNickname);

@@ -4,26 +4,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../apiclient/persons_api_client.dart';
+import '../model/dto/member_dto.dart';
 
-class MembersScreen extends StatelessWidget {
-
-  final bloc = PersonBloc(
-      personRepository: PersonsRepository(
-          apiClient: PersonsApiClient()
-      )
-  );
-
-  final int numberPage = 1;
-  // final List<Member> members = [
-  // ];
+class MembersScreen extends StatefulWidget {
 
 
   MembersScreen({super.key});
 
   @override
+  State<MembersScreen> createState() => _MembersScreenState();
+}
+
+class _MembersScreenState extends State<MembersScreen> {
+  final bloc = PersonBloc(
+      personRepository: PersonsRepository(
+          apiClient: PersonsApiClient()
+      )
+  );
+  late int id;
+  final scrollController = ScrollController();
+  List<MemberInEvent> members = [];
+
+  @override
+  void initState() {
+    scrollController.addListener(_scrollListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // Удаляем обработчик прокрутки списка
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
+  }
+
+  void _scrollListener() {
+    // Проверяем, если мы прокрутили до конца списка
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      bloc.add(AllMembersOfEvent(id));
+      print("hay");
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments) as List;
-    final id = arguments[0] as int;
+    id = arguments[0] as int;
     final isHost = arguments[1] as bool;
     late int membersCount;
 
@@ -45,7 +74,12 @@ class MembersScreen extends StatelessWidget {
           body: BlocBuilder<PersonBloc, PersonState>(
               builder: (context, state) {
                 if (state is AllMembers) {
-                  membersCount = state.members.length;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      members = state.members;
+                      membersCount = state.members.length;
+                    });
+                  });
                   return Column(
                     children: [
                       const SizedBox(height: 40,),
@@ -54,6 +88,7 @@ class MembersScreen extends StatelessWidget {
                           padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                           child: ListView.builder(
                             //shrinkWrap: true,
+                            controller: scrollController,
                               itemCount: state.members.length,
                               itemBuilder: (context, int index) =>
                                 Card(
@@ -103,5 +138,5 @@ class MembersScreen extends StatelessWidget {
         ),
       )
     );
-  }
+    }
 }

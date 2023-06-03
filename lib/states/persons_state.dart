@@ -7,6 +7,8 @@ class PersonsInitial extends PersonState {}
 
 class PersonsLoading extends PersonState {}
 
+class PersonsFirstLoading extends PersonState {}
+
 class PersonsLoaded extends PersonState {
   final List<Member> members;
   PersonsLoaded(this.members);
@@ -38,6 +40,10 @@ class UpdateProfileSuccess extends PersonState {
 class PersonsError extends PersonState {
   final String errorMessage;
   PersonsError({required this.errorMessage});
+
+  String getErrorMessageWithoutException() {
+    return errorMessage.substring(11, errorMessage.length);
+  }
 }
 
 class OwnProfileLoaded extends PersonState {

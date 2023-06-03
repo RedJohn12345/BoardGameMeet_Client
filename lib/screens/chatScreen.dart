@@ -2,6 +2,7 @@ import 'dart:convert';
 
 
 import 'package:boardgm/model/dto/member_dto.dart';
+import 'package:boardgm/utils/dialog.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/widgets/ChatWidget.dart';
 import 'package:boardgm/widgets/NameWidget.dart';
@@ -57,7 +58,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   void _scrollListener() {
     // Проверяем, если мы прокрутили до конца списка
-    if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
       bloc.add(LoadMessages(eventId));
     }
   }
@@ -83,8 +84,11 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     messageController.dispose();
+
     super.dispose();
     stompClient.deactivate();
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
   }
 
       @override
@@ -114,6 +118,7 @@ class ChatScreenState extends State<ChatScreen> {
                     children: [
                       Flexible(
                         child: ListView.builder(
+                          controller: scrollController,
                             reverse: true,
                             itemCount: chatBubbles.length,
                             itemBuilder: (_, index) =>
@@ -139,16 +144,17 @@ class ChatScreenState extends State<ChatScreen> {
             floatingActionButton: FloatingActionButton(
               child: new Icon(Icons.send),
               onPressed: () async {
-                if (messageController.text.isEmpty) return;
+                //if (messageController.text.isEmpty) return;
                 print('pressed');
-                stompClient.send(destination: '/app/chat', body: json.encode(
-                    {
-                      "text": messageController.text,
-                      "eventId": eventId,
-                      "personNickname": await Preference.getNickname()
-                    })
-                );
-                messageController.clear();
+                await DialogUtil.showErrorDialog(context, "Удоли");
+                // stompClient.send(destination: '/app/chat', body: json.encode(
+                //     {
+                //       "text": messageController.text,
+                //       "eventId": eventId,
+                //       "personNickname": await Preference.getNickname()
+                //     })
+                // );
+                // messageController.clear();
               },
             ),
           ),

@@ -13,7 +13,7 @@ class DialogUtil {
                onPressed: () {
                  Navigator.pop(context);
                },
-               child: Text('ОК'),
+               child: Center(child: Text('ОК')),
              ),
            ],
          );

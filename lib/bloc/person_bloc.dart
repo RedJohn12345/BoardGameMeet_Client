@@ -20,6 +20,8 @@ part '../states/persons_state.dart';
 
 class PersonBloc extends Bloc<PersonEvent, PersonState> {
   final PersonsRepository personRepository;
+  int page = 0;
+  List<MemberInEvent> list = [];
   PersonBloc({required this.personRepository}) : super(PersonsInitial());
 
   @override
@@ -107,9 +109,15 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         yield PersonsError(errorMessage: e.toString());
       }
     } else if (event is AllMembersOfEvent) {
+      if (page != 0) {
+        yield PersonsLoading();
+      } else {
+        yield PersonsFirstLoading();
+      }
       try {
-        final members = await personRepository.getMembers(event.eventId);
-        yield AllMembers(members);
+        final members = await personRepository.getMembers(event.eventId, page);
+        yield AllMembers(list..addAll(members));
+        page++;
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }

@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../apiclient/events_api_client.dart';
 import '../bloc/events_bloc.dart';
 import '../repositories/events_repository.dart';
+import '../utils/dialog.dart';
 import '../widgets/CountPlayersWidget.dart';
 import '../widgets/DescriptionWidget.dart';
 import '../widgets/NameWidget.dart';
@@ -79,27 +80,21 @@ class _EditEventScreenState extends State<EditEventScreen> {
         body: BlocBuilder<EventsBloc, EventsState>(
           builder: (context, state) {
             if (state is EventsInitial) {
-              return Center(
-                child: Form(
-                  key: formKey,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                        children: getColumn(bloc, dateTimeWidget, event)),
-                  ),
-                )
-              );
+              return buildCenter(bloc, dateTimeWidget, event);
             } else if (state is EventsLoading) {
               return Center(child: CircularProgressIndicator(),);
             } else if (state is EventsError) {
-              return Center(child: Text(state.errorMessage),);
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await DialogUtil.showErrorDialog(context, state.getErrorMessageWithoutException());
+              });
+              return buildCenter(bloc, dateTimeWidget, event);
+              //return Center(child: Text(state.errorMessage),);
+            } else if (state is EventCreated) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushReplacementNamed(context, '/my_events');
+            });
+            return const Center(child: CircularProgressIndicator(),);
             }
-        else if (state is EventCreated) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacementNamed(context, '/my_events');
-          });
-          return const Center(child: CircularProgressIndicator(),);
-          }
             else if (state is EventUpdated) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.pop(context);
@@ -113,6 +108,19 @@ class _EditEventScreenState extends State<EditEventScreen> {
         )
       ),
     );
+  }
+
+  Center buildCenter(EventsBloc bloc, DateTimeWidget dateTimeWidget, Event? event) {
+    return Center(
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                      children: getColumn(bloc, dateTimeWidget, event)),
+                ),
+              )
+            );
   }
 
   List<Widget> getColumn(EventsBloc bloc, DateTimeWidget dateTimeWidget, Event? event) {

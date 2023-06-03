@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 import '../model/member.dart';
+import '../utils/dialog.dart';
 import '../widgets/CityWidget.dart';
 import '../widgets/LoginWidget.dart';
 import '../widgets/NameWidget.dart';
@@ -75,53 +76,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               body: BlocBuilder<PersonBloc, PersonState>(
                 builder: (context, state) {
                   if (state is PersonsInitial) {
-                    return Center(
-                      child: Form(
-                        key: formKey,
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          child: Column(
-                              children: [
-                                Flexible(
-                                child: ListView.builder(
-                                  itemCount: params.length,
-                                  itemBuilder: (_, index) =>
-                                  params[index],
-                                  ),
-                                ),
-                                Row(
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(onPressed: () {
-                                          final form = formKey.currentState!;
-                                          if (form.validate()) {
-                                            Member profile = Member(
-                                                nickname: nicknameController.text, name: nameController.text, city: cityController.text,
-                                                age: ageController.text == "" ? 0 : int.parse(ageController.text), avatarId: member.avatarId, sex: sexController.sex);
-                                            bloc.add(UpdateProfile(profile));
-                                          }
-                                        },
-                                          child: Text("Сохранить"),
-                                          style: const ButtonStyle(
-                                              backgroundColor: MaterialStatePropertyAll<
-                                                  Color>(Color(0xff50bc55))),
-                                        ),
-                                      ),
-                                    ]
-                                ),
-
-                                const SizedBox(height: 16,),
-                              ]),
-                        ),
-                      ),
-                    );
+                    return buildCenter(params, member, bloc);
                   } else if (state is PersonsLoading) {
                     return const Center(child: CircularProgressIndicator(),);
                   } else if (state is PersonsError) {
-                    return Center(child: Text(state.errorMessage),);
+                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+                      await DialogUtil.showErrorDialog(context, state.getErrorMessageWithoutException());
+                    });
+                    return buildCenter(params, member, bloc);
+                    //return Center(child: Text(state.errorMessage),);
                   } else if (state is UpdateProfileSuccess) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pushReplacementNamed(context, '/profile', arguments: [null, null, member.nickname]);
+                      Navigator.pushReplacementNamed(context, '/profile', arguments: [null, null, nicknameController.text]);
                     });
                     return const Center(child: CircularProgressIndicator(),);
                   } else {
@@ -132,6 +98,49 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           ),
         )
     );
+  }
+
+  Center buildCenter(List<Widget> params, Member member, PersonBloc bloc) {
+    return Center(
+                    child: Form(
+                      key: formKey,
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                            children: [
+                              Flexible(
+                              child: ListView.builder(
+                                itemCount: params.length,
+                                itemBuilder: (_, index) =>
+                                params[index],
+                                ),
+                              ),
+                              Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(onPressed: () {
+                                        final form = formKey.currentState!;
+                                        if (form.validate()) {
+                                          Member profile = Member(
+                                              nickname: nicknameController.text, name: nameController.text, city: cityController.text,
+                                              age: ageController.text == "" ? 0 : int.parse(ageController.text), avatarId: member.avatarId, sex: sexController.sex);
+                                          bloc.add(UpdateProfile(profile));
+                                        }
+                                      },
+                                        child: Text("Сохранить"),
+                                        style: const ButtonStyle(
+                                            backgroundColor: MaterialStatePropertyAll<
+                                                Color>(Color(0xff50bc55))),
+                                      ),
+                                    ),
+                                  ]
+                              ),
+
+                              const SizedBox(height: 16,),
+                            ]),
+                      ),
+                    ),
+                  );
   }
 
   List<Widget> getParams(Member member) {

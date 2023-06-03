@@ -40,7 +40,7 @@ class PersonsApiClient {
       // Парсим JSON-ответ и преобразуем его в список событий
       return;
     } else {
-      throw Exception(response.statusCode);
+      throw Exception(response.body);
     }
   }
 
@@ -69,7 +69,7 @@ class PersonsApiClient {
       await Preference.saveNickname(nickname);
       return;
     } else {
-      throw Exception(response.statusCode);
+      throw Exception(response.body);
     }
   }
 
@@ -150,6 +150,8 @@ class PersonsApiClient {
       await Preference.saveToken(token);
       await Preference.saveNickname(nickname);
       return;
+    } else if (response.statusCode == 409) {
+      throw Exception(response.body);
     } else {
       throw Exception('Error while update person with code ${response.statusCode}');
     }
@@ -170,8 +172,8 @@ class PersonsApiClient {
     }
   }
 
-  Future<List<MemberInEvent>> fetchGetMembers(int eventId) async {
-    var url = Uri.parse('$address/getAllMembersIn/$eventId');
+  Future<List<MemberInEvent>> fetchGetMembers(int eventId, int page) async {
+    var url = Uri.parse('$address/getAllMembersIn/$eventId?page=$page&size=10');
     final token = await Preference.getToken();
 
     var response = await http.get(url, headers: {

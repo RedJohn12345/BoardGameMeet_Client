@@ -98,6 +98,8 @@ class EventsApiClient {
     if (response.statusCode == 200) {
       // Парсим JSON-ответ и преобразуем его в список событий
       return;
+    } else if (response.statusCode == 409) {
+      throw Exception(response.body);
     } else {
       throw Exception(response.statusCode);
     }
@@ -145,6 +147,8 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 409) {
+      throw Exception(response.body);
     } else {
       throw Exception('Error while update event with code ${response.statusCode}');
     }

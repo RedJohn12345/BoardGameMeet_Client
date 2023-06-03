@@ -44,6 +44,10 @@ class ButtonEntry extends EventsState {
 class EventsError extends EventsState {
   final String errorMessage;
   EventsError({required this.errorMessage});
+
+  String getErrorMessageWithoutException() {
+    return errorMessage.substring(11, errorMessage.length);
+  }
 }
 
 class MessagesLoaded extends EventsState {

@@ -5,6 +5,7 @@ import 'package:boardgm/model/member.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../utils/dialog.dart';
 import '../widgets/SexWidget.dart';
 import '../widgets/ageWidget.dart';
 
@@ -47,57 +48,15 @@ class _Registration2ScreenState extends State<Registration2Screen> {
         body: BlocBuilder<PersonBloc, PersonState> (
           builder: (context, state) {
             if (state is PersonsInitial ) {
-              return Center(
-                child: Form(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(child: sexController),
-                            ],
-                          ),
-                          const SizedBox(height: 16,),
-                          AgeWidget(controller: ageController,),
-                          const SizedBox(height: 16,),
-                          Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton( onPressed: () {
-                                    member.sex = sexController.sex;
-                                    member.age = ageController.text.isNotEmpty ? int.parse(ageController.text) : null;
-                                    bloc.add(RegistrationPerson(member));
-
-                                  },
-                                    child: Text("Продолжить"),
-                                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
-                                  ),
-                                ),]
-                          ),
-
-                          const SizedBox(height: 16,),
-                          Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton( onPressed: () {
-                                    bloc.add(RegistrationPerson(member));
-                                  },
-                                    child: Text("Пропустить"),
-                                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
-                                  ),
-                                ),]
-                          ),
-
-                          const SizedBox(height: 16,),
-                        ]),
-                  ),
-                ),
-              );
+              return buildCenter(member, bloc);
             } else if (state is PersonsLoading) {
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is PersonsError) {
-              return Center(child: Text(state.errorMessage),);
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await DialogUtil.showErrorDialog(context, state.getErrorMessageWithoutException());
+              });
+              return buildCenter(member, bloc);
+              //return Center(child: Text(state.errorMessage),);
             } else if (state is RegistrationSuccess) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.pop(context);
@@ -111,5 +70,55 @@ class _Registration2ScreenState extends State<Registration2Screen> {
 
       ),
     );
+  }
+
+  Center buildCenter(Member member, PersonBloc bloc) {
+    return Center(
+              child: Form(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(child: sexController),
+                          ],
+                        ),
+                        const SizedBox(height: 16,),
+                        AgeWidget(controller: ageController,),
+                        const SizedBox(height: 16,),
+                        Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton( onPressed: () {
+                                  member.sex = sexController.sex;
+                                  member.age = ageController.text.isNotEmpty ? int.parse(ageController.text) : null;
+                                  bloc.add(RegistrationPerson(member));
+
+                                },
+                                  child: Text("Продолжить"),
+                                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                ),
+                              ),]
+                        ),
+
+                        const SizedBox(height: 16,),
+                        Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton( onPressed: () {
+                                  bloc.add(RegistrationPerson(member));
+                                },
+                                  child: Text("Пропустить"),
+                                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                ),
+                              ),]
+                        ),
+
+                        const SizedBox(height: 16,),
+                      ]),
+                ),
+              ),
+            );
   }
 }
