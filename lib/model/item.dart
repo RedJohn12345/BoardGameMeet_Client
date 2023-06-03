@@ -5,7 +5,9 @@ class Item {
   Item({required this.name, required this.marked});
 
   static fromJson(json) {
-    return Item(name: json['name'] as String, marked: json['marked'] as bool);
+    var item =  Item(name: json['name'] as String, marked: json['marked'] as bool);
+    item.id = json['itemId'] as int;
+    return item;
   }
 
 }
