@@ -51,7 +51,7 @@ class _AddressWidgetState extends State<AddressWidget> {
       style: TextStyle(color: Colors.white),
         validator: (name) {
           if((name?.isEmpty ?? true) || widgetSelect) {
-            return 'Please enter a city';
+            return 'Please enter a address';
           } else if (!addressIsFind) {
             return 'Address is not found';
           }
