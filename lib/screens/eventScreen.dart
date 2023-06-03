@@ -64,7 +64,8 @@ class _EventScreenState extends State<EventScreen> {
         children: [
           Expanded(
               child: Center(child: Text("Нужные предметы", style: TextStyle(color: Colors.black, fontSize: 26)))),
-          event.isHost ? IconButton(onPressed: () {
+          (event.isHost  && event.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch)
+              ? IconButton(onPressed: () {
             Navigator.pushNamed(context, "/items", arguments: event);
           }, icon: Icon(Icons.edit), color: Colors.black,
           ) : SizedBox(),
@@ -120,7 +121,7 @@ class _EventScreenState extends State<EventScreen> {
             },
                 icon: Icon(Icons.account_box_sharp)),
             Visibility(
-                visible: event.isHost && event.date.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch,
+                visible: event.isHost && event.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch,
                 child: IconButton(onPressed: () {
                   Navigator.pushNamed(context, '/editEvent', arguments: event);
                 },

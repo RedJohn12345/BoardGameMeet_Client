@@ -153,7 +153,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                         Navigator.pushNamed(context, '/event', arguments: [myEvents[index], '/my_events']);
                       },
                       title: myEvents[index].date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch
-                          ? Text(myEvents[index].name) : Text("${myEvents[index].name}(Прошел)") ,
+                          ? Text(myEvents[index].name) : Text("${myEvents[index].name} (Прошел)") ,
                       subtitle: Text(
                           "${myEvents[index].game} - ${myEvents[index].date
                               .toString()} - ${myEvents[index].location}"),
