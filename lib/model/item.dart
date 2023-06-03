@@ -1,6 +1,7 @@
 class Item {
   late String name;
   late bool marked;
+  late int id;
   Item({required this.name, required this.marked});
 
   static fromJson(json) {

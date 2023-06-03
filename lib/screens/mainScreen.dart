@@ -22,11 +22,12 @@ class _MainScreenState extends State<MainScreen> {
   List<MainPageEvent> events = [];
   Widget button = Container();
   final scrollController = ScrollController();
+  final searchController = TextEditingController();
   final bloc = EventsBloc(
       eventsRepository: EventsRepository(
           apiClient: EventsApiClient()
       )
-  )..add(LoadEvents("Voronezh", null));
+  );
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     super.dispose();
-
+    searchController.dispose();
     // Удаляем обработчик прокрутки списка
     scrollController.removeListener(_scrollListener);
   }
@@ -45,14 +46,14 @@ class _MainScreenState extends State<MainScreen> {
   void _scrollListener() {
     // Проверяем, если мы прокрутили до конца списка
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
-      bloc.add(LoadEvents("string", null));
+      bloc.add(LoadEvents(searchController.text));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EventsBloc>(
-      create: (context) => bloc,
+      create: (context) => bloc..add(LoadEvents(searchController.text)),
       child: Scaffold(
         appBar: AppBar(
           title:
@@ -165,7 +166,7 @@ class _MainScreenState extends State<MainScreen> {
               Expanded(
                 child: const TextField(
                   decoration: InputDecoration(
-                      hintText: "Введите название игры или мероприятия",
+                      hintText: "Поиск",
                       fillColor:  Color(0xff171717),
                       filled: true,
                       hintStyle: TextStyle(color: Colors.white60)

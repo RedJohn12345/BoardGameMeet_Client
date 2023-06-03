@@ -62,8 +62,11 @@ class PersonsApiClient {
       final body = jsonDecode(response.body);
       final token = body['token'];
       final role = body['role'] as String;
-      await _saveToken(token);
-      await _saveRole(role);
+      final nickname = body['nickname'] as String;
+
+      await Preference.saveToken(token);
+      await Preference.saveRole(role);
+      await Preference.saveNickname(nickname);
       return;
     } else {
       throw Exception(response.statusCode);
@@ -88,14 +91,14 @@ class PersonsApiClient {
 
   Future fetchExitProfile() async {
     var url = Uri.parse('$address/exit');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.post(url, headers: {
       authorization: bearer + token.toString()
     });
 
     if (response.statusCode == 200) {
-      await _deleteToken();
+      await Preference.deleteToken();
       return;
     } else {
       throw Exception('Error while exit profile with code ${response.statusCode}');
@@ -104,7 +107,8 @@ class PersonsApiClient {
 
   Future<Member> fetchGetOwnProfile() async {
     var url = Uri.parse('$address/ownProfile');
-    final token = await _getToken();
+    final token = await Preference.getToken();
+
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
     });
@@ -119,7 +123,7 @@ class PersonsApiClient {
 
   Future fetchUpdatePerson(UpdatePersonRequest request) async {
     var url = Uri.parse('$address/updatePerson');
-    final token = await _getToken();
+    final token = await Preference.getToken();
     String gender = request.gender == Sex.MAN ? "MALE" : "FEMALE";
     final msg = jsonEncode({
       "name": request.name,
@@ -141,7 +145,7 @@ class PersonsApiClient {
       print(response.body);
       final body = jsonDecode(response.body);
       final token = body['token'];
-      await _saveToken(token);
+      await Preference.saveToken(token);
       return;
     } else {
       throw Exception('Error while update person with code ${response.statusCode}');
@@ -150,7 +154,7 @@ class PersonsApiClient {
 
   Future fetchDeletePerson(String userNickname) async {
     var url = Uri.parse('$address/admin/deletePerson/$userNickname');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.delete(url,headers: {
       authorization: bearer + token.toString()
@@ -165,7 +169,7 @@ class PersonsApiClient {
 
   Future<List<MemberInEvent>> fetchGetMembers(int eventId) async {
     var url = Uri.parse('$address/getAllMembersIn/$eventId');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
@@ -186,7 +190,7 @@ class PersonsApiClient {
 
   Future fetchJoinToEvent(int? eventId) async {
     var url = Uri.parse('$address/joinEvent/$eventId');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.post(url, headers: {
       authorization: bearer + token.toString()
@@ -202,7 +206,7 @@ class PersonsApiClient {
 
   Future fetchLeaveFromEvent(int? eventId) async {
     var url = Uri.parse('$address/leaveEvent/$eventId');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.post(url, headers: {
       authorization: bearer + token.toString()
@@ -260,7 +264,7 @@ class PersonsApiClient {
 
   Future<bool> fetchIsMyProfile(String nickname) async {
     var url = Uri.parse('$address/isProfileOf/$nickname');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.get(url,
       headers: {
@@ -279,7 +283,7 @@ class PersonsApiClient {
 
   Future fetchDeleteItems(int? eventId) async {
     var url = Uri.parse('$address/deleteItemsIn/$eventId');
-    final token = await _getToken();
+    final token = await Preference.getToken();
 
     var response = await http.delete(url,
       headers: {
@@ -294,13 +298,12 @@ class PersonsApiClient {
     }
   }
 
-  Future<bool> fetchVerifyToken() async {
+  Future<bool> fetchVerifyToken(String token) async {
     var url = Uri.parse('$address/verifyToken');
-    final token = await _getToken();
-    final nickname = await _getNickname();
+    final nickname = await Preference.getNickname();
 
     final msg = jsonEncode({
-      "token": token.toString(),
+      "token": token,
       "nickname": nickname
     });
 
@@ -318,34 +321,6 @@ class PersonsApiClient {
 
   }
 
-  static Future _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
-  }
 
-  static Future<String?> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
-
-  static Future _deleteToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove('token');
-  }
-
-  static Future _saveRole(String role) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('role', role);
-  }
-
-  static Future _saveNickname(String nickname) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('nickname', nickname);
-  }
-
-  static Future<String?> _getNickname() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('nickname');
-  }
 
 }

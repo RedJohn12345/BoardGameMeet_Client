@@ -107,3 +107,10 @@ class BanPerson extends PersonEvent {
   final String nickname;
   BanPerson(this.nickname);
 }
+
+class MarkItem extends PersonEvent {
+  final int eventId;
+  final Item item;
+
+  MarkItem(this.eventId, this.item);
+}

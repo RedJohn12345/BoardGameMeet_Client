@@ -1,46 +1,39 @@
 import 'dart:convert';
 
 
+import 'package:boardgm/model/dto/member_dto.dart';
+import 'package:boardgm/widgets/ChatWidget.dart';
+import 'package:boardgm/widgets/NameWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
-
-class MyApp extends StatelessWidget {
-
-
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new MyHomePage(),
-    );
-  }
-
-  static Future<String> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token')!;
+  ChatScreenState createState() {
+    return ChatScreenState();
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  // final WebSocketChannel channel;
-  //
-  // MyHomePage({required this.channel});
+class ChatScreenState extends State<ChatScreen> {
+  TextEditingController messageController = TextEditingController();
+  List<ChatBubble> chatsBubbles = [
+    ChatBubble(text: "hello", isCurrentUser: true, interlocutor: Interlocutor(nickname: "denis", name: "denis", avatarId: 2)),
+    ChatBubble(text: "hello", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denis2", avatarId: 3)),
+    ChatBubble(text: "hello ", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denisgjh2", avatarId: 3)),
+    ChatBubble(text: "hello", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denisfsdf2", avatarId: 2)),
+    ChatBubble(text: "hellofdsfsdfdsfdsfdsf fhdjfdkskjgfdghdsghldf", isCurrentUser: false, interlocutor: Interlocutor(nickname: "deniadsfds", name: "dfdsfenis2", avatarId: 1)),
+    ChatBubble(text: "hello", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "densdfis2", avatarId: 2)),
+    ChatBubble(text: "hello ", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denisgjh2", avatarId: 3)),
+    ChatBubble(text: "hello", isCurrentUser: false, interlocutor: Interlocutor(nickname: "denis", name: "denisfsdf2", avatarId: 2)),
+    ChatBubble(text: "hellof", isCurrentUser: false, interlocutor: Interlocutor(nickname: "deniadsfds", name: "dfdsfenis2", avatarId: 1)),
+    ChatBubble(text: "hello", isCurrentUser: true, interlocutor: Interlocutor(nickname: "denis", name: "densdfis2", avatarId: 2)),
 
-  @override
-  MyHomePageState createState() {
-    return new MyHomePageState();
-  }
-}
-
-class MyHomePageState extends State<MyHomePage> {
-  TextEditingController editingController = new TextEditingController();
-  // late Socket socket;
-
-  // IOWebSocketChannel channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/chat');
+  ];
 
   late StompClient stompClient = StompClient(
       config: StompConfig(
@@ -48,7 +41,6 @@ class MyHomePageState extends State<MyHomePage> {
         onConnect: onConnectCallback,
         onStompError: onError
   ));
-  // WebSocketChannel? channel;
 
   void _setUpStompClient() {
     stompClient.activate();
@@ -72,45 +64,52 @@ class MyHomePageState extends State<MyHomePage> {
   void frameCallback(StompFrame frame) {
     print(frame.body);
   }
+
+  @override
+  void dispose() {
+    messageController.dispose();
+    super.dispose();
+    stompClient.deactivate();
+  }
+
       @override
   Widget build(BuildContext context) {
         return Scaffold(
-          appBar: new AppBar(
-            title: new Text("Web Socket"),
-          ),
-          body: new Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new Form(
-                  child: new TextFormField(
-                    decoration: new InputDecoration(
-                        labelText: "Send any message"),
-                    controller: editingController,
-                  ),
-                ),
-                // new StreamBuilder(
-                //   stream: channel.stream,
-                //   builder: (context, snapshot) {
-                //     return new Padding(
-                //       padding: const EdgeInsets.all(20.0),
-                //       child: new Text(snapshot.hasData ? '${snapshot.data}' : ''),
-                //     );
-                //   },
-                // )
-              ],
+            appBar: AppBar(
+              title:
+              Text("Чат", style: TextStyle(fontSize: 24),),
+              //
+              centerTitle: true,
+              backgroundColor: Color(0xff50bc55),
             ),
+            backgroundColor: Color(0xff292929),
+          body: Column(
+            children: [
+              Flexible(
+                child: ListView.builder(
+                  //shrinkWrap: true,
+                    itemCount: chatsBubbles.length,
+                    itemBuilder: (_, index) =>
+                       chatsBubbles[index]
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 100, 16),
+                child: NameWidget(controller: messageController, text: "Сообщение",)
+              )
+            ],
           ),
-          floatingActionButton: new FloatingActionButton(
+          floatingActionButton: FloatingActionButton(
             child: new Icon(Icons.send),
             onPressed: () {
+              //if (messageController.text.isEmpty) return;
               print('pressed');
               // channel.sink.add('test');
               // print(stompClient.connected);
+              Restart.restartApp();
               stompClient.send(destination: '/app/chat', body: json.encode(
                   {
-                    "text": editingController.text,
+                    "text": messageController.text,
                     "eventId": 1,
                     "personNickname": "Dunadan"
                   })
@@ -120,3 +119,4 @@ class MyHomePageState extends State<MyHomePage> {
         );
   }
 }
+

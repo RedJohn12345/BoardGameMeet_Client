@@ -52,6 +52,6 @@ class PersonsRepository {
   Future deleteItems(int? eventId) async =>
       apiClient.fetchDeleteItems(eventId);
 
-  Future<bool> verifyToken() async =>
-      apiClient.fetchVerifyToken();
+  // Future<bool> verifyToken(String token) async =>
+  //     apiClient.fetchVerifyToken(token);
 }

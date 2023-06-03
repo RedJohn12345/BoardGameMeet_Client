@@ -12,8 +12,8 @@ class EventsRepository {
   Future<List<dynamic>> getMyEvents(int page) async =>
       apiClient.fetchMyEvents(page);
 
-  Future<List<MainPageEvent>> getEvents(String city, String? search, int page) async =>
-      apiClient.fetchEvents(city, search, page);
+  Future<List<MainPageEvent>> getEvents(String? search, int page) async =>
+      apiClient.fetchEvents(search, page);
 
   Future createEvent(CreateEventRequest event) async =>
       apiClient.fetchCreateEvent(event);
@@ -36,6 +36,6 @@ class EventsRepository {
   Future editItems(int eventId, List<Item> items) async =>
       apiClient.fetchEditItemsIn(eventId, items);
 
-  Future markItems(int eventId, List<Item> items) async =>
-      apiClient.fetchMarkItemsIn(eventId, items);
+  Future markItem(int eventId, Item item) async =>
+      apiClient.fetchMarkItemIn(eventId, item);
 }

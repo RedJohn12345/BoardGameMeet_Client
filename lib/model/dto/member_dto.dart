@@ -64,3 +64,20 @@ class NickNameAndSecretWord {
         secretWord: json['secretWord'] as String);
   }
 }
+
+class Interlocutor {
+  late String nickname;
+  late String name;
+  late int avatarId;
+
+  Interlocutor({required this.nickname, required this.name, required this.avatarId});
+
+  static fromJson(json) {
+    return Interlocutor(nickname: json['nickname'] as String,
+        name: json['name'] as String, avatarId: json['avatarId'] as int);
+  }
+
+  String getAvatar() {
+    return "assets/images/$avatarId.jpg";
+  }
+}
