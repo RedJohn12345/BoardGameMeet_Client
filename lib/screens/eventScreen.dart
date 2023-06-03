@@ -119,7 +119,7 @@ class _EventScreenState extends State<EventScreen> {
             },
                 icon: Icon(Icons.account_box_sharp)),
             Visibility(
-                visible: event.isHost,
+                visible: event.isHost && event.date.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch,
                 child: IconButton(onPressed: () {
                   Navigator.pushNamed(context, '/editEvent', arguments: event);
                 },
