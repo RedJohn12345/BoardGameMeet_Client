@@ -5,7 +5,6 @@ import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/member.dart';
 
@@ -59,7 +58,7 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       print(response.body);
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
       final token = body['token'];
       final role = body['role'] as String;
       final nickname = body['nickname'] as String;
@@ -82,7 +81,9 @@ class PersonsApiClient {
     });
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonProfile = jsonDecode(response.body);
+      print(response.body);
+      final Map<String, dynamic> jsonProfile = jsonDecode(utf8.decode(response.bodyBytes));
+      print(jsonProfile);
       return Member.fromJson(jsonProfile);
     } else {
       throw Exception('Error while get profile wile code ${response.statusCode}');
@@ -114,7 +115,7 @@ class PersonsApiClient {
     });
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonProfile = jsonDecode(response.body);
+      final Map<String, dynamic> jsonProfile = jsonDecode(utf8.decode(response.bodyBytes));
       return Member.fromJson(jsonProfile);
     } else {
       throw Exception('Error while get profile wile code ${response.statusCode}');
@@ -143,7 +144,7 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       print(response.body);
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
       final token = body['token'];
       final nickname = body['nickname'];
 
@@ -181,7 +182,7 @@ class PersonsApiClient {
     });
 
     if (response.statusCode == 200) {
-      final List<dynamic> jsonMembers = jsonDecode(response.body);
+      final List<dynamic> jsonMembers = jsonDecode(utf8.decode(response.bodyBytes));
       List<MemberInEvent> members = [];
       for (final jsonMember in jsonMembers) {
         members.add(MemberInEvent.fromJson(jsonMember));
@@ -278,7 +279,7 @@ class PersonsApiClient {
     );
 
     if (response.statusCode == 200) {
-      final dynamic jsonStatus = jsonDecode(response.body);
+      final dynamic jsonStatus = jsonDecode(utf8.decode(response.bodyBytes));
       final status = jsonStatus['myProfile'] as bool;
       return status;
     } else {

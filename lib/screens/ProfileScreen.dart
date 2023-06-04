@@ -154,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       const SizedBox(height: 16,),
-      Center(child: Text(member.sex == Sex.NONE ? "" : member.sex.title, style: TextStyle(color: Colors.black, fontSize: 26)),),
+      Center(child: Text(member.sex == Sex.NONE ? "" : (member.sex.title == "Мужской" ? "М" : "Ж"), style: TextStyle(color: Colors.black, fontSize: 32)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Имя", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(member.name, style: TextStyle(color: Colors.black, fontSize: 24)),),

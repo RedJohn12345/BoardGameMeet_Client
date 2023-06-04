@@ -6,7 +6,6 @@ import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:boardgm/widgets/ChatWidget.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/event.dart';
 
@@ -27,7 +26,7 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       // Парсим JSON-ответ и преобразуем его в список событий
-      final List<dynamic> eventsJson = jsonDecode(response.body);
+      final List<dynamic> eventsJson = jsonDecode(utf8.decode(response.bodyBytes));
       return eventsJson.map((json) => Event.fromJson(json)).toList();
     } else {
       throw Exception('Ошибка при загрузке событий');
@@ -58,7 +57,7 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       // Парсим JSON-ответ и преобразуем его в список событий
-      final List<dynamic> jsonEvents = jsonDecode(response.body);
+      final List<dynamic> jsonEvents = jsonDecode(utf8.decode(response.bodyBytes));
       List<MainPageEvent> mainPageEvents = [];
       for(var jsonEvent in jsonEvents) {
         mainPageEvents.add(MainPageEvent.fromJson(jsonEvent));
@@ -113,7 +112,7 @@ class EventsApiClient {
         bearer + token.toString(),});
 
     if (response.statusCode == 200) {
-      final dynamic eventJson = jsonDecode(response.body);
+      final dynamic eventJson = jsonDecode(utf8.decode(response.bodyBytes));
       Event event = Event.fromJson(eventJson);
       return event;
     } else {
@@ -201,7 +200,7 @@ class EventsApiClient {
     });
 
     if (response.statusCode == 200) {
-      final List<dynamic> jsonItems = jsonDecode(response.body);
+      final List<dynamic> jsonItems = jsonDecode(utf8.decode(response.bodyBytes));
       return jsonItems.map((json) => Item.fromJson(json)).toList();
     } else {
       throw Exception('Ошибка при получении нежных вещей с кодом'
