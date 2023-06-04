@@ -29,6 +29,7 @@ class _PasswordWidgetState extends State<PasswordWidget> {
       maxLength: 30,
       obscuringCharacter: "*",
       decoration: InputDecoration(
+          counterText: "",
           labelText: widget.hintText == "" ? (widget.withHelper ? "Пароль*" : "Пароль") : (widget.hintText + "*"),
           fillColor:  Color(0xff171717),
           filled: true,

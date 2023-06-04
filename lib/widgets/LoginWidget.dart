@@ -24,6 +24,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     controller: widget.controller,
       maxLength: 30,
     decoration: InputDecoration(
+      counterText: "",
       labelText: widget.withHelper ? "Никнейм*" : "Никнейм",
       labelStyle: TextStyle(color: Colors.white60),
       fillColor:  Color(0xff171717),

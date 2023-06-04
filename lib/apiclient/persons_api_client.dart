@@ -18,7 +18,7 @@ class PersonsApiClient {
 
   Future fetchRegistration(Member member) async {
     var url = Uri.parse('http://10.0.2.2:8080/auth/registration');
-    String gender = member.sex == Sex.MAN ? "MALE" : "FEMALE";
+    String gender = member.sex == Sex.MAN ? "MALE" : (member.sex == Sex.WOMAN ? "FEMALE" : "BLANK");
     final msg = jsonEncode({
       "name": member.name,
       "nickname": member.nickname,
@@ -125,7 +125,7 @@ class PersonsApiClient {
   Future fetchUpdatePerson(UpdatePersonRequest request) async {
     var url = Uri.parse('$address/updatePerson');
     final token = await Preference.getToken();
-    String gender = request.gender == Sex.MAN ? "MALE" : "FEMALE";
+    String gender = request.gender == Sex.MAN ? "MALE" : (request.gender == Sex.WOMAN ? "FEMALE" : "BLANK");
     final msg = jsonEncode({
       "name": request.name,
       "nickname": request.nickname,

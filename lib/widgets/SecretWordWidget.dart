@@ -24,6 +24,7 @@ class _SecretWordWidgetState extends State<SecretWordWidget> {
     controller: widget.controller,
       maxLength: 30,
     decoration: InputDecoration(
+      counterText: "",
       labelText: widget.withHelper ? "Секретное слово*" : "Секретное слово*",
       fillColor:  Color(0xff171717),
       filled: true,

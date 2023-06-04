@@ -133,7 +133,7 @@ class ChatScreenState extends State<ChatScreen> {
                       Padding(
                           padding: const EdgeInsets.fromLTRB(16, 16, 100, 16),
                           child: NameWidget(
-                            controller: messageController, text: "Сообщение",)
+                            controller: messageController, text: "Сообщение", size: 255,)
                       )
                     ],
                   );
@@ -149,9 +149,8 @@ class ChatScreenState extends State<ChatScreen> {
             floatingActionButton: FloatingActionButton(
               child: new Icon(Icons.send),
               onPressed: () async {
-                //if (messageController.text.isEmpty) return;
+                if (messageController.text.isEmpty) return;
                 print('pressed');
-                // await DialogUtil.showErrorDialog(context, "Удоли");
                 stompClient.send(destination: '/app/chat', body: json.encode(
                     {
                       "text": messageController.text,

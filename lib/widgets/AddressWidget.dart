@@ -39,6 +39,7 @@ class _AddressWidgetState extends State<AddressWidget> {
       controller: widget.controller,
         maxLength: 100,
       decoration: InputDecoration(
+        counterText: "",
         labelText: widget.withHelper ? "Адрес*" : "Адрес",
         fillColor:  Color(0xff171717),
         filled: true,

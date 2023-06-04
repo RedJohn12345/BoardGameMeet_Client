@@ -55,8 +55,11 @@ class _EventScreenState extends State<EventScreen> {
       const Center(child: Text("Место", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.location, style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
+      event.description.isEmpty ? Container() :
       const Center(child: Text("Описание", style: TextStyle(color: Colors.black, fontSize: 26)),),
+      event.description.isEmpty ? Container() :
       Align(alignment: Alignment.topLeft, child: Text(event.description, style: TextStyle(color: Colors.black, fontSize: 24)),),
+      event.description.isEmpty ? Container() :
       const SizedBox(height: 16,),
       const Center(child: Text("Количество игроков", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.viewCountPlayers(), style: TextStyle(color: Colors.black, fontSize: 24),),),
