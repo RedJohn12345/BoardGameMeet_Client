@@ -267,7 +267,7 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       // Парсим JSON-ответ и преобразуем его в список событий
-      final List<dynamic> messagesJson = jsonDecode(response.body);
+      final List<dynamic> messagesJson = jsonDecode(utf8.decode(response.bodyBytes));
       return messagesJson.map((json) => ChatBubble.fromJson(json)).toList();
     } else {
       throw Exception('Ошибка при загрузке сообщений');

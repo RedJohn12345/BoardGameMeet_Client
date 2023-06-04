@@ -81,7 +81,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
       child: Scaffold(
         appBar: AppBar(
           title:
-              Text("Создание мероприятия", style: TextStyle(fontSize: 24),),
+              event == null ? Text("Создание мероприятия", style: TextStyle(fontSize: 24),)
+                            : Text("Изменение мероприятия", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
           backgroundColor: Color(0xff50bc55),

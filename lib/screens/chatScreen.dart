@@ -41,7 +41,8 @@ class ChatScreenState extends State<ChatScreen> {
       config: StompConfig(
         url: 'ws://10.0.2.2:8080/chat',
         onConnect: onConnectCallback,
-        onStompError: onError
+        onStompError: onError,
+        onDisconnect: onDisconnect
   ));
 
   void _setUpStompClient() {
@@ -70,6 +71,10 @@ class ChatScreenState extends State<ChatScreen> {
 
   void onError(StompFrame stompFrame) {
     print('error');
+  }
+
+  void onDisconnect(StompFrame farem) {
+    print('disconnected');
   }
 
   void frameCallback(StompFrame frame) {
@@ -146,15 +151,15 @@ class ChatScreenState extends State<ChatScreen> {
               onPressed: () async {
                 //if (messageController.text.isEmpty) return;
                 print('pressed');
-                await DialogUtil.showErrorDialog(context, "Удоли");
-                // stompClient.send(destination: '/app/chat', body: json.encode(
-                //     {
-                //       "text": messageController.text,
-                //       "eventId": eventId,
-                //       "personNickname": await Preference.getNickname()
-                //     })
-                // );
-                // messageController.clear();
+                // await DialogUtil.showErrorDialog(context, "Удоли");
+                stompClient.send(destination: '/app/chat', body: json.encode(
+                    {
+                      "text": messageController.text,
+                      "eventId": eventId,
+                      "personNickname": await Preference.getNickname()
+                    })
+                );
+                messageController.clear();
               },
             ),
           ),
