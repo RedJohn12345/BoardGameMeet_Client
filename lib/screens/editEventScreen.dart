@@ -64,6 +64,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
   Widget build(BuildContext context) {
     Event? event = (ModalRoute.of(context)?.settings.arguments == null) ? null : ModalRoute.of(context)?.settings.arguments as Event;
     if (event != null) {
+      print(event.minAge);
+      print(event.maxAge);
       nameController.text = event.name;
       gameController.text = event.game;
       addressController.text = event.location;
