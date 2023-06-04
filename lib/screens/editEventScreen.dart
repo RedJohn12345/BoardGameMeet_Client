@@ -41,7 +41,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
   List<Widget> fields = [];
 
   @override
-  void init_state() {
+  void initState() {
+    super.initState();
     dateTimeWidget = DateTimeWidget(controller: dateController, withHelper: true);
   }
 
@@ -100,7 +101,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
               //return Center(child: Text(state.errorMessage),);
             } else if (state is EventCreated) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushReplacementNamed(context, '/my_events');
+              Navigator.pushNamedAndRemoveUntil(context, '/my_events',
+                      (Route<dynamic> route) => route.settings.name != '/editEvent' && route.settings.name != '/my_events'
+                  && route.settings.name != '/home');
             });
             return const Center(child: CircularProgressIndicator(),);
             }

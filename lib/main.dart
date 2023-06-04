@@ -86,7 +86,7 @@ class _FlutterAppState extends State<FlutterApp> {
           '/welcome': (context) => WelcomeScreen(),
           '/items': (context) => ItemsScreen(),
           '/chat': (context) => ChatScreen(),
-          '/splash': (context) => SplashScreen(),
+          '/splash': (context) => SplashScreen(route: page,),
         },
       );
     }

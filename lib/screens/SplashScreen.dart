@@ -2,11 +2,26 @@ import 'package:flutter/material.dart';
 
 
 class SplashScreen extends StatefulWidget {
+  final String route;
+
+  const SplashScreen({super.key, required this.route});
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    _navigate();
+  }
+
+  void _navigate() async {
+    await Future.delayed(Duration(seconds: 3)); // Задержка в 3 секунды
+    Navigator.pushReplacementNamed(context, widget.route);
+  }
 
   @override
   Widget build(BuildContext context) {
