@@ -22,6 +22,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   final formKey = GlobalKey<FormState>();
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
+  final bloc =  PersonBloc(
+      personRepository: PersonsRepository(
+          apiClient: PersonsApiClient()));
 
   @override
   void dispose() {
@@ -32,9 +35,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc =  PersonBloc(
-        personRepository: PersonsRepository(
-            apiClient: PersonsApiClient()));
+
     return BlocProvider<PersonBloc>(
       create: (context) => bloc,
       child: Scaffold(
@@ -91,7 +92,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                                   final form = formKey.currentState!;
                                   if (form.validate()) {
                                     Member member = Member(nickname: loginController.text, password: passwordController.text);
-                                    bloc.add(AuthorizationPerson(member));
+                                    setState(() {
+                                      bloc.add(AuthorizationPerson(member));
+                                    });
                                   }
                                 },
                                   child: Text("Войти"),

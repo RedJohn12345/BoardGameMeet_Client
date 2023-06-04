@@ -31,8 +31,20 @@ class _EditEventScreenState extends State<EditEventScreen> {
   final descriptionController = TextEditingController();
   final ageFromController = TextEditingController();
   final ageToController = TextEditingController();
+  final bloc = EventsBloc(
+      eventsRepository: EventsRepository(
+          apiClient: EventsApiClient()
+      )
+  );
+  late DateTimeWidget dateTimeWidget;
 
   List<Widget> fields = [];
+
+  @override
+  void init_state() {
+    dateTimeWidget = DateTimeWidget(controller: dateController, withHelper: true);
+  }
+
 
   @override
   void dispose() {
@@ -56,16 +68,13 @@ class _EditEventScreenState extends State<EditEventScreen> {
       addressController.text = event.location;
       countPlayersController.text = event.maxNumberPlayers.toString();
       dateController.text = event.date!.toIso8601String();
+      dateTimeWidget.selectedDate = event.date!;
       descriptionController.text = event.description;
       ageFromController.text = event.minAge == 0 ? "" : event.minAge.toString();
       ageToController.text = event.maxAge == 0 ? "" : event.maxAge.toString();
     }
-    DateTimeWidget dateTimeWidget = DateTimeWidget(controller: dateController, withHelper: true,);
-    final bloc = EventsBloc(
-        eventsRepository: EventsRepository(
-            apiClient: EventsApiClient()
-        )
-    );
+
+
     return BlocProvider(
       create: (context) => bloc,
       child: Scaffold(

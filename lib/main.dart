@@ -1,6 +1,7 @@
 import 'package:boardgm/screens/ChooseAvatarScreen.dart';
 import 'package:boardgm/screens/ProfileEditScreen.dart';
 import 'package:boardgm/screens/ProfileScreen.dart';
+import 'package:boardgm/screens/SplashScreen.dart';
 import 'package:boardgm/screens/WelcomeScreen.dart';
 import 'package:boardgm/screens/changePassword.dart';
 import 'package:boardgm/screens/chatScreen.dart';
@@ -66,7 +67,7 @@ class _FlutterAppState extends State<FlutterApp> {
 
       return MaterialApp(
         title: 'Board Game Meet',
-        initialRoute: page,
+        initialRoute: '/splash',
         routes: {
           '/home': (context) => MainScreen(),
           '/my_events': (context) => MyEventsScreen(),
@@ -84,7 +85,8 @@ class _FlutterAppState extends State<FlutterApp> {
           '/editEvent': (context) => EditEventScreen(),
           '/welcome': (context) => WelcomeScreen(),
           '/items': (context) => ItemsScreen(),
-          '/chat': (context) => ChatScreen()
+          '/chat': (context) => ChatScreen(),
+          '/splash': (context) => SplashScreen(),
         },
       );
     }
