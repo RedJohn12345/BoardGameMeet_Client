@@ -10,6 +10,7 @@ import 'package:boardgm/screens/editEventScreen.dart';
 import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:boardgm/screens/itemsScreen.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,8 @@ class _FlutterAppState extends State<FlutterApp> {
   bool? isFirst;
   // late int color;
   final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
-  Future<void> _initConfig() async {
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  Future<void> _initRemoteConfig() async {
     await _remoteConfig.setConfigSettings(RemoteConfigSettings(
       fetchTimeout: const Duration(
           seconds: 1), // a fetch will wait up to 10 seconds before timing out
@@ -64,11 +66,27 @@ class _FlutterAppState extends State<FlutterApp> {
     await _remoteConfig.fetchAndActivate();
   }
 
+  Future<void> _initAnalytics() async {
+    await FirebaseAnalytics.instance
+        .logBeginCheckout(
+        value: 10.0,
+        currency: 'USD',
+        items: [
+          AnalyticsEventItem(
+              itemName: 'Socks',
+              itemId: 'xjw73ndnw',
+          ),
+        ],
+        coupon: '10PERCENTOFF'
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _checkFirstTime();
-    _initConfig();
+    _initRemoteConfig();
+    _initAnalytics();
   }
 
   Future<void> _checkFirstTime() async {
