@@ -10,10 +10,12 @@ import '../utils/preference.dart';
 
 class EventScreenShow extends StatefulWidget {
 
-  EventScreenShow({super.key});
+  late int color;
+
+  EventScreenShow({super.key, required this.color});
 
   @override
-  State<EventScreenShow> createState() => _EventScreenShowState();
+  State<EventScreenShow> createState() => _EventScreenShowState(color: color);
 }
 
 class _EventScreenShowState extends State<EventScreenShow> {
@@ -24,6 +26,9 @@ class _EventScreenShowState extends State<EventScreenShow> {
       )
   );
   bool isAdmin = false;
+  late int color;
+
+  _EventScreenShowState({required this.color});
 
   @override void initState() {
     _setAdmin();
@@ -69,7 +74,7 @@ class _EventScreenShowState extends State<EventScreenShow> {
               Text(name, style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<PersonBloc, PersonState> (
@@ -102,9 +107,9 @@ class _EventScreenShowState extends State<EventScreenShow> {
                               });
                             },
                               child: Text("Вступить"),
-                              style: const ButtonStyle(
+                              style: ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll<
-                                      Color>(Color(0xff50bc55))),
+                                      Color>(Color(color))),
                             ),
 
                           ),
@@ -116,9 +121,9 @@ class _EventScreenShowState extends State<EventScreenShow> {
                               });
                             },
                               child: Text("Посмотреть"),
-                              style: const ButtonStyle(
+                              style: ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll<
-                                      Color>(Color(0xff50bc55))),
+                                      Color>(Color(color))),
                             ),
                           ),
                         ]

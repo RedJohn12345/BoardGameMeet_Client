@@ -4,14 +4,18 @@ import '../model/member.dart';
 
 class ChooseAvatar extends StatefulWidget {
 
+  late int color;
 
-  ChooseAvatar({super.key});
+  ChooseAvatar({super.key, required this.color});
 
   @override
-  State<ChooseAvatar> createState() => _ChooseAvatarState();
+  State<ChooseAvatar> createState() => _ChooseAvatarState(color: color);
 }
 
 class _ChooseAvatarState extends State<ChooseAvatar> {
+
+  late int color;
+  _ChooseAvatarState({required this.color});
 
   final List<AssetImage> images = [
     AssetImage('assets/images/1.jpg'),
@@ -35,7 +39,7 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
             Text("Выбор Аватара", style: TextStyle(fontSize: 24),),
         //
         centerTitle: true,
-        backgroundColor: Color(0xff50bc55),
+        backgroundColor: Color(color),
       ),
       backgroundColor: Color(0xff292929),
       body:
@@ -99,7 +103,7 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
                                   (Route<dynamic> route) => route.settings.name != '/profileEdit' && route.settings.name != '/avatarChoose');
                       },
                         child: Text("Сохранить"),
-                        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                        style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                       ),
                     ),]
               ),

@@ -7,13 +7,16 @@ import '../widgets/PasswordWidget.dart';
 
 class ChangePassword2Screen extends StatefulWidget {
 
-  ChangePassword2Screen({super.key});
+  late int color;
+  ChangePassword2Screen({super.key, required this.color});
 
   @override
-  State<ChangePassword2Screen> createState() => _ChangePassword2ScreenState();
+  State<ChangePassword2Screen> createState() => _ChangePassword2ScreenState(color: color);
 }
 
 class _ChangePassword2ScreenState extends State<ChangePassword2Screen> {
+  late int color;
+  _ChangePassword2ScreenState({required this.color});
   final formKey = GlobalKey<FormState>();
   final passwordController = TextEditingController();
   final repeatController = TextEditingController();
@@ -37,7 +40,7 @@ class _ChangePassword2ScreenState extends State<ChangePassword2Screen> {
               Text("Восстановление пароля", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<PersonBloc, PersonState>(
@@ -67,7 +70,7 @@ class _ChangePassword2ScreenState extends State<ChangePassword2Screen> {
                                     }
                                   },
                                     child: Text("Восстановить"),
-                                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                    style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                                   ),
                                 ),]
                           ),

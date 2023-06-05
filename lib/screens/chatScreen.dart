@@ -18,15 +18,22 @@ import '../bloc/events_bloc.dart';
 import '../repositories/events_repository.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+
+  late int color;
+
+  ChatScreen({super.key, required this.color});
 
   @override
   ChatScreenState createState() {
-    return ChatScreenState();
+    return ChatScreenState(color: color);
   }
 }
 
 class ChatScreenState extends State<ChatScreen> {
+
+  late int color;
+
+  ChatScreenState({required this.color});
   TextEditingController messageController = TextEditingController();
   List<Widget> chatBubbles = [];
   final scrollController = ScrollController();
@@ -108,7 +115,7 @@ class ChatScreenState extends State<ChatScreen> {
                 Text("Чат", style: TextStyle(fontSize: 24),),
                 //
                 centerTitle: true,
-                backgroundColor: Color(0xff50bc55),
+                backgroundColor: Color(color),
               ),
               backgroundColor: Color(0xff292929),
             body: BlocBuilder<EventsBloc, EventsState>(

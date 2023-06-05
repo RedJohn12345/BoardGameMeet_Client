@@ -8,15 +8,18 @@ import '../model/event.dart';
 
 class MyEventsScreen extends StatefulWidget {
 
+  late int color;
 
-  MyEventsScreen({super.key});
+  MyEventsScreen({super.key, required this.color});
 
   @override
-  State<MyEventsScreen> createState() => _MyEventsScreenState();
+  State<MyEventsScreen> createState() => _MyEventsScreenState(color: color);
 }
 
 class _MyEventsScreenState extends State<MyEventsScreen> {
 
+  late int color;
+  _MyEventsScreenState({required this.color});
   List<Event> myEvents = [];
   Widget button = Container();
   final scrollController = ScrollController();
@@ -57,7 +60,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
               Text("Мои мероприятия", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<EventsBloc, EventsState>(
@@ -103,7 +106,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
         floatingActionButton: FloatingActionButton(onPressed: () {
           Navigator.pushNamed(context, '/editEvent', arguments: null);
         },
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -124,7 +127,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                 icon: Icon(Icons.list_alt, size: 30.0,),
                 label: ""),
           ],
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
       ),
     );

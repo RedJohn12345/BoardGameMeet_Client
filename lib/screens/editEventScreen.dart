@@ -15,13 +15,18 @@ import '../widgets/ageWidget.dart';
 
 class EditEventScreen extends StatefulWidget {
 
-  EditEventScreen({super.key});
+  late int color;
+
+  EditEventScreen({super.key, required this.color});
 
   @override
-  State<EditEventScreen> createState() => _EditEventScreenState();
+  State<EditEventScreen> createState() => _EditEventScreenState(color: color);
 }
 
 class _EditEventScreenState extends State<EditEventScreen> {
+  late int color;
+
+  _EditEventScreenState({required this.color});
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final gameController = TextEditingController();
@@ -87,7 +92,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                             : Text("Изменение мероприятия", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<EventsBloc, EventsState>(
@@ -193,7 +198,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                 }
               },
                 child: Text("Продолжить"),
-                style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
               ),
             ),]
       ),
