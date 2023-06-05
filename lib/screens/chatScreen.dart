@@ -46,7 +46,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   late StompClient stompClient = StompClient(
       config: StompConfig(
-        url: 'ws://10.0.2.2:8080/chat',
+        url: 'ws://board-game-meet-dunad4n.cloud.okteto.net/chat',
         onConnect: onConnectCallback,
         onStompError: onError,
         onDisconnect: onDisconnect

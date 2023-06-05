@@ -15,10 +15,10 @@ class EventsApiClient {
   static const bearer = 'Bearer_';
   static const contentType = 'Content-type';
   static const json = 'application/json';
-  static const address = 'http://10.0.2.2:8080';
+  static const address = 'board-game-meet-dunad4n.cloud.okteto.net';
 
   Future<List> fetchMyEvents(int page) async {
-    var url = Uri.parse('http://10.0.2.2:8080/myEvents?page=$page&size=20');
+    var url = Uri.parse('$address/myEvents?page=$page&size=20');
     final token = await Preference.getToken();
     var response = await http.get(url,
         headers: {authorization:
@@ -34,16 +34,15 @@ class EventsApiClient {
   }
 
   Future<List<MainPageEvent>> fetchEvents(String? search, int page) async {
-    //final String url = '$_baseUrl/';
     final Uri url;
     print(search);
     final city = await YandexMapKitUtil.getCityToSearch();
     if (search != null) {
       url = Uri.parse(
-          'http://10.0.2.2:8080/events?city=$city&search=$search&page=$page&size=20');
+          '$address/events?city=$city&search=$search&page=$page&size=20');
     } else {
       url = Uri.parse(
-          'http://10.0.2.2:8080/events?city=$city&page=$page&size=20');
+          '$address/events?city=$city&page=$page&size=20');
     }
     final token = await Preference.checkToken() ? await Preference.getToken(): null;
     var response;
@@ -71,7 +70,7 @@ class EventsApiClient {
 
   Future fetchCreateEvent(CreateEventRequest request) async {
     //final String url = '$_baseUrl/';
-    var url = Uri.parse('http://10.0.2.2:8080/createEvent');
+    var url = Uri.parse('$address/createEvent');
     final token = await Preference.getToken();
     final city = await YandexMapKitUtil.getCityByAddress(request.address);
     final msg = jsonEncode({
@@ -106,7 +105,7 @@ class EventsApiClient {
   }
 
   Future<Event> fetchEvent(int eventId) async {
-    var url = Uri.parse('http://10.0.2.2:8080/event/$eventId');
+    var url = Uri.parse('$address/event/$eventId');
     final token = await Preference.getToken();
     var response = await http.get(url,
         headers: {authorization:
@@ -122,7 +121,7 @@ class EventsApiClient {
   }
 
   Future fetchUpdateEvent(UpdateEventRequest request) async {
-    var url = Uri.parse('http://10.0.2.2:8080/updateEvent');
+    var url = Uri.parse('$address/updateEvent');
     final token = await Preference.getToken();
     final city = await YandexMapKitUtil.getCityByAddress(request.address);
     final msg = jsonEncode({
@@ -260,7 +259,7 @@ class EventsApiClient {
   }
 
   Future<List> fetchMessages(int eventId, int page) async {
-    var url = Uri.parse('http://10.0.2.2:8080/messagesIn/$eventId?page=$page&size=7');
+    var url = Uri.parse('$address/messagesIn/$eventId?page=$page&size=7');
     final token = await Preference.getToken();
     var response = await http.get(url,
       headers: {authorization:

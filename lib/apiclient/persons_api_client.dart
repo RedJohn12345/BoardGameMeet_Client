@@ -14,10 +14,10 @@ class PersonsApiClient {
   static const bearer = 'Bearer_';
   static const contentType = 'Content-type';
   static const json = 'application/json';
-  static const address = 'http://10.0.2.2:8080';
+  static const address = 'board-game-meet-dunad4n.cloud.okteto.net';
 
   Future fetchRegistration(Member member) async {
-    var url = Uri.parse('http://10.0.2.2:8080/auth/registration');
+    var url = Uri.parse('$address/auth/registration');
     String gender = member.sex == Sex.MAN ? "MALE" : (member.sex == Sex.WOMAN ? "FEMALE" : "BLANK");
     final msg = jsonEncode({
       "name": member.name,
@@ -44,7 +44,7 @@ class PersonsApiClient {
   }
 
   Future fetchAuthorization(Member member) async {
-    var url = Uri.parse('http://10.0.2.2:8080/auth/login');
+    var url = Uri.parse('$address/auth/login');
     final msg = jsonEncode({
       "nickname": member.nickname,
       "password": member.password,
