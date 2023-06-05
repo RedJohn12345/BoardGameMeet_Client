@@ -164,9 +164,6 @@ class ChatScreenState extends State<ChatScreen> {
                       "eventId": eventId,
                       "personNickname": await Preference.getNickname()
                     }),
-                  headers: {
-                  "Authorization" : (await Preference.getToken())!,
-                  }
                 );
                 messageController.clear();
               },
