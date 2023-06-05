@@ -131,15 +131,13 @@ class _EventScreenShowState extends State<EventScreenShow> {
                   ),
                 ],);
             } else if (state is JoinedToEvent) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                // event.numberPlayers++;
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
                 Navigator.pushReplacementNamed(
                     context, '/event', arguments: [state.event, '/home']);
               });
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is AdminShowedEvent) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                // event.numberPlayers++;
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
                 Navigator.pushReplacementNamed(
                     context, '/event', arguments: [state.event, '/home']);
               });

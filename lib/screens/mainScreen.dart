@@ -104,7 +104,7 @@ class _MainScreenState extends State<MainScreen> {
           } else if (state is AvatarIsLoaded) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
-                button = FloatingActionButton(onPressed: () {
+                button = FloatingActionButton(onPressed: () async {
                   Navigator.pushNamed(context, '/profile', arguments: [null, null, state.nickname]);
                 },
                   child: CircleAvatar(
@@ -226,9 +226,6 @@ class _MainScreenState extends State<MainScreen> {
                                   selectedEvent.address,
                                   selectedEvent.viewCountPlayers(),
                                   selectedEvent.id]);
-                            setState(() {
-
-                            });
                         },
                         title: Text(events[index].name),
                         subtitle: Text(

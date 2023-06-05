@@ -3,8 +3,6 @@ import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../model/event.dart';
 import '../model/item.dart';
 import '../repositories/persons_repository.dart';
@@ -46,7 +44,7 @@ class _EventScreenState extends State<EventScreen> {
 
     final list = (ModalRoute.of(context)?.settings.arguments) as List;
     final event = list[0] as Event;
-    final route = list[1] as String;
+    var route = list[1] as String;
 
     final List<Widget> itemsWidget = [];
 

@@ -5,6 +5,7 @@ import 'package:boardgm/repositories/events_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../model/event.dart';
+import '../utils/preference.dart';
 
 class MyEventsScreen extends StatefulWidget {
 
@@ -155,9 +156,6 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     child: ListTile(
                       onTap: () async {
                           await Navigator.pushNamed(context, '/event', arguments: [myEvents[index], '/my_events']);
-                          setState(() {
-                            print("hello");
-                          });
                           },
                       title: myEvents[index].date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch
                           ? Text(myEvents[index].name) : Text("${myEvents[index].name} (Прошел)") ,

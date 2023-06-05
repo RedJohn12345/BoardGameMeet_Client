@@ -14,7 +14,7 @@ class PersonsApiClient {
   static const bearer = 'Bearer_';
   static const contentType = 'Content-type';
   static const json = 'application/json';
-  static const address = 'board-game-meet-dunad4n.cloud.okteto.net';
+  static const address = 'https://board-game-meet-dunad4n.cloud.okteto.net';
 
   Future fetchRegistration(Member member) async {
     var url = Uri.parse('$address/auth/registration');
