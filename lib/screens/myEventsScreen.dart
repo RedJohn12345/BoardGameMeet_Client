@@ -49,11 +49,6 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool needRestart = ModalRoute.of(context)?.settings.arguments == null ? false : ModalRoute.of(context)?.settings.arguments as bool;
-    if (needRestart) {
-      print("hello");
-      setState(() {});
-    }
     return BlocProvider<EventsBloc>(
       create: (context) => bloc,
       child: Scaffold(
