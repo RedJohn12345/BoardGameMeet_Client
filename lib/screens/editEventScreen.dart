@@ -112,7 +112,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
             }
             else if (state is EventUpdated) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(
+                context, '/event', arguments: [event, '/my_events'], (Route<dynamic> route) => route.settings.name != '/event' && route.settings.name != '/editEvent');
               });
               return const Center(child: CircularProgressIndicator(),);
             }

@@ -1,5 +1,6 @@
 import 'package:boardgm/apiclient/events_api_client.dart';
 import 'package:boardgm/bloc/events_bloc.dart';
+import 'package:boardgm/custom_icons.dart';
 import 'package:boardgm/repositories/events_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +49,11 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool needRestart = ModalRoute.of(context)?.settings.arguments == null ? false : ModalRoute.of(context)?.settings.arguments as bool;
+    if (needRestart) {
+      print("hello");
+      setState(() {});
+    }
     return BlocProvider<EventsBloc>(
       create: (context) => bloc,
       child: Scaffold(
@@ -73,9 +79,9 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
             } else if (state is AvatarIsLoaded) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 setState(() {
-                  button = FloatingActionButton(onPressed: () {
-                    Navigator.pushNamed(context, '/profile', arguments: [null, null, state.nickname]);
-                  },
+                  button = FloatingActionButton(onPressed: () async {
+                    await Navigator.pushNamed(context, '/profile', arguments: [null, null, state.nickname]);
+                    },
                     child: CircleAvatar(
                       backgroundImage: AssetImage(state.avatar),
                       radius: 200,
@@ -149,15 +155,18 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                   Card(
                     color: Colors.white,
                     child: ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/event', arguments: [myEvents[index], '/my_events']);
-                      },
+                      onTap: () async {
+                          await Navigator.pushNamed(context, '/event', arguments: [myEvents[index], '/my_events']);
+                          setState(() {
+                            print("hello");
+                          });
+                          },
                       title: myEvents[index].date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch
                           ? Text(myEvents[index].name) : Text("${myEvents[index].name} (Прошел)") ,
                       subtitle: Text(
                           "${myEvents[index].game} - ${myEvents[index].date
                               .toString()} - ${myEvents[index].location}"),
-                      trailing: Icon(Icons.account_box),
+                      trailing: Icon(myEvents[index].isHost ? CustomIcons.crown : Icons.account_box),
                     ),
                   )
           ),

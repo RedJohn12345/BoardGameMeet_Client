@@ -1,7 +1,6 @@
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../apiclient/events_api_client.dart';
 import '../bloc/events_bloc.dart';
@@ -51,6 +50,13 @@ class _MainScreenState extends State<MainScreen> {
       bloc.add(LoadEvents(search));
     }
   }
+
+  @override
+  void didChangeDependencies() {
+    print("hello");
+    super.didChangeDependencies();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +173,8 @@ class _MainScreenState extends State<MainScreen> {
         child: Row(
             children: [
               Expanded(
-                child: const TextField(
+                child: TextField(
+                  controller: searchController,
                   decoration: InputDecoration(
                       hintText: "Поиск",
                       fillColor:  Color(0xff171717),
@@ -179,11 +186,21 @@ class _MainScreenState extends State<MainScreen> {
               ),
               IconButton(
                   onPressed: () {
-                    if (searchController.text.isEmpty) return;
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        '/home', (route) => false, arguments: searchController.text);
+                    print(search);
+                    if (searchController.text.isEmpty) {
+                      if (search == null) {
+                        return;
+                      } else {
+                        Navigator.pushNamedAndRemoveUntil(context,
+                            '/home', (route) => false);
+                      }
+                    } else {
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          '/home', (route) => false,
+                          arguments: searchController.text);
+                    }
                   },
-                  icon: Icon(Icons.search)),
+                  icon: Icon(Icons.search), color: Colors.white,),
             ]),
       ),
       Flexible(
@@ -197,15 +214,18 @@ class _MainScreenState extends State<MainScreen> {
                   Card(
                     color: Colors.white,
                     child: ListTile(
-                        onTap: () {
+                        onTap: ()  async {
                             MainPageEvent selectedEvent = events[index];
-                            Navigator.pushNamed(context, '/eventShow',
+                            await Navigator.pushNamed(context, '/eventShow',
                                 arguments: [selectedEvent.name,
                                   selectedEvent.game,
                                   selectedEvent.date,
                                   selectedEvent.address,
                                   selectedEvent.viewCountPlayers(),
                                   selectedEvent.id]);
+                            setState(() {
+
+                            });
                         },
                         title: Text(events[index].name),
                         subtitle: Text(

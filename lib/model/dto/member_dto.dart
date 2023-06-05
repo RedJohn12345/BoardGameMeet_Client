@@ -48,7 +48,7 @@ class MemberInEvent {
 
   static fromJson(json) {
     return MemberInEvent(nickname: json['nickname'] as String,
-                         avatarId: json['avatarId'] as int,
+                         avatarId: json['avatarId'] == null ? 1 : json['avatarId'] as int,
                          isHost: json['host'] as bool);
   }
 }

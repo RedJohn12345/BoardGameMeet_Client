@@ -1,4 +1,5 @@
 import 'package:boardgm/bloc/person_bloc.dart';
+import 'package:boardgm/custom_icons.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,6 +107,7 @@ class _MembersScreenState extends State<MembersScreen> {
                                       ),
                                     ),
                                     trailing:
+                                    index == 0 ? Icon(CustomIcons.crown) :
                                     Visibility(
                                         visible: isHost && index > 0,
                                         child: IconButton(icon: Icon(

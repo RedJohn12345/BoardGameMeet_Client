@@ -20,11 +20,9 @@ class MainPageEventsLoaded extends EventsState {
 }
 
 class EventCreated extends EventsState {
-
 }
 
 class EventUpdated extends EventsState {
-
 }
 
 class EventLoaded_State extends EventsState {
