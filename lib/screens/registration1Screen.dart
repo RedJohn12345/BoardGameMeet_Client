@@ -8,18 +8,23 @@ import '../widgets/SecretWordWidget.dart';
 
 class Registration1Screen extends StatefulWidget {
 
-  Registration1Screen({super.key});
+  late int color;
+
+  Registration1Screen({super.key, required this.color});
 
   @override
-  State<Registration1Screen> createState() => _Registration1ScreenState();
+  State<Registration1Screen> createState() => _Registration1ScreenState(color: color);
 }
 
 class _Registration1ScreenState extends State<Registration1Screen> {
+  late int color;
   final formKey = GlobalKey<FormState>();
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
   final secretWordController = TextEditingController();
   final nameController = TextEditingController();
+
+  _Registration1ScreenState({required this.color});
 
   @override
   void dispose() {
@@ -38,7 +43,7 @@ class _Registration1ScreenState extends State<Registration1Screen> {
             Text("Регистрация", style: TextStyle(fontSize: 24),),
         //
         centerTitle: true,
-        backgroundColor: Color(0xff50bc55),
+        backgroundColor: Color(color),
       ),
       backgroundColor: Color(0xff292929),
       body: Center(
@@ -68,7 +73,7 @@ class _Registration1ScreenState extends State<Registration1Screen> {
                         }
                       },
                         child: Text("Продолжить"),
-                        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                        style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                       ),
                     ),]
               ),

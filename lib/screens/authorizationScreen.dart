@@ -11,14 +11,18 @@ import '../widgets/PasswordWidget.dart';
 
 class AuthorizationScreen extends StatefulWidget {
 
-  AuthorizationScreen({super.key});
+  late int color;
+  AuthorizationScreen({super.key, required this.color});
 
   @override
-  State<AuthorizationScreen> createState() => _AuthorizationScreenState();
+  State<AuthorizationScreen> createState() => _AuthorizationScreenState(color: color);
 }
 
 class _AuthorizationScreenState extends State<AuthorizationScreen> {
 
+  late int color;
+
+  _AuthorizationScreenState({required this.color});
   final formKey = GlobalKey<FormState>();
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
@@ -44,7 +48,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
               Text("Авторизация", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<PersonBloc, PersonState> (
@@ -98,7 +102,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                                   }
                                 },
                                   child: Text("Войти"),
-                                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                                 ),
                               ),]
                         ),
@@ -110,7 +114,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                                   Navigator.pushNamed(context, '/registration');
                                 },
                                   child: Text("Зарегистрироваться"),
-                                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                                 ),
                               ),]
                         ),

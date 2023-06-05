@@ -1,3 +1,4 @@
+import 'package:boardgm/firebase_options.dart';
 import 'package:boardgm/screens/ChooseAvatarScreen.dart';
 import 'package:boardgm/screens/ProfileEditScreen.dart';
 import 'package:boardgm/screens/ProfileScreen.dart';
@@ -9,6 +10,9 @@ import 'package:boardgm/screens/editEventScreen.dart';
 import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:boardgm/screens/itemsScreen.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/MembersScreen.dart';
@@ -19,7 +23,12 @@ import 'screens/mainScreen.dart';
 import 'screens/registration1Screen.dart';
 import 'screens/registration2Screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(FlutterApp());
 }
 
@@ -38,11 +47,46 @@ class FlutterApp extends StatefulWidget {
 
 class _FlutterAppState extends State<FlutterApp> {
   bool? isFirst;
+  // late int color;
+  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  Future<void> _initRemoteConfig() async {
+    await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(
+          seconds: 1), // a fetch will wait up to 10 seconds before timing out
+      minimumFetchInterval: const Duration(
+          seconds:
+          10), // fetch parameters will be cached for a maximum of 1 hour
+    ));
+
+    _fetchConfig();
+
+  }
+  void _fetchConfig() async {
+    await _remoteConfig.fetchAndActivate();
+  }
+
+  Future<void> _initAnalytics() async {
+    await FirebaseAnalytics.instance
+        .logBeginCheckout(
+        value: 10.0,
+        currency: 'USD',
+        items: [
+          AnalyticsEventItem(
+              itemName: 'Socks',
+              itemId: 'xjw73ndnw',
+          ),
+        ],
+        coupon: '10PERCENTOFF'
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     _checkFirstTime();
+    _initRemoteConfig();
+    _initAnalytics();
   }
 
   Future<void> _checkFirstTime() async {
@@ -60,6 +104,10 @@ class _FlutterAppState extends State<FlutterApp> {
 
   @override
   Widget build(BuildContext context) {
+    // _remoteConfig.fetchAndActivate();
+    bool condition = _remoteConfig.getBool("main_color");
+    print("conditional is $condition");
+    int color = condition ? 0xff50bc55 : Colors.deepOrange.value;
     if (isFirst == null)
       return CircularProgressIndicator();
     else {
@@ -69,23 +117,23 @@ class _FlutterAppState extends State<FlutterApp> {
         title: 'Board Game Meet',
         initialRoute: '/splash',
         routes: {
-          '/home': (context) => MainScreen(),
-          '/my_events': (context) => MyEventsScreen(),
-          '/authorization': (context) => AuthorizationScreen(),
-          '/registration': (context) => Registration1Screen(),
-          '/registration+': (context) => Registration2Screen(),
-          '/changePassword': (context) => ChangePasswordScreen(),
-          '/changePassword+': (context) => ChangePassword2Screen(),
-          '/event': (context) => EventScreen(),
-          '/eventShow': (context) => EventScreenShow(),
-          '/members': (context) => MembersScreen(),
-          '/profile': (context) => ProfileScreen(),
-          '/profileEdit': (context) => ProfileEditScreen(),
-          '/avatarChoose': (context) => ChooseAvatar(),
-          '/editEvent': (context) => EditEventScreen(),
-          '/welcome': (context) => WelcomeScreen(),
-          '/items': (context) => ItemsScreen(),
-          '/chat': (context) => ChatScreen(),
+          '/home': (context) => MainScreen(color: color),
+          '/my_events': (context) => MyEventsScreen(color: color),
+          '/authorization': (context) => AuthorizationScreen(color: color),
+          '/registration': (context) => Registration1Screen(color: color),
+          '/registration+': (context) => Registration2Screen(color: color),
+          '/changePassword': (context) => ChangePasswordScreen(color: color),
+          '/changePassword+': (context) => ChangePassword2Screen(color: color),
+          '/event': (context) => EventScreen(color: color),
+          '/eventShow': (context) => EventScreenShow(color: color),
+          '/members': (context) => MembersScreen(color: color),
+          '/profile': (context) => ProfileScreen(color: color),
+          '/profileEdit': (context) => ProfileEditScreen(color: color),
+          '/avatarChoose': (context) => ChooseAvatar(color: color),
+          '/editEvent': (context) => EditEventScreen(color: color),
+          '/welcome': (context) => WelcomeScreen(color: color),
+          '/items': (context) => ItemsScreen(color: color),
+          '/chat': (context) => ChatScreen(color: color),
           '/splash': (context) => SplashScreen(route: page,),
         },
       );

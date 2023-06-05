@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "992990807174",
+    "project_id": "board-game-meet-1b606",
+    "storage_bucket": "board-game-meet-1b606.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992990807174:android:cf27d82bfd9b284c54fd07",
+        "android_client_info": {
+          "package_name": "kkk.games.boardgm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "992990807174-2rl8llpuvv684fjk071qmvn59862plof.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4ha_2T4m57wvuXjvxth3N_mTV_Pbldp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992990807174-2rl8llpuvv684fjk071qmvn59862plof.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

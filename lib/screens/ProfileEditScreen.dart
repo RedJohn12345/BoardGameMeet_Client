@@ -17,13 +17,19 @@ import '../widgets/ageWidget.dart';
 
 class ProfileEditScreen extends StatefulWidget {
 
-  ProfileEditScreen({super.key});
+  late int color;
+
+  ProfileEditScreen({super.key, required this.color});
 
   @override
-  State<ProfileEditScreen> createState() => _ProfileEditScreenState();
+  State<ProfileEditScreen> createState() => _ProfileEditScreenState(color: color);
 }
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
+
+  late int color;
+
+  _ProfileEditScreenState({required this.color});
 
   final formKey = GlobalKey<FormState>();
   final nicknameController = TextEditingController();
@@ -70,7 +76,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 Text("Редактирование профиля", style: TextStyle(fontSize: 24),),
                 //
                 centerTitle: true,
-                backgroundColor: Color(0xff50bc55),
+                backgroundColor: Color(color),
               ),
               backgroundColor: Color(0xff292929),
               body: BlocBuilder<PersonBloc, PersonState>(
@@ -128,9 +134,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         }
                                       },
                                         child: Text("Сохранить"),
-                                        style: const ButtonStyle(
+                                        style: ButtonStyle(
                                             backgroundColor: MaterialStatePropertyAll<
-                                                Color>(Color(0xff50bc55))),
+                                                Color>(Color(color))),
                                       ),
                                     ),
                                   ]

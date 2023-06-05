@@ -3,12 +3,20 @@ import 'package:dots_indicator/dots_indicator.dart';
 
 
 class WelcomeScreen extends StatefulWidget {
+
+  late int color;
+
+  WelcomeScreen({super.key, required this.color});
+
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  State<WelcomeScreen> createState() => _WelcomeScreenState(color: color);
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  late int color;
   final PageController controller = PageController();
+
+  _WelcomeScreenState({required this.color});
 
     int currentPage = 0;
 
@@ -35,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 automaticallyImplyLeading: false,
                 title: Text("BoardGameMeet", style: TextStyle(fontSize: 24),),
                 centerTitle: true,
-                backgroundColor: Color(0xff50bc55),
+                backgroundColor: Color(color),
               ),
               backgroundColor: Color(0xff292929),
               body:Container(
@@ -52,7 +60,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 automaticallyImplyLeading: false,
                 title: Text("BoardGameMeet", style: TextStyle(fontSize: 24),),
                 centerTitle: true,
-                backgroundColor: Color(0xff50bc55),
+                backgroundColor: Color(color),
               ),
               backgroundColor: Color(0xff292929),
               body: Container(
@@ -70,7 +78,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 automaticallyImplyLeading: false,
                 title: Text("BoardGameMeet", style: TextStyle(fontSize: 24),),
                 centerTitle: true,
-                backgroundColor: Color(0xff50bc55),
+                backgroundColor: Color(color),
               ),
               backgroundColor: Color(0xff292929),
               body: Container(
@@ -88,7 +96,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 automaticallyImplyLeading: false,
                 title: Text("BoardGameMeet", style: TextStyle(fontSize: 24),),
                 centerTitle: true,
-                backgroundColor: Color(0xff50bc55),
+                backgroundColor: Color(color),
               ),
               backgroundColor: Color(0xff292929),
               body: Container(
@@ -109,7 +117,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                           },
                             child: Text("Начать"),
-                            style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                            style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                           ),
                         ),
                       ],

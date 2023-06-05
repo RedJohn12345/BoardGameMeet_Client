@@ -10,14 +10,19 @@ import '../widgets/NameWidget.dart';
 
 class ItemsScreen extends StatefulWidget {
 
-  ItemsScreen({super.key});
+  late int color;
+
+  ItemsScreen({super.key, required this.color});
 
   @override
-  State<ItemsScreen> createState() => _ItemsScreenState();
+  State<ItemsScreen> createState() => _ItemsScreenState(color: color);
 }
 
 class _ItemsScreenState extends State<ItemsScreen> {
 
+  late int color;
+
+  _ItemsScreenState({required this.color});
   final formKey = GlobalKey<FormState>();
   final itemController = TextEditingController();
   List<Item> items = [];
@@ -43,7 +48,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
               Text("Предметы", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<PersonBloc, PersonState> (
@@ -97,7 +102,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                                     }
                                   },
                                     child: Text("Добавить"),
-                                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                    style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                                   ),
                                 ),
                                 const SizedBox(width: 16,),
@@ -112,7 +117,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                       });
                     },
                       child: Text("Сохранить"),
-                      style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                      style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                     ),
                   ],
                 ),
