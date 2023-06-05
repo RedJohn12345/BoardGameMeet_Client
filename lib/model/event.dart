@@ -31,7 +31,7 @@ class Event {
   static fromJson(json) {
     Event event =  Event(id: json['id'], name: json['name'] as String, game: json['game'] as String, location: json['address'] as String,
       numberPlayers: json['curPersonCount'] as int, maxNumberPlayers: json['maxPersonCount'] as int,
-      description: "", isHost: json['host'] as bool);
+      description: json['description'] as String, isHost: json['host'] as bool, minAge: json['minAge'] as int, maxAge: json['maxAge'] as int);
     event.date = DateTime.parse(json['date'] as String);
     return event;
   }

@@ -11,13 +11,17 @@ import '../model/member.dart';
 
 class ProfileScreen extends StatefulWidget {
 
-  ProfileScreen({super.key});
+  late int color;
+
+  ProfileScreen({super.key, required this.color});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState(color: color);
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late int color;
+  _ProfileScreenState({required this.color});
   final bloc = PersonBloc(personRepository: PersonsRepository(apiClient: PersonsApiClient()));
   bool isAdmin = false;
 
@@ -49,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title:
                 Text("Профиль", style: TextStyle(fontSize: 24),),
                 centerTitle: true,
-                backgroundColor: Color(0xff50bc55),
+                backgroundColor: Color(color),
                 actions: state.isMyProfile ? [
                   IconButton(onPressed: () {
                     Navigator.pushReplacementNamed(
@@ -84,9 +88,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 });
                               },
                                 child: Text("Выйти"),
-                                style: const ButtonStyle(
+                                style: ButtonStyle(
                                     backgroundColor: MaterialStatePropertyAll<
-                                        Color>(Color(0xff50bc55))),
+                                        Color>(Color(color))),
                               ),
                             ),
                             )
@@ -106,9 +110,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   });
                                 },
                                   child: Text("Заблокировать"),
-                                  style: const ButtonStyle(
+                                  style: ButtonStyle(
                                       backgroundColor: MaterialStatePropertyAll<
-                                          Color>(Color(0xff50bc55))),
+                                          Color>(Color(color))),
                                 ),
                               ),
                             )

@@ -10,16 +10,19 @@ import '../repositories/events_repository.dart';
 
 class MainScreen extends StatefulWidget {
 
-
-  MainScreen({super.key});
+  late int color;
+  MainScreen({super.key, required this.color});
 
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainScreen> createState() => _MainScreenState(color: color);
 }
 
 class _MainScreenState extends State<MainScreen> {
 
+  late int color;
+
+  _MainScreenState({required this.color});
   List<MainPageEvent> events = [];
   Widget button = Container();
   final scrollController = ScrollController();
@@ -63,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
               Text("Список мероприятий", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<EventsBloc, EventsState>(
@@ -85,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
                       Navigator.pushNamed(context, "/authorization");
                     },
                       child: Text("Войти"),
-                      style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                      style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                     );
               });
             });
@@ -125,7 +128,7 @@ class _MainScreenState extends State<MainScreen> {
         floatingActionButton: FloatingActionButton(onPressed: () async {
           await Preference.checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
         },
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
           child: Icon(Icons.add, color: Colors.white, size: 30.0,),
           heroTag: 'create_event',
         ),
@@ -149,7 +152,7 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Icon(Icons.list_alt, size: 30.0,),
                 label: ""),
           ],
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
       ),
     );

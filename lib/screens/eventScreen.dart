@@ -11,10 +11,12 @@ import '../repositories/persons_repository.dart';
 
 class EventScreen extends StatefulWidget {
 
-  EventScreen({super.key});
+  late int color;
+
+  EventScreen({super.key, required this.color});
 
   @override
-  State<EventScreen> createState() => _EventScreenState();
+  State<EventScreen> createState() => _EventScreenState(color: color);
 }
 
 class _EventScreenState extends State<EventScreen> {
@@ -24,6 +26,9 @@ class _EventScreenState extends State<EventScreen> {
           apiClient: PersonsApiClient()
       )
   );
+  late int color;
+
+  _EventScreenState({required this.color});
   List<Item> items = [];
   bool isAdmin = false;
 
@@ -99,7 +104,7 @@ class _EventScreenState extends State<EventScreen> {
     }
 
     params.add(itemsWidget.length == 0 ? SizedBox() : Container(decoration: BoxDecoration(
-        color: Color(0xff50bc55),
+        color: Color(color),
         borderRadius: BorderRadius.circular(20)),
         padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
         margin: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Column(children: itemsWidget,)));
@@ -112,7 +117,7 @@ class _EventScreenState extends State<EventScreen> {
               Text(event.name, style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
           actions: [
             IconButton(onPressed: () async {
               final membersCount = await Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]) as int;
@@ -169,9 +174,9 @@ class _EventScreenState extends State<EventScreen> {
                                   personBloc.add(DeleteEvent(event.id!));
                                 },
                                 child: Text("Удалить"),
-                                style: const ButtonStyle(
+                                style: ButtonStyle(
                                     backgroundColor: MaterialStatePropertyAll<
-                                        Color>(Color(0xff50bc55))),
+                                        Color>(Color(color))),
                                 ),
                               ),
                           ),
@@ -182,9 +187,9 @@ class _EventScreenState extends State<EventScreen> {
                                 personBloc.add(LeaveFromEvent(event.id));
                               },
                                 child: Text("Покинуть"),
-                                style: const ButtonStyle(
+                                style: ButtonStyle(
                                     backgroundColor: MaterialStatePropertyAll<
-                                        Color>(Color(0xff50bc55))),
+                                        Color>(Color(color))),
                               ),
                             )
                           ),
@@ -194,9 +199,9 @@ class _EventScreenState extends State<EventScreen> {
                               Navigator.pushNamed(context, '/chat', arguments: event.id);
                             },
                               child: Text("Чат"),
-                              style: const ButtonStyle(
+                              style: ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll<
-                                      Color>(Color(0xff50bc55))),
+                                      Color>(Color(color))),
                             ),
                           ),
                         ]

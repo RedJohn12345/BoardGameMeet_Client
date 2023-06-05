@@ -11,13 +11,18 @@ import '../widgets/ageWidget.dart';
 
 class Registration2Screen extends StatefulWidget {
 
-  Registration2Screen({super.key});
+  late int color;
+
+  Registration2Screen({super.key, required this.color});
 
   @override
-  State<Registration2Screen> createState() => _Registration2ScreenState();
+  State<Registration2Screen> createState() => _Registration2ScreenState(color: color);
 }
 
 class _Registration2ScreenState extends State<Registration2Screen> {
+  late int color;
+
+  _Registration2ScreenState({required this.color});
   final ageController = TextEditingController();
   final passwordController = TextEditingController();
   final SexWidget sexController = SexWidget();
@@ -42,7 +47,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
               Text("Регистрация", style: TextStyle(fontSize: 24),),
           //
           centerTitle: true,
-          backgroundColor: Color(0xff50bc55),
+          backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
         body: BlocBuilder<PersonBloc, PersonState> (
@@ -97,7 +102,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
 
                                 },
                                   child: Text("Продолжить"),
-                                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                                 ),
                               ),]
                         ),
@@ -110,7 +115,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
                                   bloc.add(RegistrationPerson(member));
                                 },
                                   child: Text("Пропустить"),
-                                  style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(0xff50bc55))),
+                                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
                                 ),
                               ),]
                         ),

@@ -8,11 +8,12 @@ import '../model/dto/member_dto.dart';
 
 class MembersScreen extends StatefulWidget {
 
+  late int color;
 
-  MembersScreen({super.key});
+  MembersScreen({super.key, required this.color});
 
   @override
-  State<MembersScreen> createState() => _MembersScreenState();
+  State<MembersScreen> createState() => _MembersScreenState(color: color);
 }
 
 class _MembersScreenState extends State<MembersScreen> {
@@ -22,6 +23,9 @@ class _MembersScreenState extends State<MembersScreen> {
       )
   );
   late int id;
+  late int color;
+
+  _MembersScreenState({required this.color});
   final scrollController = ScrollController();
   List<MemberInEvent> members = [];
 
@@ -68,7 +72,7 @@ class _MembersScreenState extends State<MembersScreen> {
             Text("Список участников", style: TextStyle(fontSize: 24),),
             //
             centerTitle: true,
-            backgroundColor: Color(0xff50bc55),
+            backgroundColor: Color(color),
           ),
           backgroundColor: Color(0xff292929),
           body: BlocBuilder<PersonBloc, PersonState>(
