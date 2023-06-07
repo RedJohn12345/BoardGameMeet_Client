@@ -142,6 +142,7 @@ class _EventScreenShowState extends State<EventScreenShow> {
                 ],);
             } else if (state is JoinedToEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await Preference.savePath('/home');
                 Navigator.pushReplacementNamed(
                     context, '/event', arguments: [state.event, '/home']);
               });

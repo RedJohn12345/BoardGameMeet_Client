@@ -38,13 +38,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield EventsFirstLoading();
       }
       try {
-        if (await Preference.checkToken()) {
-          personsRepository = PersonsRepository(apiClient: PersonsApiClient());
-          final profile = await personsRepository.getOwnProfile();
-          yield AvatarIsLoaded(profile.getAvatar(), profile.nickname);
-        } else {
-          yield ButtonEntry();
-        }
         final events = await eventsRepository.getMyEvents(page);
         yield MyEventsLoaded((list..addAll(events)).cast<Event>());
         page++;
@@ -58,14 +51,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield EventsFirstLoading();
       }
       try {
-        if (await Preference.checkToken()) {
-          personsRepository = PersonsRepository(apiClient: PersonsApiClient());
-          final profile = await personsRepository.getOwnProfile();
-          yield AvatarIsLoaded(profile.getAvatar(), profile.nickname);
-        } else {
-          yield ButtonEntry();
-        }
-        // final events = await eventsRepository.getEvents(city!, event.search, page);
         final events = await eventsRepository.getEvents(event.search, page);
         yield MainPageEventsLoaded((list..addAll(events)).cast<MainPageEvent>());
         // yield MainPageEventsLoaded(events);

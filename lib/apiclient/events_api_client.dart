@@ -204,7 +204,7 @@ class EventsApiClient {
       final List<dynamic> jsonItems = jsonDecode(utf8.decode(response.bodyBytes));
       return jsonItems.map((json) => Item.fromJson(json)).toList();
     } else {
-      throw Exception('Ошибка при получении нежных вещей с кодом'
+      throw Exception('Ошибка при получении нужных вещей с кодом'
                                                       '${response.statusCode}');
     }
   }

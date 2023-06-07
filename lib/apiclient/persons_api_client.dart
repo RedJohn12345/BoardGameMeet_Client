@@ -67,6 +67,8 @@ class PersonsApiClient {
       await Preference.saveToken(token);
       await Preference.saveRole(role);
       await Preference.saveNickname(nickname);
+      Member member = await fetchGetOwnProfile();
+      await Preference.saveAvatar(member.getAvatar());
       return;
     } else {
       throw Exception(response.body);
@@ -151,6 +153,7 @@ class PersonsApiClient {
 
       await Preference.saveToken(token);
       await Preference.saveNickname(nickname);
+      await Preference.saveAvatar("assets/images/${request.avatarId}.jpg");
       return;
     } else if (response.statusCode == 409) {
       throw Exception(response.body);
