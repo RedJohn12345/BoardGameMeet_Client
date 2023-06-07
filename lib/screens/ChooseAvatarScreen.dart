@@ -24,7 +24,8 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
     AssetImage('assets/images/4.jpg'),
     AssetImage('assets/images/5.jpg'),
     AssetImage('assets/images/6.jpg'),
-    AssetImage('assets/images/7.jpeg'),
+    AssetImage('assets/images/7.jpg'),
+    AssetImage('assets/images/8.jpg'),
 
   ];
 

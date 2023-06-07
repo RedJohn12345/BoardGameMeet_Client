@@ -32,6 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _setAdmin() async {
     isAdmin = await _isAdmin();
+    print(isAdmin);
   }
 
   @override
@@ -169,15 +170,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       const Center(child: Text("Город", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(member.city, style: TextStyle(color: Colors.black, fontSize: 24),),),
       const SizedBox(height: 16,),
-      member.age == 0 ? SizedBox() : const Center(child: Text("Возраст", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      member.age == 0 ? SizedBox() : Center(child: Text(member.age.toString(), style: TextStyle(color: Colors.black, fontSize: 24),),),
+      member.age == null ? SizedBox() : const Center(child: Text("Возраст", style: TextStyle(color: Colors.black, fontSize: 26)),),
+      member.age == null ? SizedBox() : Center(child: Text(member.age.toString(), style: TextStyle(color: Colors.black, fontSize: 24),),),
       const SizedBox(height: 16,),
     ];
   }
 
   static Future<bool> _isAdmin() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('role') == 'USER_ADMIN';
+    return prefs.getString('role') == 'ROLE_ADMIN';
   }
 
 }

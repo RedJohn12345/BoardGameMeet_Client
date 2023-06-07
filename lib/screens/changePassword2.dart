@@ -85,6 +85,8 @@ class _ChangePassword2ScreenState extends State<ChangePassword2Screen> {
                 Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
               });
               return CircularProgressIndicator();
+            } else if (state is PersonsError) {
+              return Center(child: Text(state.errorMessage),);
             } else {
               return Container();
             }

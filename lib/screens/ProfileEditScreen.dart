@@ -57,7 +57,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
     nicknameController.text = member.nickname;
     nameController.text = member.name;
-    ageController.text = member.age == 0 ? "" : member.age.toString();
+    ageController.text = member.age == null ? "" : member.age.toString();
     cityController.text = member.city;
     sexController.sex = member.sex;
     final params = getParams(member);
@@ -129,7 +129,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         if (form.validate()) {
                                           Member profile = Member(
                                               nickname: nicknameController.text, name: nameController.text, city: cityController.text,
-                                              age: ageController.text == "" ? 0 : int.parse(ageController.text), avatarId: member.avatarId, sex: sexController.sex);
+                                              age: ageController.text.isEmpty ? null : int.parse(ageController.text), avatarId: member.avatarId, sex: sexController.sex);
                                           bloc.add(UpdateProfile(profile));
                                         }
                                       },

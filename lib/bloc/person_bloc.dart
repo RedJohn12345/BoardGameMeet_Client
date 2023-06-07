@@ -94,8 +94,9 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       yield PersonsLoading();
       try {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
-        Event selectedEvent = await eventRepository.getEvent(event.eventId!);
-        yield AdminShowedEvent(selectedEvent);
+        var items = await eventRepository.getItems(event.eventId!);
+        yield EventForPersonLoaded(items.cast<Item>());
+        //yield AdminShowedEvent(selectedEvent);
       } catch (e) {
         yield PersonsError(errorMessage: e.toString());
       }

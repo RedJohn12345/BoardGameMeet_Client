@@ -56,7 +56,8 @@ class _EventScreenShowState extends State<EventScreenShow> {
       Center(child: Text(game, style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Дата", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      Center(child: Text(date.toString(), style: TextStyle(color: Colors.black, fontSize: 24)),),
+      Center(child: Text((date
+          .toString()).substring(0, 16), style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Место", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(address, style: TextStyle(color: Colors.black, fontSize: 24)),),
@@ -101,10 +102,13 @@ class _EventScreenShowState extends State<EventScreenShow> {
                     child: Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton(onPressed: () {
-                              setState(() {
-                                bloc.add(JoinToEvent(eventId: eventId));
-                              });
+                            child: ElevatedButton(onPressed: () async {
+                              await Preference.checkToken()
+                                  ? setState(() {
+                                      bloc.add(JoinToEvent(eventId: eventId));
+                                    })
+                                  :Navigator.pushNamed(context, '/authorization');
+
                             },
                               child: Text("Вступить"),
                               style: ButtonStyle(
@@ -115,15 +119,21 @@ class _EventScreenShowState extends State<EventScreenShow> {
                           ),
                           Visibility(
                             visible: isAdmin,
-                            child: ElevatedButton(onPressed: () {
-                              setState(() {
-                                bloc.add(AdminShowEvent(eventId: eventId));
-                              });
-                            },
-                              child: Text("Посмотреть"),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll<
-                                      Color>(Color(color))),
+                            child: SizedBox(width: 16,)
+                          ),
+                          Visibility(
+                            visible: isAdmin,
+                            child: Expanded(
+                              child: ElevatedButton(onPressed: () {
+                                setState(() {
+                                  bloc.add(AdminShowEvent(eventId: eventId));
+                                });
+                              },
+                                child: Text("Посмотреть"),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(color))),
+                              ),
                             ),
                           ),
                         ]

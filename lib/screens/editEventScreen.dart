@@ -78,8 +78,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
       dateController.text = event.date!.toIso8601String();
       dateTimeWidget.selectedDate = event.date!;
       descriptionController.text = event.description;
-      ageFromController.text = event.minAge == 0 ? "" : event.minAge.toString();
-      ageToController.text = event.maxAge == 0 ? "" : event.maxAge.toString();
+      ageFromController.text = event.minAge == null ? "" : event.minAge.toString();
+      ageToController.text = event.maxAge == null ? "" : event.maxAge.toString();
     }
 
 
@@ -181,16 +181,16 @@ class _EditEventScreenState extends State<EditEventScreen> {
                       CreateEventRequest request = CreateEventRequest(
                           name: nameController.text, game:  gameController.text,  address: addressController.text, date: dateTimeWidget.selectedDate,
                           maxPersonCount: int.parse(countPlayersController.text),
-                          minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0,
-                          maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0,
+                          minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : null,
+                          maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : null,
                           description: descriptionController.text);
                       bloc.add(CreateEvent(request));
                     } else {
                       UpdateEventRequest request = UpdateEventRequest(id: event.id!,
                           name: nameController.text, game:  gameController.text,  address: addressController.text, date: dateTimeWidget.selectedDate,
                           maxPersonCount: int.parse(countPlayersController.text),
-                          minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : 0,
-                          maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : 0,
+                          minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : null,
+                          maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : null,
                           description: descriptionController.text);
                       bloc.add(UpdateEvent(request));
                     }

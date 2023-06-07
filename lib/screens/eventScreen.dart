@@ -37,6 +37,7 @@ class _EventScreenState extends State<EventScreen> {
 
   _setAdmin() async {
     isAdmin = await Preference.isAdmin();
+    print(isAdmin);
   }
 
   @override
@@ -53,7 +54,8 @@ class _EventScreenState extends State<EventScreen> {
       Center(child: Text(event.game, style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Дата", style: TextStyle(color: Colors.black, fontSize: 26)),),
-      Center(child: Text(event.date.toString(), style: TextStyle(color: Colors.black, fontSize: 24)),),
+      Center(child: Text((event.date
+          .toString()).substring(0, 16), style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Место", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.location, style: TextStyle(color: Colors.black, fontSize: 24)),),
@@ -180,6 +182,13 @@ class _EventScreenState extends State<EventScreen> {
                                         Color>(Color(color))),
                                 ),
                               ),
+                          ),
+                          Visibility(
+                            visible: event.isHost || isAdmin,
+                            //   () async {
+                            // return await _isAdmin();
+                            // },
+                            child: const SizedBox(width: 16,),
                           ),
                           Visibility(
                             visible: !event.isHost,

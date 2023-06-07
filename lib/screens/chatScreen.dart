@@ -80,15 +80,16 @@ class ChatScreenState extends State<ChatScreen> {
     print('error');
   }
 
-  void onDisconnect(StompFrame farem) {
+  void onDisconnect(StompFrame frame) {
     print('disconnected');
   }
 
-  void frameCallback(StompFrame frame) {
+  void frameCallback(StompFrame frame) async {
     var json = jsonDecode(frame.body!);
     if (json['eventId'] as int == eventId) {
+      String? myNickname = await Preference.getNickname();
       setState(() {
-        chatBubbles.insert(0, ChatBubble.fromJson(json));
+        chatBubbles.insert(0, ChatBubble.fromJson(json, myNickname));
       });
     }
   }

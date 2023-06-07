@@ -18,7 +18,7 @@ class Event {
 
   Event({required this.id, this.name = "", this.game = "",
     this.location = "", this.numberPlayers = 0,  this.maxNumberPlayers = 0, this.description = "",
-    required this.isHost, this.minAge = 0, this.maxAge = 0});
+    required this.isHost, this.minAge, this.maxAge});
 
 
   String viewCountPlayers() {

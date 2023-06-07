@@ -19,7 +19,7 @@ class PersonsApiClient {
   Future fetchRegistration(Member member) async {
     var url = Uri.parse('$address/auth/registration');
     String gender = member.sex == Sex.MAN ? "MALE" : (member.sex == Sex.WOMAN ? "FEMALE" : "BLANK");
-    final msg = jsonEncode({
+    final msg =  jsonEncode({
       "name": member.name,
       "nickname": member.nickname,
       "password": member.password,
@@ -61,6 +61,7 @@ class PersonsApiClient {
       final body = jsonDecode(utf8.decode(response.bodyBytes));
       final token = body['token'];
       final role = body['role'] as String;
+      print(role);
       final nickname = body['nickname'] as String;
 
       await Preference.saveToken(token);
@@ -251,7 +252,7 @@ class PersonsApiClient {
     var url = Uri.parse('$address/changePassword');
     final msg = jsonEncode({
       "newPassword": password,
-      "repeatPassword": repeatPassword,
+      "repeatNewPassword": repeatPassword,
       "nickname": nickname,
     });
 

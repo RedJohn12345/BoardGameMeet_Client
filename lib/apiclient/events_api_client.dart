@@ -132,10 +132,11 @@ class EventsApiClient {
       "address": request.address,
       "date": request.date.toIso8601String(),
       "maxPersonCount": request.maxPersonCount,
-      "minAge": request.minAge,
-      "maxAge": request.maxAge,
+      "minAge": request.minAge ?? 0,
+      "maxAge": request.maxAge ?? 100,
       "description": request.description
     });
+    print(msg);
 
     var response = await http.put(url, body: msg,
       headers: {
@@ -268,7 +269,8 @@ class EventsApiClient {
     if (response.statusCode == 200) {
       // Парсим JSON-ответ и преобразуем его в список событий
       final List<dynamic> messagesJson = jsonDecode(utf8.decode(response.bodyBytes));
-      return messagesJson.map((json) => ChatBubble.fromJson(json)).toList();
+      String? myNickname = await Preference.getNickname();
+      return messagesJson.map((json) => ChatBubble.fromJson(json, myNickname)).toList();
     } else {
       throw Exception('Ошибка при загрузке сообщений');
     }

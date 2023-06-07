@@ -5,7 +5,7 @@ import '../Sex.dart';
 class Profile {
   late String name;
   late String nickname;
-  late int age;
+  late int? age;
   late String city;
   late int avatarId;
   late Sex sex;
@@ -16,7 +16,7 @@ class Profile {
   static fromJson(json) {
     return Profile(name: json['name'] as String,
                    nickname: json['nickname'] as String,
-                   age: json['age'] as int,
+                   age: json['age'] as int?,
                    city: json['city'] as String,
                    avatarId: json['avatarId'] as int,
                    sex: json['sex'] as Sex);

@@ -1,3 +1,4 @@
+import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -67,9 +68,10 @@ class ChatBubble extends StatelessWidget {
         );
   }
 
-  static fromJson(json) {
-    Interlocutor interlocutor = Interlocutor(name: json['name'] as String, avatarId: json['avatarId'] as int);
-    ChatBubble bubble =  ChatBubble(text: json['text'] as String, isCurrentUser: json['myNickname'] as bool, interlocutor: interlocutor,);
+  static fromJson(json, myNickname) {
+    bool isMyNickname = json['myNickname'] as String == myNickname;
+    Interlocutor interlocutor = Interlocutor(name: json['name'] as String, avatarId: json['avatarId'] == null ? 1 : json['avatarId'] as int);
+    ChatBubble bubble =  ChatBubble(text: json['text'] as String, isCurrentUser: isMyNickname, interlocutor: interlocutor,);
     return bubble;
   }
 }

@@ -160,8 +160,8 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                       title: myEvents[index].date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch
                           ? Text(myEvents[index].name) : Text("${myEvents[index].name} (Прошел)") ,
                       subtitle: Text(
-                          "${myEvents[index].game} - ${myEvents[index].date
-                              .toString()} - ${myEvents[index].location}"),
+                          "${myEvents[index].game} - ${(myEvents[index].date
+                              .toString()).substring(0, 16)} - ${myEvents[index].location}"),
                       trailing: Icon(myEvents[index].isHost ? CustomIcons.crown : Icons.account_box),
                     ),
                   )

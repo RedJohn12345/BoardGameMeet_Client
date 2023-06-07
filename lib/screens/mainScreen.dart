@@ -229,8 +229,8 @@ class _MainScreenState extends State<MainScreen> {
                         },
                         title: Text(events[index].name),
                         subtitle: Text(
-                            "${events[index].game} - ${events[index].date
-                                .toString()} - ${events[index].address}")
+                            "${events[index].game} - ${(events[index].date
+                                .toString()).substring(0, 16)} - ${events[index].address}")
                     ),
                   )
           ),

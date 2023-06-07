@@ -9,8 +9,8 @@ class UpdateEventRequest {
   late String address;
   late DateTime date;
   late int maxPersonCount;
-  late int minAge;
-  late int maxAge;
+  late int? minAge;
+  late int? maxAge;
   late String description;
 
   UpdateEventRequest({required this.id, required this.name, required this.game, required this.address,
