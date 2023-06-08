@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:boardgm/exceptions/CustomExeption.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/item.dart';
 import 'package:boardgm/utils/preference.dart';
@@ -115,6 +116,8 @@ class EventsApiClient {
       final dynamic eventJson = jsonDecode(utf8.decode(response.bodyBytes));
       Event event = Event.fromJson(eventJson);
       return event;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception("Ошибка при загрузке ивента с id=$eventId");
     }
@@ -132,8 +135,8 @@ class EventsApiClient {
       "address": request.address,
       "date": request.date.toIso8601String(),
       "maxPersonCount": request.maxPersonCount,
-      "minAge": request.minAge ?? 0,
-      "maxAge": request.maxAge ?? 100,
+      "minAge": request.minAge,
+      "maxAge": request.maxAge,
       "description": request.description
     });
     print(msg);
@@ -149,6 +152,8 @@ class EventsApiClient {
       return;
     } else if (response.statusCode == 409) {
       throw Exception(response.body);
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Error while update event with code ${response.statusCode}');
     }
@@ -172,6 +177,8 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Error while ban person with code ${response.statusCode}');
     }
@@ -187,6 +194,8 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Error while delete event with code ${response.statusCode}');
     }
@@ -203,9 +212,30 @@ class EventsApiClient {
     if (response.statusCode == 200) {
       final List<dynamic> jsonItems = jsonDecode(utf8.decode(response.bodyBytes));
       return jsonItems.map((json) => Item.fromJson(json)).toList();
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
-      throw Exception('Ошибка при получении нежных вещей с кодом'
+      throw Exception('Ошибка при получении нужных вещей с кодом'
                                                       '${response.statusCode}');
+    }
+  }
+
+  Future fetchDeleteItems(int? eventId) async {
+    var url = Uri.parse('$address/deleteItemsIn/$eventId');
+    final token = await Preference.getToken();
+
+    var response = await http.delete(url,
+        headers: {
+          authorization: bearer + token.toString()
+        }
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
+    } else {
+      throw Exception('Ошибка при удалении итемов ${response.statusCode}');
     }
   }
 
@@ -229,6 +259,8 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при редактировании нужных предметов с кодом'
                                                       '${response.statusCode}');
@@ -253,6 +285,8 @@ class EventsApiClient {
 
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при отметке нужных предметов с кодом'
                                                       '${response.statusCode}');
@@ -271,6 +305,8 @@ class EventsApiClient {
       final List<dynamic> messagesJson = jsonDecode(utf8.decode(response.bodyBytes));
       String? myNickname = await Preference.getNickname();
       return messagesJson.map((json) => ChatBubble.fromJson(json, myNickname)).toList();
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при загрузке сообщений');
     }

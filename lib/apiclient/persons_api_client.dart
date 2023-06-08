@@ -6,6 +6,7 @@ import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:http/http.dart' as http;
 
+import '../exceptions/CustomExeption.dart';
 import '../model/member.dart';
 
 class PersonsApiClient {
@@ -67,6 +68,8 @@ class PersonsApiClient {
       await Preference.saveToken(token);
       await Preference.saveRole(role);
       await Preference.saveNickname(nickname);
+      Member member = await fetchGetOwnProfile();
+      await Preference.saveAvatar(member.getAvatar());
       return;
     } else {
       throw Exception(response.body);
@@ -151,6 +154,7 @@ class PersonsApiClient {
 
       await Preference.saveToken(token);
       await Preference.saveNickname(nickname);
+      await Preference.saveAvatar("assets/images/${request.avatarId}.jpg");
       return;
     } else if (response.statusCode == 409) {
       throw Exception(response.body);
@@ -189,6 +193,8 @@ class PersonsApiClient {
         members.add(MemberInEvent.fromJson(jsonMember));
       }
       return members;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при получении всех участников мероприятия '
           'с кодом ${response.statusCode}');
@@ -205,6 +211,8 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при добавлении участника в мероприятие с кодом'
                                                       '${response.statusCode}');
@@ -221,6 +229,8 @@ class PersonsApiClient {
     //await _deleteToken();
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 510) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при выходе из мероприятия с кодом '
                                                       '${response.statusCode}');
@@ -285,23 +295,6 @@ class PersonsApiClient {
       return status;
     } else {
       throw Exception('Ошибка при получении статуса профиля ${response.statusCode}');
-    }
-  }
-
-  Future fetchDeleteItems(int? eventId) async {
-    var url = Uri.parse('$address/deleteItemsIn/$eventId');
-    final token = await Preference.getToken();
-
-    var response = await http.delete(url,
-      headers: {
-        authorization: bearer + token.toString()
-      }
-    );
-
-    if (response.statusCode == 200) {
-      return;
-    } else {
-      throw Exception('Ошибка при удалении итемов ${response.statusCode}');
     }
   }
 

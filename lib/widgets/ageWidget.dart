@@ -5,10 +5,11 @@ import 'package:flutter/widgets.dart';
 class AgeWidget extends StatefulWidget {
 
   final TextEditingController controller;
+  TextEditingController? subController;
   String text;
   AgeWidget({
     Key? key,
-    required this.controller, this.text = "Возраст"}): super(key: key);
+    required this.controller, this.text = "Возраст", this.subController}): super(key: key);
 
   @override
   _AgeWidgetState createState() {
@@ -37,5 +38,13 @@ class _AgeWidgetState extends State<AgeWidget> {
     ),
     keyboardType: TextInputType.number,
     style: TextStyle(color: Colors.white),
+      validator: (name) {
+        if (widget.subController != null && name != null) {
+          if (widget.subController!.text.isNotEmpty && name.isEmpty) {
+            return "Поле не заполнено";
+          }
+        }
+        return null;
+      },
   );
 }

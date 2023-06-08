@@ -36,6 +36,9 @@ class EventsRepository {
   Future editItems(int eventId, List<Item> items) async =>
       apiClient.fetchEditItemsIn(eventId, items);
 
+  Future deleteItems(int? eventId) async =>
+      apiClient.fetchDeleteItems(eventId);
+
   Future markItem(int eventId, Item item) async =>
       apiClient.fetchMarkItemIn(eventId, item);
 

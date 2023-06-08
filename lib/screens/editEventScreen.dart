@@ -164,9 +164,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
       const SizedBox(height: 16,),
       Row(
         children: [
-          Expanded(child: AgeWidget(controller: ageFromController, text: "Возраст от")),
+          Expanded(child: AgeWidget(controller: ageFromController, text: "Возраст от", subController: ageToController)),
           SizedBox(width: 16,),
-          Expanded(child: AgeWidget(controller: ageToController, text: "Возраст до")),
+          Expanded(child: AgeWidget(controller: ageToController, text: "Возраст до", subController: ageFromController,)),
         ],
       ),
       SizedBox(height: 16,),
