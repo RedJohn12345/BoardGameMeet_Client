@@ -85,9 +85,7 @@ class PersonsApiClient {
     });
 
     if (response.statusCode == 200) {
-      print(response.body);
       final Map<String, dynamic> jsonProfile = jsonDecode(utf8.decode(response.bodyBytes));
-      print(jsonProfile);
       return Member.fromJson(jsonProfile);
     } else {
       throw Exception('Error while get profile wile code ${response.statusCode}');
@@ -294,7 +292,8 @@ class PersonsApiClient {
       final status = jsonStatus['myProfile'] as bool;
       return status;
     } else {
-      throw Exception('Ошибка при получении статуса профиля ${response.statusCode}');
+      return false;
+      //throw Exception('Ошибка при получении статуса профиля ${response.statusCode}');
     }
   }
 

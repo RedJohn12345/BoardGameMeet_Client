@@ -232,12 +232,12 @@ class _EventScreenState extends State<EventScreen> {
                   ],);
               } else if (state is LeavingFromEvent) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
                 });
                 return const Center(child: CircularProgressIndicator(),);
               } else if (state is DeletingEvent) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
                 });
                 return const Center(child: CircularProgressIndicator(),);
               } else if (state is EventNotFoundErrorForPerson)  {
@@ -248,7 +248,7 @@ class _EventScreenState extends State<EventScreen> {
               } else if (state is PersonsError) {
                 return Center(child: Text(state.errorMessage),);
               } else {
-                return const Center(child: CircularProgressIndicator(),);
+                return Container();
               }
             }
           )

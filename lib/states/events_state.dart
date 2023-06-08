@@ -24,9 +24,6 @@ class EventCreated extends EventsState {
 
 class EventUpdated extends EventsState {
   late Event event;
-  EventUpdated(UpdateEventRequest updateEventRequest) {
-    this.event = updateEventRequest.toEvent();
-  }
 }
 
 class EventLoaded_State extends EventsState {

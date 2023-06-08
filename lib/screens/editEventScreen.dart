@@ -195,7 +195,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : null,
                           maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : null,
                           description: descriptionController.text);
-                      event = request.toEvent();
                       bloc.add(UpdateEvent(request));
                     }
                   });

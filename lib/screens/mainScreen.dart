@@ -202,7 +202,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             IconButton(
                 onPressed: () {
-                  print(search);
+
                   if (searchController.text.isEmpty) {
                     if (search == null) {
                       return;
@@ -211,6 +211,7 @@ class _MainScreenState extends State<MainScreen> {
                           '/home', (route) => false);
                     }
                   } else {
+                    print(searchController.text);
                     Navigator.pushNamedAndRemoveUntil(context,
                         '/home', (route) => false,
                         arguments: searchController.text);
