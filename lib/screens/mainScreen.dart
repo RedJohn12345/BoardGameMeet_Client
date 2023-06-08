@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
 
   _MainScreenState({required this.color});
   List<MainPageEvent> events = [];
-  Widget button = Container();
+  String? avatarPath;
   final scrollController = ScrollController();
   final searchController = TextEditingController();
   String? search;
@@ -37,6 +37,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     scrollController.addListener(_scrollListener);
     super.initState();
+    _getAvatar();
   }
 
   @override
@@ -44,7 +45,11 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
     searchController.dispose();
     // Удаляем обработчик прокрутки списка
-    scrollController.removeListener(_scrollListener);
+    //scrollController.removeListener(_scrollListener);
+  }
+
+  Future<void> _getAvatar() async {
+      avatarPath = await Preference.getAvatar();
   }
 
   void _scrollListener() {
@@ -75,61 +80,39 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
-        body: BlocBuilder<EventsBloc, EventsState>(
-        builder: (context, state) {
-          if (state is MainPageEventsLoaded) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              setState(() {
-                events = state.events;
+        body: RefreshIndicator(
+          onRefresh: () async {
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          },
+          child: BlocBuilder<EventsBloc, EventsState>(
+          builder: (context, state) {
+            if (state is MainPageEventsLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {
+                  events = state.events;
+                });
               });
-            });
-            return Column(
-              children: getColumnEvents(),
-            );
-          } else if (state is ButtonEntry) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              setState(() {
-                button =
-                    ElevatedButton( onPressed: () {
-                      Navigator.pushNamed(context, "/authorization");
-                    },
-                      child: Text("Войти"),
-                      style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
-                    );
-              });
-            });
-            return Column(
-              children: getColumnEvents(),
-            );
-          } else if (state is AvatarIsLoaded) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              setState(() {
-                button = FloatingActionButton(onPressed: () async {
-                  Navigator.pushNamed(context, '/profile', arguments: [null, null, state.nickname]);
-                },
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(state.avatar),
-                    radius: 200,
-                  ),
-                  heroTag: 'avatar',
-                );
-              });
-            });
-            return Column(
-              children: getColumnEvents(),
-            );
-          } else if (state is EventsFirstLoading) {
-            return Center(child: CircularProgressIndicator(),);
-          } else if (state is EventsLoading) {
-            return Column(
-              children: getColumnEvents()..add(Center(child: CircularProgressIndicator())),
-            );
-          } else if (state is EventsError) {
-            return Center(child: Text(state.errorMessage),);
-          } else {
-            return Container();
+              return Column(
+                children: [buildAvatar(),
+                  buildSearchLine(), getColumnEvents()],
+              );
+            } else if (state is EventsFirstLoading) {
+              return Column(
+                children: [buildAvatar(),
+                  buildSearchLine(), Expanded(child: Center(child: CircularProgressIndicator(),))],
+              );
+            } else if (state is EventsLoading) {
+              return Column(
+                children: [buildAvatar(),
+                  buildSearchLine(), getColumnEvents(), Center(child: CircularProgressIndicator())],
+              );
+            } else if (state is EventsError) {
+              return Center(child: Text(state.errorMessage),);
+            } else {
+              return Container();
+            }
           }
-        }
+          ),
         ),
         floatingActionButton: FloatingActionButton(onPressed: () async {
           await Preference.checkToken() ? Navigator.pushNamed(context, '/editEvent') : Navigator.pushNamed(context, '/authorization');
@@ -164,54 +147,16 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  List<Widget> getColumnEvents() {
-    return [Padding(
-      padding: EdgeInsets.all(16),
-      child: Align(
-        alignment: Alignment.topRight,
-        child: this.button),
-      ),
-      Container(
-        padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-        child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                      hintText: "Поиск",
-                      fillColor:  Color(0xff171717),
-                      filled: true,
-                      hintStyle: TextStyle(color: Colors.white60)
-                  ),
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    print(search);
-                    if (searchController.text.isEmpty) {
-                      if (search == null) {
-                        return;
-                      } else {
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            '/home', (route) => false);
-                      }
-                    } else {
-                      Navigator.pushNamedAndRemoveUntil(context,
-                          '/home', (route) => false,
-                          arguments: searchController.text);
-                    }
-                  },
-                  icon: Icon(Icons.search), color: Colors.white,),
-            ]),
-      ),
+  Widget getColumnEvents() {
+    return
       Flexible(
         child: Container(
           padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
           margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
           child: ListView.builder(
             //shrinkWrap: true,
+              physics: AlwaysScrollableScrollPhysics(),
+              controller: scrollController,
               itemCount: events.length,
               itemBuilder: (_, index) =>
                   Card(
@@ -235,7 +180,71 @@ class _MainScreenState extends State<MainScreen> {
                   )
           ),
         ),
-      ),];
+      );
+  }
+
+  Container buildSearchLine() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+      child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                    hintText: "Поиск",
+                    fillColor:  Color(0xff171717),
+                    filled: true,
+                    hintStyle: TextStyle(color: Colors.white60)
+                ),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            IconButton(
+                onPressed: () {
+                  print(search);
+                  if (searchController.text.isEmpty) {
+                    if (search == null) {
+                      return;
+                    } else {
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          '/home', (route) => false);
+                    }
+                  } else {
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        '/home', (route) => false,
+                        arguments: searchController.text);
+                  }
+                },
+                icon: Icon(Icons.search), color: Colors.white,),
+          ]),
+    );
+  }
+
+  Padding buildAvatar() {
+    return Padding(
+    padding: EdgeInsets.all(16),
+    child: Align(
+      alignment: Alignment.topRight,
+      child: avatarPath == null ?
+      ElevatedButton( onPressed: () {
+        Navigator.pushNamed(context, "/authorization");
+      },
+        child: Text("Войти"),
+        style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
+      ) :
+      FloatingActionButton(onPressed: () async {
+        await Preference.savePath('/home');
+        Navigator.pushNamed(context, '/profile', arguments: [null, null, await Preference.getNickname()]);
+      },
+        child: CircleAvatar(
+          backgroundImage: AssetImage(avatarPath!),
+          radius: 200,
+        ),
+        heroTag: 'avatar',
+      ),
+    ),
+    );
   }
 
 }

@@ -1,6 +1,6 @@
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:boardgm/utils/dialog.dart';
 import '../apiclient/persons_api_client.dart';
 
 class Preference {
@@ -31,6 +31,7 @@ class Preference {
   static Future deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
+    prefs.remove('avatar');
   }
 
   static Future saveRole(String role) async {
@@ -51,6 +52,26 @@ class Preference {
   static Future<bool> isAdmin() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('role') == 'ROLE_ADMIN';
+  }
+
+  static Future saveAvatar(String avatar) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('avatar', avatar);
+  }
+
+  static Future<String?> getAvatar() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('avatar');
+  }
+
+  static Future savePath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('path', path);
+  }
+
+  static Future<String?> getPath() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('path');
   }
 
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:boardgm/apiclient/persons_api_client.dart';
+import 'package:boardgm/exceptions/CustomExeption.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/widgets/ChatWidget.dart';
@@ -21,8 +22,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
   int page = 0;
   String? city;
   List<dynamic> list = [];
-  // List<MainPageEvent> listMainPageEvents = [];
-  // List<MainPageEvent> listMainPageEvents = [];
 
 
   EventsBloc({required this.eventsRepository}) : super(EventsInitial());
@@ -38,13 +37,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield EventsFirstLoading();
       }
       try {
-        if (await Preference.checkToken()) {
-          personsRepository = PersonsRepository(apiClient: PersonsApiClient());
-          final profile = await personsRepository.getOwnProfile();
-          yield AvatarIsLoaded(profile.getAvatar(), profile.nickname);
-        } else {
-          yield ButtonEntry();
-        }
         final events = await eventsRepository.getMyEvents(page);
         yield MyEventsLoaded((list..addAll(events)).cast<Event>());
         page++;
@@ -58,14 +50,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield EventsFirstLoading();
       }
       try {
-        if (await Preference.checkToken()) {
-          personsRepository = PersonsRepository(apiClient: PersonsApiClient());
-          final profile = await personsRepository.getOwnProfile();
-          yield AvatarIsLoaded(profile.getAvatar(), profile.nickname);
-        } else {
-          yield ButtonEntry();
-        }
-        // final events = await eventsRepository.getEvents(city!, event.search, page);
         final events = await eventsRepository.getEvents(event.search, page);
         yield MainPageEventsLoaded((list..addAll(events)).cast<MainPageEvent>());
         // yield MainPageEventsLoaded(events);
@@ -79,7 +63,11 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         final responseEvent = await eventsRepository.getEvent(event.id);
         yield EventLoaded_State(responseEvent);
       } catch (e) {
-        yield EventsError(errorMessage: e.toString());
+        if (e is EventNotFoundException) {
+          yield EventNotFoundError(errorMessage: e.errMsg());
+        } else {
+          yield EventsError(errorMessage: e.toString());
+        }
       }
     } else if (event is CreateEvent) {
       yield EventsLoading();
@@ -93,7 +81,7 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       yield EventsLoading();
       try {
         await eventsRepository.updateEvent(event.event);
-        yield EventUpdated();
+        yield EventUpdated(event.event);
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }
@@ -108,9 +96,12 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         yield MessagesLoaded((list..addAll(messages)).cast<ChatBubble>());
         page++;
       } catch (e) {
+        if (e is EventNotFoundException) {
+          yield EventNotFoundError(errorMessage: e.errMsg());
+      } else {
         yield EventsError(errorMessage: e.toString());
       }
     }
   }
-
+  }
 }

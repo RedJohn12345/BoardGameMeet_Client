@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../apiclient/persons_api_client.dart';
 import '../model/dto/member_dto.dart';
+import '../utils/dialog.dart';
 
 class MembersScreen extends StatefulWidget {
 
@@ -134,6 +135,11 @@ class _MembersScreenState extends State<MembersScreen> {
                     Navigator.pushReplacementNamed(context, '/members', arguments: [id, isHost]);
                   });
                   return Center(child: Text("error"),);
+                } else if (state is EventNotFoundErrorForPerson)  {
+                  WidgetsBinding.instance.addPostFrameCallback((_) async {
+                    await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+                  });
+                  return Container();
                 } else if (state is PersonsError) {
                   return Center(child: Text(state.errorMessage),);
                 } else {

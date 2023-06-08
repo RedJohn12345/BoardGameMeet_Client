@@ -2,6 +2,9 @@
 import 'dart:core';
 import 'dart:ffi';
 
+import 'package:boardgm/model/event.dart';
+import 'package:boardgm/utils/yandexMapKit.dart';
+
 class UpdateEventRequest {
   late int id;
   late String name;
@@ -15,6 +18,13 @@ class UpdateEventRequest {
 
   UpdateEventRequest({required this.id, required this.name, required this.game, required this.address,
       required this.date, required this.maxPersonCount, required this.minAge,  required this.maxAge, required this.description});
+
+  Event toEvent() {
+    Event event = Event(id: id, isHost: true, name: name, game: game, location: address, description: description,
+    maxNumberPlayers: maxPersonCount, maxAge: maxAge, minAge: minAge);
+    event.date = date;
+    return event;
+  }
 }
 
 class CreateEventRequest {

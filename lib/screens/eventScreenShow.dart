@@ -5,6 +5,7 @@ import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../utils/dialog.dart';
 import '../utils/preference.dart';
 
 
@@ -142,16 +143,22 @@ class _EventScreenShowState extends State<EventScreenShow> {
                 ],);
             } else if (state is JoinedToEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await Preference.savePath('/home');
                 Navigator.pushReplacementNamed(
-                    context, '/event', arguments: [state.event, '/home']);
+                    context, '/event', arguments: state.event);
               });
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is AdminShowedEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
                 Navigator.pushReplacementNamed(
-                    context, '/event', arguments: [state.event, '/home']);
+                    context, '/event', arguments: state.event);
               });
               return const Center(child: CircularProgressIndicator(),);
+            } else if (state is EventNotFoundErrorForPerson)  {
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+              });
+              return Container();
             } else if (state is PersonsError) {
               return Center(child: Text(state.errorMessage),);
             } else {

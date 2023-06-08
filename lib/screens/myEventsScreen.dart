@@ -22,7 +22,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
   late int color;
   _MyEventsScreenState({required this.color});
   List<Event> myEvents = [];
-  Widget button = Container();
+  String? avatarPath;
   final scrollController = ScrollController();
   final bloc = EventsBloc(
       eventsRepository: EventsRepository(
@@ -34,6 +34,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
   void initState() {
     scrollController.addListener(_scrollListener);
     super.initState();
+    _getAvatar();
   }
 
   @override
@@ -42,6 +43,11 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
 
     // Удаляем обработчик прокрутки списка
     scrollController.removeListener(_scrollListener);
+  }
+
+  Future<void> _getAvatar() async {
+    avatarPath = await Preference.getAvatar();
+
   }
 
   void _scrollListener() {
@@ -64,46 +70,36 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
           backgroundColor: Color(color),
         ),
         backgroundColor: Color(0xff292929),
-        body: BlocBuilder<EventsBloc, EventsState>(
-          builder: (context, state) {
-            if (state is MyEventsLoaded) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                setState(() {
-                  myEvents = state.events;
+        body: RefreshIndicator(
+          onRefresh: () async {
+            Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
+          },
+          child: BlocBuilder<EventsBloc, EventsState>(
+            builder: (context, state) {
+              if (state is MyEventsLoaded) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                    myEvents = state.events;
+                  });
                 });
-              });
-              return Column(
-                children: getColumnEvents(),
+                return Column(
+                  children: [buildAvatar(context), getColumnEvents()],
+                );
+              } else if (state is EventsFirstLoading) {
+                return Column(
+                  children: [buildAvatar(context), Expanded(child: Center(child: CircularProgressIndicator(),))]
               );
-            } else if (state is AvatarIsLoaded) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                setState(() {
-                  button = FloatingActionButton(onPressed: () async {
-                    await Navigator.pushNamed(context, '/profile', arguments: [null, null, state.nickname]);
-                    },
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(state.avatar),
-                      radius: 200,
-                    ),
-                    heroTag: 'avatar',
-                  );
-                });
-              });
-              return Column(
-                children: getColumnEvents(),
-              );
-            } else if (state is EventsFirstLoading) {
-              return Center(child: CircularProgressIndicator(),);
-            } else if (state is EventsLoading) {
-              return Column(
-                children: getColumnEvents()..add(Center(child: CircularProgressIndicator())),
-              );
-            } else if (state is EventsError) {
-              return Center(child: Text(state.errorMessage),);
-            } else {
-              return Container();
-            }
-          }),
+              } else if (state is EventsLoading) {
+                return Column(
+                  children: [buildAvatar(context), getColumnEvents(), Center(child: CircularProgressIndicator())],
+                );
+              } else if (state is EventsError) {
+                return Center(child: Text(state.errorMessage),);
+              } else {
+                return Container();
+              }
+            }),
+        ),
         floatingActionButton: FloatingActionButton(onPressed: () {
           Navigator.pushNamed(context, '/editEvent', arguments: null);
         },
@@ -133,32 +129,47 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
       ),
     );
   }
+
+  Padding buildAvatar(BuildContext context) {
+    return Padding(
+                padding: EdgeInsets.all(16),
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: avatarPath == null ? Container() :
+                    FloatingActionButton(onPressed: () async {
+                      await Preference.savePath('/my_events');
+                      Navigator.pushNamed(context, '/profile', arguments: [null, null, await Preference.getNickname()]);
+                    },
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(avatarPath!),
+                        radius: 200,
+                      ),
+                      heroTag: 'avatar',
+                    )
+                ),
+              );
+  }
   
-  List<Widget> getColumnEvents() {
-    return [
-      Padding(
-      padding: EdgeInsets.all(16),
-      child: Align(
-        alignment: Alignment.topRight,
-        child: button
-      ),
-    ),
+  Widget getColumnEvents() {
+    return
       Flexible(
         child: Container(
           padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
           child: ListView.builder(
             //shrinkWrap: true,
               controller: scrollController,
+              physics: AlwaysScrollableScrollPhysics(),
               itemCount: myEvents.length,
               itemBuilder: (_, index) =>
                   Card(
                     color: Colors.white,
                     child: ListTile(
                       onTap: () async {
-                          await Navigator.pushNamed(context, '/event', arguments: [myEvents[index], '/my_events']);
+                          await Preference.savePath('/my_events');
+                          Navigator.pushNamed(context, '/event', arguments: myEvents[index]);
                           },
                       title: myEvents[index].date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch
-                          ? Text(myEvents[index].name) : Text("${myEvents[index].name} (Прошел)") ,
+                          ? Text(myEvents[index].name) : Text("${myEvents[index].name} (Завершён)") ,
                       subtitle: Text(
                           "${myEvents[index].game} - ${(myEvents[index].date
                               .toString()).substring(0, 16)} - ${myEvents[index].location}"),
@@ -167,7 +178,6 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                   )
           ),
         ),
-      ),
-    ];
+      );
   }
 }

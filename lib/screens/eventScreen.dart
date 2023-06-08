@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../model/event.dart';
 import '../model/item.dart';
 import '../repositories/persons_repository.dart';
+import '../utils/dialog.dart';
 
 class EventScreen extends StatefulWidget {
 
@@ -29,10 +30,12 @@ class _EventScreenState extends State<EventScreen> {
   _EventScreenState({required this.color});
   List<Item> items = [];
   bool isAdmin = false;
+  String? pathBack;
 
   @override void initState() {
     _setAdmin();
     super.initState();
+    _getPathBack();
   }
 
   _setAdmin() async {
@@ -40,13 +43,14 @@ class _EventScreenState extends State<EventScreen> {
     print(isAdmin);
   }
 
+  Future<void> _getPathBack() async {
+    pathBack = await Preference.getPath();
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    final list = (ModalRoute.of(context)?.settings.arguments) as List;
-    final event = list[0] as Event;
-    var route = list[1] as String;
-
+    final event = (ModalRoute.of(context)?.settings.arguments) as Event;
     final List<Widget> itemsWidget = [];
 
     final List<Widget> params = [
@@ -114,127 +118,141 @@ class _EventScreenState extends State<EventScreen> {
 
     return BlocProvider<PersonBloc>(
       create: (context) => personBloc..add(LoadEventForPerson(event.id!)),
-      child: Scaffold(
-        appBar: AppBar(
-          title:
-              Text(event.name, style: TextStyle(fontSize: 24),),
-          //
-          centerTitle: true,
-          backgroundColor: Color(color),
-          actions: [
-            IconButton(onPressed: () async {
-              final membersCount = await Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]) as int;
-              setState(() {
-                event.numberPlayers = membersCount;
-              });
-            },
-                icon: Icon(Icons.account_box_sharp)),
-            Visibility(
-                visible: event.isHost && event.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch,
-                child: IconButton(onPressed: () {
-                  Navigator.pushNamed(context, '/editEvent', arguments: event);
-                },
-                    icon: Icon(Icons.edit)),
-            ),
-          ],
-        ),
-        backgroundColor: Color(0xff292929),
-        body: BlocBuilder<PersonBloc, PersonState>(
-          builder: (context, state) {
-            if (state is EventForPersonLoaded) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
+      child: WillPopScope(
+        onWillPop: () {
+          if (pathBack == null) {
+            return Future.value(true);
+          }
+          Navigator.pushNamedAndRemoveUntil(context, pathBack!, (route) => false);
+          return Future.value(false);
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title:
+                Text(event.name, style: TextStyle(fontSize: 24),),
+            //
+            centerTitle: true,
+            backgroundColor: Color(color),
+            actions: [
+              IconButton(onPressed: () async {
+                final membersCount = await Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]) as int;
                 setState(() {
-                  items = state.items;
+                  event.numberPlayers = membersCount;
                 });
-              });
-              return Column(
-                children: [
-                  Flexible(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20)),
-                      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      child: ListView.builder(
-                        itemCount: params.length,
-                        itemBuilder: (_, index) =>
-                        params[index],
+              },
+                  icon: Icon(Icons.account_box_sharp)),
+              Visibility(
+                  visible: event.isHost && event.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch,
+                  child: IconButton(onPressed: () {
+                    Navigator.pushNamed(context, '/editEvent', arguments: event);
+                  },
+                      icon: Icon(Icons.edit)),
+              ),
+            ],
+          ),
+          backgroundColor: Color(0xff292929),
+          body: BlocBuilder<PersonBloc, PersonState>(
+            builder: (context, state) {
+              if (state is EventForPersonLoaded) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                    items = state.items;
+                  });
+                });
+                return Column(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                        margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                        child: ListView.builder(
+                          itemCount: params.length,
+                          itemBuilder: (_, index) =>
+                          params[index],
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                        children: [
-                          Visibility(
-                            visible: event.isHost || isAdmin,
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                          children: [
+                            Visibility(
+                              visible: event.isHost || isAdmin,
+                                //   () async {
+                                // return await _isAdmin();
+                                // },
+                                child: Expanded(
+                                  child: ElevatedButton(onPressed: () {
+                                    personBloc.add(DeleteEvent(event.id!));
+                                  },
+                                  child: Text("Удалить"),
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll<
+                                          Color>(Color(color))),
+                                  ),
+                                ),
+                            ),
+                            Visibility(
+                              visible: event.isHost || isAdmin,
                               //   () async {
                               // return await _isAdmin();
                               // },
+                              child: const SizedBox(width: 16,),
+                            ),
+                            Visibility(
+                              visible: !event.isHost,
                               child: Expanded(
                                 child: ElevatedButton(onPressed: () {
-                                  personBloc.add(DeleteEvent(event.id!));
+                                  personBloc.add(LeaveFromEvent(event.id));
                                 },
-                                child: Text("Удалить"),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll<
-                                        Color>(Color(color))),
+                                  child: Text("Покинуть"),
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll<
+                                          Color>(Color(color))),
                                 ),
-                              ),
-                          ),
-                          Visibility(
-                            visible: event.isHost || isAdmin,
-                            //   () async {
-                            // return await _isAdmin();
-                            // },
-                            child: const SizedBox(width: 16,),
-                          ),
-                          Visibility(
-                            visible: !event.isHost,
-                            child: Expanded(
+                              )
+                            ),
+                            const SizedBox(width: 16,),
+                            Expanded(
                               child: ElevatedButton(onPressed: () {
-                                personBloc.add(LeaveFromEvent(event.id));
+                                Navigator.pushNamed(context, '/chat', arguments: event.id);
                               },
-                                child: Text("Покинуть"),
+                                child: Text("Чат"),
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStatePropertyAll<
                                         Color>(Color(color))),
                               ),
-                            )
-                          ),
-                          const SizedBox(width: 16,),
-                          Expanded(
-                            child: ElevatedButton(onPressed: () {
-                              Navigator.pushNamed(context, '/chat', arguments: event.id);
-                            },
-                              child: Text("Чат"),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll<
-                                      Color>(Color(color))),
                             ),
-                          ),
-                        ]
+                          ]
+                      ),
                     ),
-                  ),
-                ],);
-            } else if (state is LeavingFromEvent) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
-              });
-              return const Center(child: CircularProgressIndicator(),);
-            } else if (state is DeletingEvent) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
-              });
-              return const Center(child: CircularProgressIndicator(),);
-            } else if (state is PersonsError) {
-              return Center(child: Text(state.errorMessage),);
-            } else {
-              return const Center(child: CircularProgressIndicator(),);
+                  ],);
+              } else if (state is LeavingFromEvent) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                });
+                return const Center(child: CircularProgressIndicator(),);
+              } else if (state is DeletingEvent) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                });
+                return const Center(child: CircularProgressIndicator(),);
+              } else if (state is EventNotFoundErrorForPerson)  {
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+                });
+                return Container();
+              } else if (state is PersonsError) {
+                return Center(child: Text(state.errorMessage),);
+              } else {
+                return const Center(child: CircularProgressIndicator(),);
+              }
             }
-          }
-        )
+          )
+        ),
       ),
     );
   }
