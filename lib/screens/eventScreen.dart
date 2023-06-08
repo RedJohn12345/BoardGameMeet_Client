@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../model/event.dart';
 import '../model/item.dart';
 import '../repositories/persons_repository.dart';
+import '../utils/dialog.dart';
 
 class EventScreen extends StatefulWidget {
 
@@ -49,10 +50,7 @@ class _EventScreenState extends State<EventScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final list = (ModalRoute.of(context)?.settings.arguments) as List;
-    final event = list[0] as Event;
-    var route = list[1] as String;
-
+    final event = (ModalRoute.of(context)?.settings.arguments) as Event;
     final List<Widget> itemsWidget = [];
 
     final List<Widget> params = [
@@ -234,14 +232,19 @@ class _EventScreenState extends State<EventScreen> {
                   ],);
               } else if (state is LeavingFromEvent) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                 });
                 return const Center(child: CircularProgressIndicator(),);
               } else if (state is DeletingEvent) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushNamedAndRemoveUntil(context, route, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                 });
                 return const Center(child: CircularProgressIndicator(),);
+              } else if (state is EventNotFoundErrorForPerson)  {
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+                });
+                return Container();
               } else if (state is PersonsError) {
                 return Center(child: Text(state.errorMessage),);
               } else {

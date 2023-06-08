@@ -147,6 +147,11 @@ class ChatScreenState extends State<ChatScreen> {
                   );
                 } else if (state is EventsFirstLoading) {
                   return Center(child: CircularProgressIndicator(),);
+                } else if (state is EventNotFoundError)  {
+                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+                      await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+                    });
+                  return Container();
                 } else if (state is EventsError) {
                   return Center(child: Text(state.errorMessage),);
                 } else {

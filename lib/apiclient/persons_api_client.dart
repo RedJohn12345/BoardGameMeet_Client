@@ -6,6 +6,7 @@ import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:http/http.dart' as http;
 
+import '../exceptions/CustomExeption.dart';
 import '../model/member.dart';
 
 class PersonsApiClient {
@@ -192,6 +193,8 @@ class PersonsApiClient {
         members.add(MemberInEvent.fromJson(jsonMember));
       }
       return members;
+    } else if (response.statusCode == 404) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при получении всех участников мероприятия '
           'с кодом ${response.statusCode}');
@@ -208,6 +211,8 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 404) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при добавлении участника в мероприятие с кодом'
                                                       '${response.statusCode}');
@@ -224,6 +229,8 @@ class PersonsApiClient {
     //await _deleteToken();
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 404) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при выходе из мероприятия с кодом '
                                                       '${response.statusCode}');
@@ -303,6 +310,8 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       return;
+    } else if (response.statusCode == 404) {
+      throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при удалении итемов ${response.statusCode}');
     }

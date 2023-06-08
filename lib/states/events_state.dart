@@ -23,6 +23,10 @@ class EventCreated extends EventsState {
 }
 
 class EventUpdated extends EventsState {
+  late Event event;
+  EventUpdated(UpdateEventRequest updateEventRequest) {
+    this.event = updateEventRequest.toEvent();
+  }
 }
 
 class EventLoaded_State extends EventsState {
@@ -40,6 +44,12 @@ class EventsError extends EventsState {
   String getErrorMessageWithoutException() {
     return errorMessage.substring(11, errorMessage.length);
   }
+}
+
+class EventNotFoundError extends EventsState {
+  final String errorMessage;
+
+  EventNotFoundError({required this.errorMessage});
 }
 
 class MessagesLoaded extends EventsState {

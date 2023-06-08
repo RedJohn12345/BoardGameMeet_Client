@@ -166,7 +166,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     child: ListTile(
                       onTap: () async {
                           await Preference.savePath('/my_events');
-                          Navigator.pushNamed(context, '/event', arguments: [myEvents[index], '/my_events']);
+                          Navigator.pushNamed(context, '/event', arguments: myEvents[index]);
                           },
                       title: myEvents[index].date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch
                           ? Text(myEvents[index].name) : Text("${myEvents[index].name} (Завершён)") ,

@@ -42,7 +42,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
       )
   );
   late DateTimeWidget dateTimeWidget;
-
+  Event? event;
   List<Widget> fields = [];
 
   @override
@@ -67,19 +67,17 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Event? event = (ModalRoute.of(context)?.settings.arguments == null) ? null : ModalRoute.of(context)?.settings.arguments as Event;
+    event = (ModalRoute.of(context)?.settings.arguments == null) ? null : ModalRoute.of(context)?.settings.arguments as Event;
     if (event != null) {
-      print(event.minAge);
-      print(event.maxAge);
-      nameController.text = event.name;
-      gameController.text = event.game;
-      addressController.text = event.location;
-      countPlayersController.text = event.maxNumberPlayers.toString();
-      dateController.text = event.date!.toIso8601String();
-      dateTimeWidget.selectedDate = event.date!;
-      descriptionController.text = event.description;
-      ageFromController.text = event.minAge == null ? "" : event.minAge.toString();
-      ageToController.text = event.maxAge == null ? "" : event.maxAge.toString();
+      nameController.text = event!.name;
+      gameController.text = event!.game;
+      addressController.text = event!.location;
+      countPlayersController.text = event!.maxNumberPlayers.toString();
+      dateController.text = event!.date.toIso8601String();
+      dateTimeWidget.selectedDate = event!.date;
+      descriptionController.text = event!.description;
+      ageFromController.text = event!.minAge == null ? "" : event!.minAge.toString();
+      ageToController.text = event!.maxAge == null ? "" : event!.maxAge.toString();
     }
 
 
@@ -101,6 +99,11 @@ class _EditEventScreenState extends State<EditEventScreen> {
               return buildCenter(bloc, dateTimeWidget, event);
             } else if (state is EventsLoading) {
               return Center(child: CircularProgressIndicator(),);
+            } else if (state is EventNotFoundError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+              });
+              return Container();
             } else if (state is EventsError) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
                 await DialogUtil.showErrorDialog(context, state.getErrorMessageWithoutException());
@@ -116,9 +119,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
             return const Center(child: CircularProgressIndicator(),);
             }
             else if (state is EventUpdated) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pushNamedAndRemoveUntil(
-                context, '/event', arguments: [event, '/my_events'], (Route<dynamic> route) => route.settings.name != '/event' && route.settings.name != '/editEvent');
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await Navigator.pushNamedAndRemoveUntil(
+                context, '/event', arguments: state.event, (Route<dynamic> route) => route.settings.name != '/event' && route.settings.name != '/editEvent');
               });
               return const Center(child: CircularProgressIndicator(),);
             }
@@ -186,12 +189,13 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           description: descriptionController.text);
                       bloc.add(CreateEvent(request));
                     } else {
-                      UpdateEventRequest request = UpdateEventRequest(id: event.id!,
+                      UpdateEventRequest request = UpdateEventRequest(id: event!.id!,
                           name: nameController.text, game:  gameController.text,  address: addressController.text, date: dateTimeWidget.selectedDate,
                           maxPersonCount: int.parse(countPlayersController.text),
                           minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : null,
                           maxAge: ageToController.text.isNotEmpty ? int.parse(ageToController.text) : null,
                           description: descriptionController.text);
+                      event = request.toEvent();
                       bloc.add(UpdateEvent(request));
                     }
                   });
