@@ -30,6 +30,7 @@ class _EventScreenState extends State<EventScreen> {
   _EventScreenState({required this.color});
   List<Item> items = [];
   bool isAdmin = false;
+  bool showOnly = false;
   String? pathBack;
 
   @override void initState() {
@@ -40,7 +41,12 @@ class _EventScreenState extends State<EventScreen> {
 
   _setAdmin() async {
     isAdmin = await Preference.isAdmin();
-    print(isAdmin);
+  }
+
+  _setShowOnly(int id) async {
+    if (isAdmin) {
+      showOnly = await PersonsApiClient.fetchIsMemberEvent(id);
+    }
   }
 
   Future<void> _getPathBack() async {
@@ -49,10 +55,9 @@ class _EventScreenState extends State<EventScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final event = (ModalRoute.of(context)?.settings.arguments) as Event;
+    _setShowOnly(event.id!);
     final List<Widget> itemsWidget = [];
-
     final List<Widget> params = [
       const Center(child: Text("Игра", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.game, style: TextStyle(color: Colors.black, fontSize: 24)),),
@@ -98,6 +103,9 @@ class _EventScreenState extends State<EventScreen> {
                 value: item.marked,
                 onChanged: (bool? value) {
                   setState(() {
+                    if (showOnly) {
+                      return;
+                    }
                     item.marked = value!;
                     personBloc.add(MarkItem(event.id!, item));
                   });
@@ -112,7 +120,7 @@ class _EventScreenState extends State<EventScreen> {
     }
 
     params.add(itemsWidget.length == 0 ? SizedBox() : Container(decoration: BoxDecoration(
-        color: Color(color),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20)),
         padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
         margin: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Column(children: itemsWidget,)));
@@ -204,7 +212,7 @@ class _EventScreenState extends State<EventScreen> {
                               child: const SizedBox(width: 16,),
                             ),
                             Visibility(
-                              visible: !event.isHost,
+                              visible: !event.isHost && !showOnly,
                               child: Expanded(
                                 child: ElevatedButton(onPressed: () {
                                   personBloc.add(LeaveFromEvent(event.id));
@@ -245,14 +253,14 @@ class _EventScreenState extends State<EventScreen> {
                 return const Center(child: CircularProgressIndicator(),);
               }  else if (state is EventNotFoundErrorForPerson)  {
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  await DialogUtil.showErrorDialog(context, state.errorMessage);
                   Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  DialogUtil.showErrorDialog(context, state.errorMessage);
                 });
                 return Container();
               } else if (state is KickPersonErrorForPerson)  {
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  await DialogUtil.showErrorDialog(context, state.errorMessage);
                   Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  DialogUtil.showErrorDialog(context, state.errorMessage);
                 });
                 return Container();
               } else if (state is PersonsError) {

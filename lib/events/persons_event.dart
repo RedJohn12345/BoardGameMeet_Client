@@ -22,6 +22,7 @@ class LoadPersonsByEvent extends PersonEvent {
 
 class ExitProfile extends PersonEvent {}
 
+
 class LoadOwnProfile extends PersonEvent {
 }
 

@@ -100,8 +100,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
               return Center(child: CircularProgressIndicator(),);
             } else if (state is EventNotFoundError) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
-                await DialogUtil.showErrorDialog(context, state.errorMessage);
                 Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                DialogUtil.showErrorDialog(context, state.errorMessage);
               });
               return Container();
             } else if (state is EventsError) {

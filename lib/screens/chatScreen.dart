@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 
+import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/utils/dialog.dart';
 import 'package:boardgm/utils/preference.dart';
@@ -14,6 +15,7 @@ import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 import '../apiclient/events_api_client.dart';
+import '../apiclient/persons_api_client.dart';
 import '../bloc/events_bloc.dart';
 import '../repositories/events_repository.dart';
 
@@ -43,6 +45,8 @@ class ChatScreenState extends State<ChatScreen> {
       )
   );
   late int eventId;
+  bool isAdmin = false;
+  bool showOnly = false;
 
   late StompClient stompClient = StompClient(
       config: StompConfig(
@@ -58,10 +62,21 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
+    _setAdmin();
     super.initState();
     //scrollController.jumpTo(scrollController.position.maxScrollExtent);
     scrollController.addListener(_scrollListener);
     _setUpStompClient();
+  }
+
+  _setAdmin() async {
+    isAdmin = await Preference.isAdmin();
+  }
+
+  _setShowOnly(int id) async {
+    if (isAdmin) {
+      showOnly = !(await PersonsApiClient.fetchIsMemberEvent(id));
+    }
   }
 
   void _scrollListener() {
@@ -107,7 +122,7 @@ class ChatScreenState extends State<ChatScreen> {
       @override
   Widget build(BuildContext context) {
     eventId = (ModalRoute.of(context)?.settings.arguments) as int;
-
+    _setShowOnly(eventId);
         return BlocProvider(
           create: (context) => bloc..add(LoadMessages(eventId)),
           child: Scaffold(
@@ -149,14 +164,14 @@ class ChatScreenState extends State<ChatScreen> {
                   return Center(child: CircularProgressIndicator(),);
                 } else if (state is EventNotFoundError)  {
                     WidgetsBinding.instance.addPostFrameCallback((_) async {
-                      await DialogUtil.showErrorDialog(context, state.errorMessage);
                       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                      DialogUtil.showErrorDialog(context, state.errorMessage);
                     });
                   return Container();
                 } else if (state is KickPersonError)  {
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    await DialogUtil.showErrorDialog(context, state.errorMessage);
-                    await Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                    DialogUtil.showErrorDialog(context, state.errorMessage);
                   });
                   return Container();
                 } else if (state is EventsError) {

@@ -156,8 +156,8 @@ class _EventScreenShowState extends State<EventScreenShow> {
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is EventNotFoundErrorForPerson)  {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
-                await DialogUtil.showErrorDialog(context, state.errorMessage);
                 Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                DialogUtil.showErrorDialog(context, state.errorMessage);;
               });
               return Container();
             } else if (state is PersonsError) {

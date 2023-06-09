@@ -137,8 +137,8 @@ class _MembersScreenState extends State<MembersScreen> {
                   return Center(child: Text("error"),);
                 } else if (state is EventNotFoundErrorForPerson)  {
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    await DialogUtil.showErrorDialog(context, state.errorMessage);
                     Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                    DialogUtil.showErrorDialog(context, state.errorMessage);
                   });
                   return Container();
                 } else if (state is PersonNotFoundErrorForPerson)  {
@@ -149,8 +149,8 @@ class _MembersScreenState extends State<MembersScreen> {
                   return Container();
                 } else if (state is KickPersonErrorForPerson)  {
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    await DialogUtil.showErrorDialog(context, state.errorMessage);
                     Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                    DialogUtil.showErrorDialog(context, state.errorMessage);
                   });
                   return Container();
                 } else if (state is PersonsError) {

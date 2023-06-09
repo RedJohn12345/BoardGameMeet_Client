@@ -337,7 +337,6 @@ class PersonsApiClient {
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
     });
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return true;
     } else {
