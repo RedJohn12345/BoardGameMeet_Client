@@ -87,6 +87,8 @@ class PersonsApiClient {
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonProfile = jsonDecode(utf8.decode(response.bodyBytes));
       return Member.fromJson(jsonProfile);
+    } else if (response.statusCode == 511) {
+      throw PersonNotFoundException();
     } else {
       throw Exception('Error while get profile wile code ${response.statusCode}');
     }
@@ -171,12 +173,17 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       return;
-    } else {
+    } else if (response.statusCode == 511) {
+      throw PersonNotFoundException();
+    }  else {
       throw Exception('Ошибка при удалении пользователя с кодом ${response.statusCode}');
     }
   }
 
   Future<List<MemberInEvent>> fetchGetMembers(int eventId, int page) async {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId))) {
+      throw KickFromEventException();
+    }
     var url = Uri.parse('$address/getAllMembersIn/$eventId?page=$page&size=10');
     final token = await Preference.getToken();
 
@@ -218,6 +225,9 @@ class PersonsApiClient {
   }
 
   Future fetchLeaveFromEvent(int? eventId) async {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId))) {
+      throw KickFromEventException();
+    }
     var url = Uri.parse('$address/leaveEvent/$eventId');
     final token = await Preference.getToken();
 
@@ -320,6 +330,18 @@ class PersonsApiClient {
 
   }
 
+  static Future<bool> fetchIsMemberEvent(int? eventId) async {
+    var url = Uri.parse('$address/isMemberOfEvent/$eventId');
+    final token = await Preference.getToken();
 
-
+    var response = await http.get(url, headers: {
+      authorization: bearer + token.toString()
+    });
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

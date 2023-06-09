@@ -80,14 +80,13 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     } else if (event is UpdateEvent) {
       yield EventsLoading();
       try {
-        await eventsRepository.updateEvent(event.event);
-        yield EventUpdated(event.event);
+        Event updatedEvent = await eventsRepository.updateEvent(event.event);
+        yield EventUpdated(updatedEvent);
       } catch (e) {
         yield EventsError(errorMessage: e.toString());
       }
     }
     if (event is LoadMessages) {
-      print("hola");
       if (page == 0) {
         yield EventsFirstLoading();
       }
@@ -98,7 +97,9 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       } catch (e) {
         if (e is EventNotFoundException) {
           yield EventNotFoundError(errorMessage: e.errMsg());
-      } else {
+        } else if (e is KickFromEventException) {
+          yield KickPersonError(errorMessage: e.errMsg());
+        } else {
         yield EventsError(errorMessage: e.toString());
       }
     }

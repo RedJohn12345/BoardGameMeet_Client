@@ -149,8 +149,15 @@ class ChatScreenState extends State<ChatScreen> {
                   return Center(child: CircularProgressIndicator(),);
                 } else if (state is EventNotFoundError)  {
                     WidgetsBinding.instance.addPostFrameCallback((_) async {
-                      await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+                      await DialogUtil.showErrorDialog(context, state.errorMessage);
+                      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                     });
+                  return Container();
+                } else if (state is KickPersonError)  {
+                  WidgetsBinding.instance.addPostFrameCallback((_) async {
+                    await DialogUtil.showErrorDialog(context, state.errorMessage);
+                    await Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  });
                   return Container();
                 } else if (state is EventsError) {
                   return Center(child: Text(state.errorMessage),);

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/exceptions/CustomExeption.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/item.dart';
@@ -123,7 +124,7 @@ class EventsApiClient {
     }
   }
 
-  Future fetchUpdateEvent(UpdateEventRequest request) async {
+  Future<Event> fetchUpdateEvent(UpdateEventRequest request) async {
     var url = Uri.parse('$address/updateEvent');
     final token = await Preference.getToken();
     final city = await YandexMapKitUtil.getCityByAddress(request.address);
@@ -149,7 +150,9 @@ class EventsApiClient {
     );
 
     if (response.statusCode == 200) {
-      return;
+      final dynamic eventJson = jsonDecode(utf8.decode(response.bodyBytes));
+      Event event = Event.fromJson(eventJson);
+      return event;
     } else if (response.statusCode == 409) {
       throw Exception(response.body);
     } else if (response.statusCode == 510) {
@@ -179,6 +182,8 @@ class EventsApiClient {
       return;
     } else if (response.statusCode == 510) {
       throw EventNotFoundException();
+    } else if (response.statusCode == 511) {
+      throw PersonNotFoundException();
     } else {
       throw Exception('Error while ban person with code ${response.statusCode}');
     }
@@ -268,6 +273,9 @@ class EventsApiClient {
   }
 
   Future fetchMarkItemIn(int eventId, Item item) async {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId))) {
+      throw KickFromEventException();
+    }
     var url = Uri.parse('$address/markItemIn/$eventId');
     final token = await Preference.getToken();
 
@@ -294,6 +302,9 @@ class EventsApiClient {
   }
 
   Future<List> fetchMessages(int eventId, int page) async {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId))) {
+      throw KickFromEventException();
+    }
     var url = Uri.parse('$address/messagesIn/$eventId?page=$page&size=7');
     final token = await Preference.getToken();
     var response = await http.get(url,

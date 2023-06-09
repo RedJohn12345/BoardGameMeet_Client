@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/Sex.dart';
 import '../model/member.dart';
+import '../utils/dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -156,6 +157,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
                        });
                         return Center(child: CircularProgressIndicator(),);
+                    } else if (state is PersonNotFoundErrorForPerson)  {
+                      WidgetsBinding.instance.addPostFrameCallback((_) async {
+                        await DialogUtil.showErrorDialog(context, state.errorMessage);
+                        Navigator.pop(context);
+                      });
+                      return Container();
                     } else if (state is PersonsError) {
                       return Center(child: Text(state.errorMessage),);
                     } else if (state is ExitSuccess) {

@@ -60,6 +60,9 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         bool profileStatus = await personRepository.isMyProfile(event.nickname);
         yield ProfileLoaded(member, profileStatus);
       } catch (e) {
+        if (e is PersonNotFoundException) {
+          yield PersonNotFoundErrorForPerson(errorMessage: e.errMsg());
+        }
         yield PersonsError(errorMessage: e.toString());
       }
     } else if (event is ExitProfile) {
@@ -118,6 +121,8 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       } catch (e) {
         if (e is EventNotFoundException) {
           yield EventNotFoundErrorForPerson(errorMessage: e.errMsg());
+        } else if (e is KickFromEventException) {
+          yield KickPersonErrorForPerson(errorMessage: e.errMsg());
         } else {
           yield PersonsError(errorMessage: e.toString());
         }
@@ -135,11 +140,14 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       } catch (e) {
         if (e is EventNotFoundException) {
           yield EventNotFoundErrorForPerson(errorMessage: e.errMsg());
+        } else if (e is KickFromEventException) {
+          yield KickPersonErrorForPerson(errorMessage: e.errMsg());
         } else {
           yield PersonsError(errorMessage: e.toString());
         }
       }
     } else if (event is ValidateSecretWordEvent) {
+      yield PersonsLoading();
       try {
         final bool valid = await personRepository.validateSecretWord(event.nickNameAndSecretWord);
         yield ValidateSecretWordResult(valid);
@@ -147,6 +155,7 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         yield PersonsError(errorMessage: e.toString());
       }
     } else if (event is ChangePasswordEvent) {
+      yield PersonsLoading();
       try {
         await personRepository.changePassword(event.password, event.passwordRepeat, event.nickname);
         yield ChangePasswordSuccess();
@@ -160,6 +169,7 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         yield PersonsError(errorMessage: e.toString());
       }
     } else if (event is DeleteEvent) {
+      yield PersonsLoading();
       try {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         await eventRepository.deleteEvent(event.eventId);
@@ -172,6 +182,7 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         }
       }
     } else if (event is KickPerson) {
+      yield PersonsLoading();
       try {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         await eventRepository.kickPerson(event.eventId, event.nickname);
@@ -179,11 +190,14 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       } catch (e) {
         if (e is EventNotFoundException) {
           yield EventNotFoundErrorForPerson(errorMessage: e.errMsg());
+        } else if (e is PersonNotFoundException) {
+          yield PersonNotFoundErrorForPerson(errorMessage: e.errMsg());
         } else {
           yield PersonsError(errorMessage: e.toString());
         }
       }
     } else if (event is LoadEventForPerson) {
+      yield PersonsLoading();
       try {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         var items = await eventRepository.getItems(event.eventId);
@@ -196,6 +210,7 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         }
       }
     } else if (event is EditItems) {
+      yield PersonsLoading();
       try {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         await eventRepository.deleteItems(event.eventId);
@@ -209,10 +224,14 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         }
       }
     } else if (event is BanPerson) {
+      yield PersonsLoading();
       try {
         await personRepository.deletePerson(event.nickname);
         yield PersonBanned();
       } catch (e) {
+        if (e is PersonNotFoundException) {
+          yield PersonNotFoundErrorForPerson(errorMessage: e.errMsg());
+        }
         yield PersonsError(errorMessage: e.toString());
       }
     } else if (event is MarkItem) {
@@ -222,6 +241,8 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       } catch (e) {
         if (e is EventNotFoundException) {
           yield EventNotFoundErrorForPerson(errorMessage: e.errMsg());
+        } else if (e is KickFromEventException) {
+          yield KickPersonErrorForPerson(errorMessage: e.errMsg());
         } else {
           yield PersonsError(errorMessage: e.toString());
         }

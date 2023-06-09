@@ -23,7 +23,9 @@ class EventCreated extends EventsState {
 }
 
 class EventUpdated extends EventsState {
-  late Event event;
+  final Event event;
+
+  EventUpdated(this.event);
 }
 
 class EventLoaded_State extends EventsState {
@@ -49,7 +51,14 @@ class EventNotFoundError extends EventsState {
   EventNotFoundError({required this.errorMessage});
 }
 
+class KickPersonError extends EventsState {
+  final String errorMessage;
+
+  KickPersonError({required this.errorMessage});
+}
+
 class MessagesLoaded extends EventsState {
   final List<ChatBubble> messages;
   MessagesLoaded(this.messages);
 }
+

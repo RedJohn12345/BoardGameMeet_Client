@@ -101,6 +101,7 @@ class _EventScreenState extends State<EventScreen> {
                     item.marked = value!;
                     personBloc.add(MarkItem(event.id!, item));
                   });
+
                 },
               ),
           ],
@@ -235,14 +236,23 @@ class _EventScreenState extends State<EventScreen> {
                   Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
                 });
                 return const Center(child: CircularProgressIndicator(),);
+              } else if (state is PersonsLoading) {
+                return Center(child: CircularProgressIndicator(),);
               } else if (state is DeletingEvent) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
                 });
                 return const Center(child: CircularProgressIndicator(),);
-              } else if (state is EventNotFoundErrorForPerson)  {
+              }  else if (state is EventNotFoundErrorForPerson)  {
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+                  await DialogUtil.showErrorDialog(context, state.errorMessage);
+                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                });
+                return Container();
+              } else if (state is KickPersonErrorForPerson)  {
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  await DialogUtil.showErrorDialog(context, state.errorMessage);
+                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                 });
                 return Container();
               } else if (state is PersonsError) {

@@ -52,6 +52,18 @@ class EventNotFoundErrorForPerson extends PersonState {
   EventNotFoundErrorForPerson({required this.errorMessage});
 }
 
+class PersonNotFoundErrorForPerson extends PersonState {
+  final String errorMessage;
+
+  PersonNotFoundErrorForPerson({required this.errorMessage});
+}
+
+class KickPersonErrorForPerson extends PersonState {
+  final String errorMessage;
+
+  KickPersonErrorForPerson({required this.errorMessage});
+}
+
 class OwnProfileLoaded extends PersonState {
   final Member member;
   OwnProfileLoaded(this.member);

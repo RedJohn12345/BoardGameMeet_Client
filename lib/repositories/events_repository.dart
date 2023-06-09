@@ -21,7 +21,7 @@ class EventsRepository {
   Future<Event> getEvent(int eventId) async =>
       apiClient.fetchEvent(eventId);
 
-  Future updateEvent(UpdateEventRequest request) async =>
+  Future<Event> updateEvent(UpdateEventRequest request) async =>
       apiClient.fetchUpdateEvent(request);
 
   Future kickPerson(int eventId, String userNickname) async =>

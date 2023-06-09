@@ -87,6 +87,8 @@ class _ChangePassword2ScreenState extends State<ChangePassword2Screen> {
               return CircularProgressIndicator();
             } else if (state is PersonsError) {
               return Center(child: Text(state.errorMessage),);
+            } else if (state is PersonsLoading) {
+              return const Center(child: CircularProgressIndicator(),);
             } else {
               return Container();
             }

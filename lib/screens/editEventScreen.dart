@@ -88,7 +88,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
           title:
               event == null ? Text("Создание мероприятия", style: TextStyle(fontSize: 24),)
                             : Text("Изменение мероприятия", style: TextStyle(fontSize: 24),),
-          //
           centerTitle: true,
           backgroundColor: Color(color),
         ),
@@ -101,7 +100,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
               return Center(child: CircularProgressIndicator(),);
             } else if (state is EventNotFoundError) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
-                await DialogUtil.showErrorEventNotFoundDialog(context, state.errorMessage);
+                await DialogUtil.showErrorDialog(context, state.errorMessage);
+                Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
               });
               return Container();
             } else if (state is EventsError) {
@@ -189,7 +189,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           description: descriptionController.text);
                       bloc.add(CreateEvent(request));
                     } else {
-                      UpdateEventRequest request = UpdateEventRequest(id: event!.id!,
+                      UpdateEventRequest request = UpdateEventRequest(id: event.id!,
                           name: nameController.text, game:  gameController.text,  address: addressController.text, date: dateTimeWidget.selectedDate,
                           maxPersonCount: int.parse(countPlayersController.text),
                           minAge: ageFromController.text.isNotEmpty ? int.parse(ageFromController.text) : null,

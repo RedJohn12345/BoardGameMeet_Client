@@ -103,6 +103,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 }
               });
               return Center(child: CircularProgressIndicator());
+            } else if (state is PersonsLoading) {
+              return const Center(child: CircularProgressIndicator(),);
             } else {
               return Container();
             }
