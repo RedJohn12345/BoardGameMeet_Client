@@ -62,8 +62,9 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       } catch (e) {
         if (e is PersonNotFoundException) {
           yield PersonNotFoundErrorForPerson(errorMessage: e.errMsg());
+        } else {
+          yield PersonsError(errorMessage: e.toString());
         }
-        yield PersonsError(errorMessage: e.toString());
       }
     } else if (event is ExitProfile) {
       yield PersonsLoading();
@@ -231,8 +232,9 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       } catch (e) {
         if (e is PersonNotFoundException) {
           yield PersonNotFoundErrorForPerson(errorMessage: e.errMsg());
+        } else {
+          yield PersonsError(errorMessage: e.toString());
         }
-        yield PersonsError(errorMessage: e.toString());
       }
     } else if (event is MarkItem) {
       try {

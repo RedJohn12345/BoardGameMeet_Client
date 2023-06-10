@@ -103,7 +103,7 @@ class PersonsApiClient {
     });
 
     if (response.statusCode == 200) {
-      await Preference.deleteToken();
+      await Preference.deletePreferences();
       return;
     } else {
       throw Exception('Error while exit profile with code ${response.statusCode}');
@@ -181,6 +181,7 @@ class PersonsApiClient {
   }
 
   Future<List<MemberInEvent>> fetchGetMembers(int eventId, int page) async {
+    print("запрос");
     var url = Uri.parse('$address/getAllMembersIn/$eventId?page=$page&size=10');
     final token = await Preference.getToken();
 

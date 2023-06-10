@@ -56,9 +56,6 @@ class _EventScreenState extends State<EventScreen> {
   @override
   Widget build(BuildContext context) {
     final event = (ModalRoute.of(context)?.settings.arguments) as Event;
-    if (isAdmin) {
-      _setShowOnly(event.id);
-    }
     final List<Widget> itemsWidget = [];
     final List<Widget> params = [
       const Center(child: Text("Игра", style: TextStyle(color: Colors.black, fontSize: 26)),),
@@ -104,15 +101,12 @@ class _EventScreenState extends State<EventScreen> {
                 title: Text(item.name),
                 value: item.marked,
                 onChanged: (bool? value) async {
-                  if (showOnly) {
-                    return;
-                  }
                   setState(() {
                     item.marked = value!;
                   });
-                  /*if (isAdmin && !(await PersonsApiClient.fetchIsMemberEvent(event.id))) {
+                  if (isAdmin && !(await PersonsApiClient.fetchIsMemberEvent(event.id))) {
                     return;
-                  }*/
+                  }
                   personBloc.add(MarkItem(event.id!, item));
                 },
               ),
@@ -216,7 +210,7 @@ class _EventScreenState extends State<EventScreen> {
                               child: const SizedBox(width: 16,),
                             ),
                             Visibility(
-                              visible: !event.isHost && !showOnly,
+                              visible: !event.isHost,
                               child: Expanded(
                                 child: ElevatedButton(onPressed: () async {
                                   if (isAdmin && !(await PersonsApiClient.fetchIsMemberEvent(event.id))) {

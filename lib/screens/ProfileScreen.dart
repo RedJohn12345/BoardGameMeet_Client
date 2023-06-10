@@ -59,6 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       create: (context) => bloc..add(LoadProfile(nickname)),
       child: WillPopScope(
         onWillPop: () {
+          //todo Navigation fix
           if (pathBack == null) {
             return Future.value(true);
           }
@@ -160,8 +161,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         return Center(child: CircularProgressIndicator(),);
                     } else if (state is PersonNotFoundErrorForPerson)  {
                       WidgetsBinding.instance.addPostFrameCallback((_) async {
-                        await DialogUtil.showErrorDialog(context, state.errorMessage);
-                        Navigator.pop(context);
+                        Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: [eventId, isHost],
+                                (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
+                        DialogUtil.showErrorDialog(context, state.errorMessage);
+                        //Navigator.pop(context);
                       });
                       return Container();
                     } else if (state is PersonsError) {

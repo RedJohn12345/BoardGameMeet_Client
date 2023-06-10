@@ -17,7 +17,7 @@ class Preference {
     if (await api.fetchVerifyToken(token.toString())) {
       return token;
     } else {
-      deleteToken();
+      deletePreferences();
       Restart.restartApp();
     }
     return null;
@@ -28,10 +28,11 @@ class Preference {
     await prefs.setString('token', token);
   }
 
-  static Future deleteToken() async {
+  static Future deletePreferences() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
     prefs.remove('avatar');
+    prefs.remove('role');
   }
 
   static Future saveRole(String role) async {

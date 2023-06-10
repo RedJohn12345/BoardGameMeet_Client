@@ -50,7 +50,6 @@ class _MembersScreenState extends State<MembersScreen> {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       bloc.add(AllMembersOfEvent(id));
-      print("hay");
     }
   }
 
@@ -65,7 +64,7 @@ class _MembersScreenState extends State<MembersScreen> {
     return WillPopScope(
       onWillPop: () {
         Navigator.pop(context, membersCount);
-        return Future.value(true);
+        return Future.value(false);
       },
       child: BlocProvider(create: (context) => bloc..add(AllMembersOfEvent(id)),
         child: Scaffold(
@@ -82,7 +81,7 @@ class _MembersScreenState extends State<MembersScreen> {
                 if (state is AllMembers) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     setState(() {
-                      members = state.members;
+                      members = state.members;//todo members count
                       membersCount = state.members.length;
                     });
                   });
@@ -112,7 +111,7 @@ class _MembersScreenState extends State<MembersScreen> {
                                       ),
                                     ),
                                     trailing:
-                                    index == 0 ? Icon(CustomIcons.crown) :
+                                    index == 0 ? IconButton(icon: Icon(CustomIcons.crown), onPressed: (){}, splashRadius: 1, enableFeedback: false,) :
                                     Visibility(
                                         visible: isHost && index > 0,
                                         child: IconButton(icon: Icon(
@@ -155,8 +154,10 @@ class _MembersScreenState extends State<MembersScreen> {
                   return Container();
                 } else if (state is PersonsError) {
                   return Center(child: Text(state.errorMessage),);
-                } else {
+                } else if (state is PersonsFirstLoading) {
                   return const Center(child: CircularProgressIndicator(),);
+                } else {
+                  return Container();
                 }
               }
           ),
