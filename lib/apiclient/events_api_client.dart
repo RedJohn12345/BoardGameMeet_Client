@@ -207,6 +207,9 @@ class EventsApiClient {
   }
 
   Future<List> fetchGetItems(int eventId) async {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
+      throw KickFromEventException();
+    }
     var url = Uri.parse('$address/getItemsIn/$eventId');
     final token = await Preference.getToken();
 
@@ -273,7 +276,7 @@ class EventsApiClient {
   }
 
   Future fetchMarkItemIn(int eventId, Item item) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId))) {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
       throw KickFromEventException();
     }
     var url = Uri.parse('$address/markItemIn/$eventId');
@@ -302,7 +305,7 @@ class EventsApiClient {
   }
 
   Future<List> fetchMessages(int eventId, int page) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId))) {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
       throw KickFromEventException();
     }
     var url = Uri.parse('$address/messagesIn/$eventId?page=$page&size=7');

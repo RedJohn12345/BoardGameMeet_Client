@@ -30,7 +30,6 @@ class _EventScreenState extends State<EventScreen> {
   _EventScreenState({required this.color});
   List<Item> items = [];
   bool isAdmin = false;
-  bool showOnly = false;
   String? pathBack;
 
   @override void initState() {
@@ -43,12 +42,6 @@ class _EventScreenState extends State<EventScreen> {
     isAdmin = await Preference.isAdmin();
   }
 
-  _setShowOnly(int id) async {
-    if (isAdmin) {
-      showOnly = await PersonsApiClient.fetchIsMemberEvent(id);
-    }
-  }
-
   Future<void> _getPathBack() async {
     pathBack = await Preference.getPath();
   }
@@ -56,7 +49,6 @@ class _EventScreenState extends State<EventScreen> {
   @override
   Widget build(BuildContext context) {
     final event = (ModalRoute.of(context)?.settings.arguments) as Event;
-    _setShowOnly(event.id!);
     final List<Widget> itemsWidget = [];
     final List<Widget> params = [
       const Center(child: Text("Игра", style: TextStyle(color: Colors.black, fontSize: 26)),),
@@ -101,15 +93,14 @@ class _EventScreenState extends State<EventScreen> {
                 controlAffinity: ListTileControlAffinity.leading,
                 title: Text(item.name),
                 value: item.marked,
-                onChanged: (bool? value) {
+                onChanged: (bool? value) async {
                   setState(() {
-                    if (showOnly) {
-                      return;
-                    }
                     item.marked = value!;
-                    personBloc.add(MarkItem(event.id!, item));
                   });
-
+                  if (isAdmin && !(await PersonsApiClient.fetchIsMemberEvent(event.id))) {
+                    return;
+                  }
+                  personBloc.add(MarkItem(event.id!, item));
                 },
               ),
           ],
@@ -212,9 +203,13 @@ class _EventScreenState extends State<EventScreen> {
                               child: const SizedBox(width: 16,),
                             ),
                             Visibility(
-                              visible: !event.isHost && !showOnly,
+                              visible: !event.isHost,
                               child: Expanded(
-                                child: ElevatedButton(onPressed: () {
+                                child: ElevatedButton(onPressed: () async {
+                                  if (isAdmin && !(await PersonsApiClient.fetchIsMemberEvent(event.id))) {
+                                    Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
+                                    return;
+                                  }
                                   personBloc.add(LeaveFromEvent(event.id));
                                 },
                                   child: Text("Покинуть"),

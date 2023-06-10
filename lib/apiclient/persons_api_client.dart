@@ -181,7 +181,7 @@ class PersonsApiClient {
   }
 
   Future<List<MemberInEvent>> fetchGetMembers(int eventId, int page) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId))) {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
       throw KickFromEventException();
     }
     var url = Uri.parse('$address/getAllMembersIn/$eventId?page=$page&size=10');
@@ -225,7 +225,7 @@ class PersonsApiClient {
   }
 
   Future fetchLeaveFromEvent(int? eventId) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId))) {
+    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
       throw KickFromEventException();
     }
     var url = Uri.parse('$address/leaveEvent/$eventId');

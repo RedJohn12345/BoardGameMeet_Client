@@ -46,7 +46,6 @@ class ChatScreenState extends State<ChatScreen> {
   );
   late int eventId;
   bool isAdmin = false;
-  bool showOnly = false;
 
   late StompClient stompClient = StompClient(
       config: StompConfig(
@@ -71,12 +70,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   _setAdmin() async {
     isAdmin = await Preference.isAdmin();
-  }
-
-  _setShowOnly(int id) async {
-    if (isAdmin) {
-      showOnly = !(await PersonsApiClient.fetchIsMemberEvent(id));
-    }
   }
 
   void _scrollListener() {
@@ -122,7 +115,6 @@ class ChatScreenState extends State<ChatScreen> {
       @override
   Widget build(BuildContext context) {
     eventId = (ModalRoute.of(context)?.settings.arguments) as int;
-    _setShowOnly(eventId);
         return BlocProvider(
           create: (context) => bloc..add(LoadMessages(eventId)),
           child: Scaffold(
@@ -185,14 +177,22 @@ class ChatScreenState extends State<ChatScreen> {
               child: new Icon(Icons.send),
               onPressed: () async {
                 if (messageController.text.isEmpty) return;
-                print('pressed');
-                stompClient.send(destination: '/app/chat', body: json.encode(
-                    {
-                      "text": messageController.text,
-                      "eventId": eventId,
-                      "personNickname": await Preference.getNickname()
-                    }),
-                );
+                // if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !isAdmin) {
+                //   Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+                //   DialogUtil.showErrorDialog(context, "Похоже вы были исключены из мероприятия");
+                // }
+
+                try {
+                  stompClient.send(destination: '/app/chat', body: json.encode(
+                  {
+                  "text": messageController.text,
+                  "eventId": eventId,
+                  "personNickname": await Preference.getNickname()
+                  }),
+                  );
+                } catch (e) {
+
+                }
                 messageController.clear();
               },
             ),
