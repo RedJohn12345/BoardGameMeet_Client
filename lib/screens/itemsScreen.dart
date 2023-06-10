@@ -99,6 +99,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                                     if (form.validate()) {
                                       setState(() {
                                         items.add(Item(name: itemController.text, marked: false));
+                                        itemController.clear();
                                       });
                                     }
                                   },

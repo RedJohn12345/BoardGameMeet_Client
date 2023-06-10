@@ -175,6 +175,7 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             floatingActionButton: FloatingActionButton(
               child: new Icon(Icons.send),
+              backgroundColor: Color(color),
               onPressed: () async {
                 if (messageController.text.isEmpty) return;
                 // if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !isAdmin) {

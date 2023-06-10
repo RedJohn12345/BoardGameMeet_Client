@@ -181,9 +181,6 @@ class PersonsApiClient {
   }
 
   Future<List<MemberInEvent>> fetchGetMembers(int eventId, int page) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
-      throw KickFromEventException();
-    }
     var url = Uri.parse('$address/getAllMembersIn/$eventId?page=$page&size=10');
     final token = await Preference.getToken();
 
@@ -200,6 +197,8 @@ class PersonsApiClient {
       return members;
     } else if (response.statusCode == 510) {
       throw EventNotFoundException();
+    } else if (response.statusCode == 512) {
+      throw KickFromEventException();
     } else {
       throw Exception('Ошибка при получении всех участников мероприятия '
           'с кодом ${response.statusCode}');
@@ -225,9 +224,6 @@ class PersonsApiClient {
   }
 
   Future fetchLeaveFromEvent(int? eventId) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
-      throw KickFromEventException();
-    }
     var url = Uri.parse('$address/leaveEvent/$eventId');
     final token = await Preference.getToken();
 
@@ -239,7 +235,9 @@ class PersonsApiClient {
       return;
     } else if (response.statusCode == 510) {
       throw EventNotFoundException();
-    } else {
+    } else if (response.statusCode == 512) {
+      throw KickFromEventException();
+    } else  {
       throw Exception('Ошибка при выходе из мероприятия с кодом '
                                                       '${response.statusCode}');
     }
@@ -338,7 +336,7 @@ class PersonsApiClient {
       authorization: bearer + token.toString()
     });
     if (response.statusCode == 200) {
-      return true;
+      return jsonDecode(utf8.decode(response.bodyBytes));
     } else {
       return false;
     }

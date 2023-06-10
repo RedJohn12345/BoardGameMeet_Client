@@ -207,9 +207,6 @@ class EventsApiClient {
   }
 
   Future<List> fetchGetItems(int eventId) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
-      throw KickFromEventException();
-    }
     var url = Uri.parse('$address/getItemsIn/$eventId');
     final token = await Preference.getToken();
 
@@ -222,6 +219,8 @@ class EventsApiClient {
       return jsonItems.map((json) => Item.fromJson(json)).toList();
     } else if (response.statusCode == 510) {
       throw EventNotFoundException();
+    } else if (response.statusCode == 512) {
+      throw KickFromEventException();
     } else {
       throw Exception('Ошибка при получении нужных вещей с кодом'
                                                       '${response.statusCode}');
@@ -276,9 +275,6 @@ class EventsApiClient {
   }
 
   Future fetchMarkItemIn(int eventId, Item item) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
-      throw KickFromEventException();
-    }
     var url = Uri.parse('$address/markItemIn/$eventId');
     final token = await Preference.getToken();
 
@@ -298,6 +294,8 @@ class EventsApiClient {
       return;
     } else if (response.statusCode == 510) {
       throw EventNotFoundException();
+    } else if (response.statusCode == 512) {
+      throw KickFromEventException();
     } else {
       throw Exception('Ошибка при отметке нужных предметов с кодом'
                                                       '${response.statusCode}');
@@ -305,9 +303,6 @@ class EventsApiClient {
   }
 
   Future<List> fetchMessages(int eventId, int page) async {
-    if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !(await Preference.isAdmin())) {
-      throw KickFromEventException();
-    }
     var url = Uri.parse('$address/messagesIn/$eventId?page=$page&size=7');
     final token = await Preference.getToken();
     var response = await http.get(url,
@@ -321,6 +316,8 @@ class EventsApiClient {
       return messagesJson.map((json) => ChatBubble.fromJson(json, myNickname)).toList();
     } else if (response.statusCode == 510) {
       throw EventNotFoundException();
+    } else if (response.statusCode == 512) {
+      throw KickFromEventException();
     } else {
       throw Exception('Ошибка при загрузке сообщений');
     }

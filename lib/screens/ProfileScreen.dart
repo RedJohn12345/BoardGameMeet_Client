@@ -1,6 +1,7 @@
 
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
+import 'package:boardgm/custom_icons.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
@@ -193,9 +194,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       const SizedBox(height: 16,),
-      Center(child: Text(member.sex == Sex.NONE ? "" : (member.sex.title == "Мужской" ? "М" : "Ж"), style: TextStyle(color: Colors.black, fontSize: 32)),),
+      Center(child: member.sex == Sex.NONE ? SizedBox() : (member.sex.title == "Мужской" ? Icon(CustomIcons.male, color: Colors.blue,) : Icon(CustomIcons.female, color: Colors.red,))),
       const SizedBox(height: 16,),
-      const Center(child: Text("Имя", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(member.name, style: TextStyle(color: Colors.black, fontSize: 24)),),
       const SizedBox(height: 16,),
       const Center(child: Text("Никнейм", style: TextStyle(color: Colors.black, fontSize: 26)),),
