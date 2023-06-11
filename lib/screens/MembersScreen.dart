@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../apiclient/persons_api_client.dart';
 import '../model/dto/member_dto.dart';
 import '../utils/dialog.dart';
+import '../utils/preference.dart';
 
 class MembersScreen extends StatefulWidget {
 
@@ -102,7 +103,8 @@ class _MembersScreenState extends State<MembersScreen> {
                                 Card(
                                   color: Colors.white,
                                   child: ListTile(
-                                    onTap: () {
+                                    onTap: () async {
+                                      await Preference.deletePath();
                                       Navigator.pushNamed(context, '/profile',
                                           arguments: [id, isHost, state.members[index].nickname]);
                                     },

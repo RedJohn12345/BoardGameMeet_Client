@@ -62,7 +62,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       create: (context) => bloc..add(LoadProfile(nickname)),
       child: WillPopScope(
         onWillPop: () {
-          //todo Navigation fix
           if (pathBack == null) {
             return Future.value(true);
           }

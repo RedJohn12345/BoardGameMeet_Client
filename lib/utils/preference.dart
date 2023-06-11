@@ -75,4 +75,10 @@ class Preference {
     return prefs.getString('path');
   }
 
+  static Future deletePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('path');
+
+  }
+
 }
