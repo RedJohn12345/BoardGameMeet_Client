@@ -12,6 +12,7 @@ import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:boardgm/screens/itemsScreen.dart';
 import 'package:boardgm/utils/analytics.dart';
+import 'package:boardgm/screens/mapScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _FlutterAppState extends State<FlutterApp> {
     _initAppMetrica();
     // _initAnalytics();
   }
-  
+
   Future<void> _initAppMetrica() async {
     await AppMetrica.activate(const AppMetricaConfig("7accc154-4b7f-4b08-976e-5423fbcca807"));
   }
@@ -144,6 +145,7 @@ class _FlutterAppState extends State<FlutterApp> {
           '/items': (context) => ItemsScreen(color: color),
           '/chat': (context) => ChatScreen(color: color),
           '/splash': (context) => SplashScreen(route: page,),
+          '/map': (context) => MapScreen(color: color),
         },
       );
     }
