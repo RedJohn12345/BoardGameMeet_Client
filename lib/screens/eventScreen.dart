@@ -1,5 +1,6 @@
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,6 +38,7 @@ class _EventScreenState extends State<EventScreen> {
     _setAdmin();
     super.initState();
     _getPathBack();
+    Analytics.currentScreen('EventScreen');
   }
 
   _setAdmin() async {

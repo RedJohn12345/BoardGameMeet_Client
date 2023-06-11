@@ -1,4 +1,5 @@
 import 'package:boardgm/bloc/person_bloc.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../apiclient/persons_api_client.dart';
@@ -21,6 +22,12 @@ class _ChangePassword2ScreenState extends State<ChangePassword2Screen> {
   final passwordController = TextEditingController();
   final repeatController = TextEditingController();
   final PersonBloc bloc = PersonBloc(personRepository: PersonsRepository(apiClient: PersonsApiClient()));
+
+  @override
+  void initState() {
+    super.initState();
+    Analytics.currentScreen('ChangePassword2');
+  }
 
   @override
   void dispose() {

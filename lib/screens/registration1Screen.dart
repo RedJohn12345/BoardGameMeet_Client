@@ -1,4 +1,5 @@
 import 'package:boardgm/model/member.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/LoginWidget.dart';
@@ -25,6 +26,12 @@ class _Registration1ScreenState extends State<Registration1Screen> {
   final nameController = TextEditingController();
 
   _Registration1ScreenState({required this.color});
+
+  @override
+  void initState() {
+    super.initState();
+    Analytics.currentScreen('RegistrationScreen1');
+  }
 
   @override
   void dispose() {

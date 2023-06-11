@@ -1,3 +1,4 @@
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
@@ -23,6 +24,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
+    Analytics.currentScreen('WelcomeScreen');
     controller.addListener(() {
       setState(() {
         currentPage = (controller.page ?? 0.0).round();

@@ -2,6 +2,7 @@ import 'package:boardgm/apiclient/events_api_client.dart';
 import 'package:boardgm/bloc/events_bloc.dart';
 import 'package:boardgm/custom_icons.dart';
 import 'package:boardgm/repositories/events_repository.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../model/event.dart';
@@ -35,6 +36,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
     scrollController.addListener(_scrollListener);
     super.initState();
     _getAvatar();
+    Analytics.currentScreen('MeEventsScreen');
   }
 
   @override

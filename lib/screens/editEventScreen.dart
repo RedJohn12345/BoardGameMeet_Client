@@ -1,5 +1,6 @@
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/event.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/widgets/AddressWidget.dart';
 import 'package:boardgm/widgets/DateTimeWidget.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
   void initState() {
     super.initState();
     dateTimeWidget = DateTimeWidget(controller: dateController, withHelper: true);
+    Analytics.currentScreen('EditEventScreen');
   }
 
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,6 +39,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final cityController = TextEditingController();
   final SexWidget sexController = SexWidget();
 
+  @override
+  void initState() {
+    super.initState();
+    Analytics.currentScreen('ProfileEditScreen');
+  }
 
   @override
   void dispose() {

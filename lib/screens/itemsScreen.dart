@@ -1,5 +1,6 @@
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/event.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,6 +31,12 @@ class _ItemsScreenState extends State<ItemsScreen> {
   final bloc =  PersonBloc(
       personRepository: PersonsRepository(
           apiClient: PersonsApiClient()));
+
+  @override
+  void initState() {
+    super.initState();
+    Analytics.currentScreen('ItemScreen');
+  }
 
   @override
   void dispose() {

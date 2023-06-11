@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/dialog.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/widgets/ChatWidget.dart';
@@ -66,6 +67,7 @@ class ChatScreenState extends State<ChatScreen> {
     //scrollController.jumpTo(scrollController.position.maxScrollExtent);
     scrollController.addListener(_scrollListener);
     _setUpStompClient();
+    Analytics.currentScreen('ChatScreen');
   }
 
   _setAdmin() async {

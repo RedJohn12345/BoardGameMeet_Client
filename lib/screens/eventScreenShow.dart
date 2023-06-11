@@ -2,6 +2,7 @@
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,6 +35,7 @@ class _EventScreenShowState extends State<EventScreenShow> {
   @override void initState() {
     _setAdmin();
     super.initState();
+    Analytics.currentScreen('EventScreenShow');
   }
 
   _setAdmin() async {

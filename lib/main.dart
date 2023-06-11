@@ -10,6 +10,7 @@ import 'package:boardgm/screens/editEventScreen.dart';
 import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:boardgm/screens/itemsScreen.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -49,7 +50,9 @@ class _FlutterAppState extends State<FlutterApp> {
   bool? isFirst;
   // late int color;
   final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
-  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
   Future<void> _initRemoteConfig() async {
     await _remoteConfig.setConfigSettings(RemoteConfigSettings(
       fetchTimeout: const Duration(
@@ -66,27 +69,27 @@ class _FlutterAppState extends State<FlutterApp> {
     await _remoteConfig.fetchAndActivate();
   }
 
-  Future<void> _initAnalytics() async {
-    await FirebaseAnalytics.instance
-        .logBeginCheckout(
-        value: 10.0,
-        currency: 'USD',
-        items: [
-          AnalyticsEventItem(
-              itemName: 'Socks',
-              itemId: 'xjw73ndnw',
-          ),
-        ],
-        coupon: '10PERCENTOFF'
-    );
-  }
+  // Future<void> _initAnalytics() async {
+  //   await FirebaseAnalytics.instance
+  //       .logBeginCheckout(
+  //       value: 10.0,
+  //       currency: 'USD',
+  //       items: [
+  //         AnalyticsEventItem(
+  //             itemName: 'Socks',
+  //             itemId: 'xjw73ndnw',
+  //         ),
+  //       ],
+  //       coupon: '10PERCENTOFF'
+  //   );
+  // }
 
   @override
   void initState() {
     super.initState();
     _checkFirstTime();
     _initRemoteConfig();
-    _initAnalytics();
+    // _initAnalytics();
   }
 
   Future<void> _checkFirstTime() async {
@@ -115,11 +118,12 @@ class _FlutterAppState extends State<FlutterApp> {
 
       return MaterialApp(
         title: 'Board Game Meet',
+        navigatorObservers: <NavigatorObserver>[observer],
         initialRoute: '/splash',
         routes: {
           '/home': (context) => MainScreen(color: color),
           '/my_events': (context) => MyEventsScreen(color: color),
-          '/authorization': (context) => AuthorizationScreen(color: color),
+          '/authorization': (context) => AuthorizationScreen(color: color, analytics: analytics,),
           '/registration': (context) => Registration1Screen(color: color),
           '/registration+': (context) => Registration2Screen(color: color),
           '/changePassword': (context) => ChangePasswordScreen(color: color),

@@ -1,4 +1,5 @@
 import 'package:boardgm/apiclient/persons_api_client.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/dialog.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class _MainScreenState extends State<MainScreen> {
     scrollController.addListener(_scrollListener);
     super.initState();
     _getAvatar();
+    Analytics.currentScreen('MainScreen');
   }
 
   @override

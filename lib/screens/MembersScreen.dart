@@ -1,6 +1,7 @@
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/custom_icons.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,6 +36,7 @@ class _MembersScreenState extends State<MembersScreen> {
   void initState() {
     scrollController.addListener(_scrollListener);
     super.initState();
+    Analytics.currentScreen('MambersScreen');
   }
 
   @override

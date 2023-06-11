@@ -1,3 +1,4 @@
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 
 import '../model/member.dart';
@@ -30,6 +31,12 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
   ];
 
   int id = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    Analytics.currentScreen('ChooseAvatarScreen');
+  }
 
   @override
   Widget build(BuildContext context) {

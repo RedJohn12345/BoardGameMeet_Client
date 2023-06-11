@@ -3,6 +3,7 @@ import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/member.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
+import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../utils/dialog.dart';
@@ -26,6 +27,12 @@ class _Registration2ScreenState extends State<Registration2Screen> {
   final ageController = TextEditingController();
   final passwordController = TextEditingController();
   final SexWidget sexController = SexWidget();
+
+  @override
+  void initState() {
+    super.initState();
+    Analytics.currentScreen('RegistrationScreen2');
+  }
 
   @override
   void dispose() {
