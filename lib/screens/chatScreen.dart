@@ -36,6 +36,9 @@ class ChatScreen extends StatefulWidget {
 class ChatScreenState extends State<ChatScreen> {
 
   late int color;
+  static const authorization = 'Authorization';
+  static const bearer = 'Bearer_';
+  static const address = 'https://board-game-meet-dunad4n.cloud.okteto.net';
 
   ChatScreenState({required this.color});
   TextEditingController messageController = TextEditingController();
@@ -47,28 +50,37 @@ class ChatScreenState extends State<ChatScreen> {
       )
   );
   late int eventId;
+  late String token;
   bool isAdmin = false;
 
-  late StompClient stompClient = StompClient(
-      config: StompConfig(
-        url: 'ws://board-game-meet-dunad4n.cloud.okteto.net/chat',
-        onConnect: onConnectCallback,
-        onStompError: onError,
-        onDisconnect: onDisconnect
-  ));
+  late StompClient stompClient;
 
-  void _setUpStompClient() {
+  void _setUpStompClient() async {
+    stompClient = StompClient(
+        config: StompConfig(
+            url: 'ws://board-game-meet-dunad4n.cloud.okteto.net/chat',
+            webSocketConnectHeaders: {authorization: bearer + (await Preference.getToken())!},
+            onConnect: onConnectCallback,
+            onStompError: onError,
+            onDisconnect: onDisconnect
+        ));
     stompClient.activate();
   }
 
   @override
   void initState() {
+    _setToken();
     _setAdmin();
     super.initState();
     //scrollController.jumpTo(scrollController.position.maxScrollExtent);
     scrollController.addListener(_scrollListener);
     _setUpStompClient();
     AppMetrica.reportEvent('Chat screen');
+  }
+
+  _setToken() async {
+    token = (await Preference.getToken())!;
+    print(token);
   }
 
   _setAdmin() async {
@@ -84,7 +96,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   void onConnectCallback(StompFrame connectFrame) {
     print('stomp client connected');
-    stompClient.subscribe(destination: '/topic/chat', callback: frameCallback);
+    stompClient!.subscribe(destination: '/topic/chat', callback: frameCallback);
   }
 
   void onError(StompFrame stompFrame) {
@@ -110,7 +122,9 @@ class ChatScreenState extends State<ChatScreen> {
     messageController.dispose();
 
     super.dispose();
-    stompClient.deactivate();
+    if (stompClient != null) {
+      stompClient.deactivate();
+    }
     scrollController.removeListener(_scrollListener);
     scrollController.dispose();
   }
@@ -187,7 +201,9 @@ class ChatScreenState extends State<ChatScreen> {
                 // }
 
                 try {
-                  stompClient.send(destination: '/app/chat', body: json.encode(
+                  stompClient.send(destination: '/app/chat',
+                    headers: {authorization: bearer + token},
+                    body: json.encode(
                   {
                   "text": messageController.text,
                   "eventId": eventId,
