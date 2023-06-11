@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/custom_icons.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
@@ -36,7 +37,7 @@ class _MembersScreenState extends State<MembersScreen> {
   void initState() {
     scrollController.addListener(_scrollListener);
     super.initState();
-    Analytics.currentScreen('MambersScreen');
+    AppMetrica.reportEvent('Members screen');
   }
 
   @override

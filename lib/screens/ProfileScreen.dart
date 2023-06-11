@@ -1,4 +1,5 @@
 
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/custom_icons.dart';
@@ -36,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _setAdmin();
     super.initState();
     _getPathBack();
-    Analytics.currentScreen('ProfileScreen');
+    AppMetrica.reportEvent('Profile screen');
   }
 
   _setAdmin() async {

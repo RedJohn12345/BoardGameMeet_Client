@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/apiclient/events_api_client.dart';
 import 'package:boardgm/bloc/events_bloc.dart';
 import 'package:boardgm/custom_icons.dart';
@@ -36,7 +37,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
     scrollController.addListener(_scrollListener);
     super.initState();
     _getAvatar();
-    Analytics.currentScreen('MeEventsScreen');
+    AppMetrica.reportEvent('My events screen');
   }
 
   @override

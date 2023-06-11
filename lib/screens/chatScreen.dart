@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/utils/analytics.dart';
@@ -67,7 +68,7 @@ class ChatScreenState extends State<ChatScreen> {
     //scrollController.jumpTo(scrollController.position.maxScrollExtent);
     scrollController.addListener(_scrollListener);
     _setUpStompClient();
-    Analytics.currentScreen('ChatScreen');
+    AppMetrica.reportEvent('Chat screen');
   }
 
   _setAdmin() async {

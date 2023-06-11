@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/firebase_options.dart';
 import 'package:boardgm/screens/ChooseAvatarScreen.dart';
 import 'package:boardgm/screens/ProfileEditScreen.dart';
@@ -11,7 +12,6 @@ import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:boardgm/screens/itemsScreen.dart';
 import 'package:boardgm/utils/analytics.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -50,8 +50,8 @@ class _FlutterAppState extends State<FlutterApp> {
   bool? isFirst;
   // late int color;
   final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+  // static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  // static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   Future<void> _initRemoteConfig() async {
     await _remoteConfig.setConfigSettings(RemoteConfigSettings(
@@ -89,7 +89,12 @@ class _FlutterAppState extends State<FlutterApp> {
     super.initState();
     _checkFirstTime();
     _initRemoteConfig();
+    _initAppMetrica();
     // _initAnalytics();
+  }
+  
+  Future<void> _initAppMetrica() async {
+    await AppMetrica.activate(const AppMetricaConfig("7accc154-4b7f-4b08-976e-5423fbcca807"));
   }
 
   Future<void> _checkFirstTime() async {
@@ -118,12 +123,12 @@ class _FlutterAppState extends State<FlutterApp> {
 
       return MaterialApp(
         title: 'Board Game Meet',
-        navigatorObservers: <NavigatorObserver>[observer],
+        // navigatorObservers: <NavigatorObserver>[observer],
         initialRoute: '/splash',
         routes: {
           '/home': (context) => MainScreen(color: color),
           '/my_events': (context) => MyEventsScreen(color: color),
-          '/authorization': (context) => AuthorizationScreen(color: color, analytics: analytics,),
+          '/authorization': (context) => AuthorizationScreen(color: color),
           '/registration': (context) => Registration1Screen(color: color),
           '/registration+': (context) => Registration2Screen(color: color),
           '/changePassword': (context) => ChangePasswordScreen(color: color),

@@ -1,7 +1,7 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/dialog.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,21 +14,19 @@ import '../widgets/PasswordWidget.dart';
 class AuthorizationScreen extends StatefulWidget {
 
   late int color;
-  final FirebaseAnalytics analytics;
-  AuthorizationScreen({super.key, required this.color, required this.analytics});
+  AuthorizationScreen({super.key, required this.color});
 
   @override
-  State<AuthorizationScreen> createState() => _AuthorizationScreenState(color: color, analytics: analytics);
+  State<AuthorizationScreen> createState() => _AuthorizationScreenState(color: color);
 }
 
 class _AuthorizationScreenState extends State<AuthorizationScreen> {
 
   late int color;
-  final FirebaseAnalytics analytics;
   // final  FirebaseAnalyticsObserver observer;
 
 
-  _AuthorizationScreenState({required this.color, required this.analytics});
+  _AuthorizationScreenState({required this.color});
   final formKey = GlobalKey<FormState>();
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
@@ -39,7 +37,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   @override
   void initState() {
     super.initState();
-    widget.analytics.setCurrentScreen(screenName: 'Authorization screen');
+    AppMetrica.reportEvent('Authorization screen');
   }
 
   @override
@@ -110,6 +108,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                                     Member member = Member(nickname: loginController.text, password: passwordController.text);
                                     setState(() {
                                       bloc.add(AuthorizationPerson(member));
+                                      AppMetrica.reportEvent('User is authorizing');
                                     });
                                   }
                                 },

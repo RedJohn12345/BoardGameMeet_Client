@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/event.dart';
 import 'package:boardgm/utils/analytics.dart';
@@ -50,7 +51,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
   void initState() {
     super.initState();
     dateTimeWidget = DateTimeWidget(controller: dateController, withHelper: true);
-    Analytics.currentScreen('EditEventScreen');
+    AppMetrica.reportEvent('edit event screen');
   }
 
 

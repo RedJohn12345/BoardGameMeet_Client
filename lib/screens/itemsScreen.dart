@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/event.dart';
 import 'package:boardgm/utils/analytics.dart';
@@ -35,7 +36,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
   @override
   void initState() {
     super.initState();
-    Analytics.currentScreen('ItemScreen');
+    AppMetrica.reportEvent('Items screen');
   }
 
   @override

@@ -53,7 +53,8 @@ dependencies:
  # web_socket_channel: ^2.1.0
   firebase_core: ^2.13.1
   firebase_remote_config: ^4.2.2
-  firebase_analytics: ^10.4.2
+#  firebase_analytics: ^10.4.2
+  appmetrica_plugin: ^1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

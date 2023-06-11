@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,7 @@ class _ChooseAvatarState extends State<ChooseAvatar> {
   @override
   void initState() {
     super.initState();
-    Analytics.currentScreen('ChooseAvatarScreen');
+    AppMetrica.reportEvent('Choose avatar screen');
   }
 
   @override

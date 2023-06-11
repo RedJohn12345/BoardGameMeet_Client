@@ -1,4 +1,5 @@
 
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/member.dart';
@@ -31,7 +32,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
   @override
   void initState() {
     super.initState();
-    Analytics.currentScreen('RegistrationScreen2');
+    AppMetrica.reportEvent('Registration screen 2');
   }
 
   @override
@@ -106,7 +107,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
                                   member.sex = sexController.sex;
                                   member.age = ageController.text.isNotEmpty ? int.parse(ageController.text) : null;
                                   bloc.add(RegistrationPerson(member));
-
+                                  AppMetrica.reportEvent('User doing registration');
                                 },
                                   child: Text("Продолжить"),
                                   style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),
@@ -120,6 +121,7 @@ class _Registration2ScreenState extends State<Registration2Screen> {
                               Expanded(
                                 child: ElevatedButton( onPressed: () {
                                   bloc.add(RegistrationPerson(member));
+                                  AppMetrica.reportEvent('User doing registration');
                                 },
                                   child: Text("Пропустить"),
                                   style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Color(color))),

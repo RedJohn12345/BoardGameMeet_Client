@@ -1,5 +1,5 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../apiclient/persons_api_client.dart';
@@ -26,7 +26,7 @@ class _ChangePassword2ScreenState extends State<ChangePassword2Screen> {
   @override
   void initState() {
     super.initState();
-    Analytics.currentScreen('ChangePassword2');
+    AppMetrica.reportEvent('Change password screen 2');
   }
 
   @override

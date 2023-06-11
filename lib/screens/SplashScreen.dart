@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _navigate();
-    Analytics.currentScreen('SplashScreen');
+    AppMetrica.reportEvent('Splash screen');
   }
 
   void _navigate() async {

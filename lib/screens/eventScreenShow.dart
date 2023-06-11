@@ -1,4 +1,5 @@
 
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
@@ -35,7 +36,7 @@ class _EventScreenShowState extends State<EventScreenShow> {
   @override void initState() {
     _setAdmin();
     super.initState();
-    Analytics.currentScreen('EventScreenShow');
+    AppMetrica.reportEvent('Event show screen');
   }
 
   _setAdmin() async {
@@ -111,7 +112,7 @@ class _EventScreenShowState extends State<EventScreenShow> {
                                       bloc.add(JoinToEvent(eventId: eventId));
                                     })
                                   :Navigator.pushNamed(context, '/authorization');
-
+                                  AppMetrica.reportEvent('User is joining to event');
                             },
                               child: Text("Вступить"),
                               style: ButtonStyle(

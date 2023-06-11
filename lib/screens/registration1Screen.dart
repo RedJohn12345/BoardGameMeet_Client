@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/model/member.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _Registration1ScreenState extends State<Registration1Screen> {
   @override
   void initState() {
     super.initState();
-    Analytics.currentScreen('RegistrationScreen1');
+    AppMetrica.reportEvent('Registration screen 1');
   }
 
   @override

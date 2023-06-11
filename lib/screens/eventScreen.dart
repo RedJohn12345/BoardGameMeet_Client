@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/utils/analytics.dart';
@@ -38,7 +39,7 @@ class _EventScreenState extends State<EventScreen> {
     _setAdmin();
     super.initState();
     _getPathBack();
-    Analytics.currentScreen('EventScreen');
+    AppMetrica.reportEvent('Event screen');
   }
 
   _setAdmin() async {

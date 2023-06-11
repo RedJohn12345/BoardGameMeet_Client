@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/dialog.dart';
@@ -41,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
     scrollController.addListener(_scrollListener);
     super.initState();
     _getAvatar();
-    Analytics.currentScreen('MainScreen');
+    AppMetrica.reportEvent('Main screen');
   }
 
   @override

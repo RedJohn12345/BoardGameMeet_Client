@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -24,7 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    Analytics.currentScreen('WelcomeScreen');
+    AppMetrica.reportEvent('Welcome screen');
     controller.addListener(() {
       setState(() {
         currentPage = (controller.page ?? 0.0).round();
