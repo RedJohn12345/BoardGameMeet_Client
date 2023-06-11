@@ -2,7 +2,6 @@ import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/model/Location.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/model/member.dart';
-import 'package:boardgm/utils/preference.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -73,4 +72,34 @@ class YandexMapKitUtil {
     return city;
   }
 
+
+  static Future<Point> getGeo() async {
+    LocationPermission status = await Geolocator.requestPermission();
+    return await getGeolocation(status);
+  }
+
+  static Future getGeolocation(status) async {
+    bool isMoscow = !(status == LocationPermission.always || status == LocationPermission.whileInUse);
+    AppLatLong? pos = isMoscow ? MoscowLocation() : null;
+    if (!isMoscow) {
+      var position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      pos = AppLatLong(lat: position.latitude, long: position.longitude);
+    }
+    return Point(latitude: pos!.lat, longitude: pos.long);
+  }
+
+  static Future<Point?> getPointByText(String text) async {
+    final resultWithSession = YandexSearch.searchByText(searchText: text, geometry: Geometry.fromBoundingBox(BoundingBox(
+        northEast: Point(latitude: 71.155753, longitude: -177.650671),
+        southWest: Point(latitude: 44.063222,  longitude: 180.940636)
+    ),), searchOptions: SearchOptions());
+
+    var result = await resultWithSession.result;
+    if (result == null) {
+      return null;
+    } else {
+      return result.items!.first.toponymMetadata!.balloonPoint;
+    }
+  }
 }
