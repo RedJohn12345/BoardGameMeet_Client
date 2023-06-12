@@ -64,6 +64,12 @@ class KickPersonErrorForPerson extends PersonState {
   KickPersonErrorForPerson({required this.errorMessage});
 }
 
+class PersonInputError extends PersonState {
+  final String errorMessage;
+
+  PersonInputError({required this.errorMessage});
+}
+
 class OwnProfileLoaded extends PersonState {
   final Member member;
   OwnProfileLoaded(this.member);

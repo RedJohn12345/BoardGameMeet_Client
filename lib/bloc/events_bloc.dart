@@ -1,15 +1,11 @@
 import 'dart:async';
-import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/exceptions/CustomExeption.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
-import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/widgets/ChatWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../model/event.dart';
-import '../model/item.dart';
 import '../repositories/events_repository.dart';
 import '../repositories/persons_repository.dart';
 part '../events/events_event.dart';
@@ -75,7 +71,11 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         await eventsRepository.createEvent(event.event);
         yield EventCreated();
       } catch (e) {
-        yield EventsError(errorMessage: e.toString());
+        if (e is InputException) {
+          yield EventInputError(errorMessage: e.errMsg());
+        } else {
+          yield EventsError(errorMessage: e.toString());
+        }
       }
     } else if (event is UpdateEvent) {
       yield EventsLoading();
@@ -83,7 +83,11 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
         Event updatedEvent = await eventsRepository.updateEvent(event.event);
         yield EventUpdated(updatedEvent);
       } catch (e) {
-        yield EventsError(errorMessage: e.toString());
+        if (e is InputException) {
+          yield EventInputError(errorMessage: e.errMsg());
+        } else {
+          yield EventsError(errorMessage: e.toString());
+        }
       }
     }
     if (event is LoadMessages) {

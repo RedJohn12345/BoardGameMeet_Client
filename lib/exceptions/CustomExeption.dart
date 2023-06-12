@@ -10,6 +10,13 @@ class KickFromEventException implements Exception {
   String errMsg() => 'Похоже вы были исключены из мероприятия';
 }
 
-class UnauthorizedException implements Exception {
-  String errMsg() => 'Ошибка авторизации, перезапустите приложение';
+class InputException implements Exception {
+  final String e;
+
+  InputException(this.e);
+  String errMsg() => e;
 }
+
+// class UnauthorizedException implements Exception {
+//   String errMsg() => 'Ошибка авторизации, перезапустите приложение';
+// }

@@ -7,6 +7,7 @@ import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 
 
 import '../model/member.dart';
@@ -92,13 +93,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     return buildCenter(params, member, bloc);
                   } else if (state is PersonsLoading) {
                     return const Center(child: CircularProgressIndicator(),);
-                  } else if (state is PersonsError) {
+                  } else if (state is PersonInputError) {
                     WidgetsBinding.instance.addPostFrameCallback((_) async {
-                      await DialogUtil.showErrorDialog(context, state.getErrorMessageWithoutException());
+                      await DialogUtil.showErrorDialog(context, state.errorMessage);
                     });
                     return buildCenter(params, member, bloc);
-                    //return Center(child: Text(state.errorMessage),);
-                  } else if (state is UpdateProfileSuccess) {
+                  } else if (state is PersonsError) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+                      await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                      Restart.restartApp();
+                    });
+                    return Container();
+                  }  else if (state is UpdateProfileSuccess) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       Navigator.pushReplacementNamed(context, '/profile', arguments: [null, null, nicknameController.text]);
                     });

@@ -100,7 +100,7 @@ class EventsApiClient {
       // Парсим JSON-ответ и преобразуем его в список событий
       return;
     } else if (response.statusCode == 409) {
-      throw Exception(response.body);
+      throw InputException(response.body);
     } else {
       throw Exception(response.statusCode);
     }
@@ -154,7 +154,7 @@ class EventsApiClient {
       Event event = Event.fromJson(eventJson);
       return event;
     } else if (response.statusCode == 409) {
-      throw Exception(response.body);
+      throw InputException(response.body);
     } else if (response.statusCode == 510) {
       throw EventNotFoundException();
     } else {

@@ -52,7 +52,6 @@ class _MapScreenState extends State<MapScreen> {
   MapType mapType = MapType.vector;
   int? poiLimit;
 
-  //late PlacemarkMapObject placemarkMapObject;
 
   @override
   Widget build(BuildContext context) {

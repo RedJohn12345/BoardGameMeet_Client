@@ -35,7 +35,11 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         await personRepository.registration(event.member);
         yield RegistrationSuccess();
       } catch (e) {
-        yield PersonsError(errorMessage: e.toString());
+        if (e is InputException) {
+          yield PersonInputError(errorMessage: e.errMsg());
+        } else {
+          yield PersonsError(errorMessage: e.toString());
+        }
       }
     } else if (event is AuthorizationPerson) {
       yield PersonsLoading();
@@ -43,7 +47,11 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         await personRepository.authorization(event.member);
         yield AuthorizationSuccess();
       } catch (e) {
-        yield PersonsError(errorMessage: e.toString());
+        if (e is InputException) {
+          yield PersonInputError(errorMessage: e.errMsg());
+        } else {
+          yield PersonsError(errorMessage: e.toString());
+        }
       }
     } else if (event is LoadOwnProfile) {
       yield PersonsLoading();
@@ -81,7 +89,11 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
             event.member.nickname, event.member.city, event.member.age, event.member.sex, event.member.avatarId));
         yield UpdateProfileSuccess();
       } catch (e) {
-        yield PersonsError(errorMessage: e.toString());
+        if (e is InputException) {
+          yield PersonInputError(errorMessage: e.errMsg());
+        } else {
+          yield PersonsError(errorMessage: e.toString());
+        }
       }
     } else if (event is WatchEvent) {
       yield WatchingEvent();

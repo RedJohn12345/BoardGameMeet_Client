@@ -6,7 +6,9 @@ import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 
+import '../utils/dialog.dart';
 import '../widgets/LoginWidget.dart';
 
 import '../widgets/SecretWordWidget.dart';
@@ -113,7 +115,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               return Center(child: CircularProgressIndicator());
             } else if (state is PersonsLoading) {
               return const Center(child: CircularProgressIndicator(),);
-            } else {
+            } else if (state is PersonsError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                Restart.restartApp();
+              });
+              return Container();
+            } else  {
               return Container();
             }
           }

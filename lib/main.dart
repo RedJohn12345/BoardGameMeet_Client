@@ -11,7 +11,6 @@ import 'package:boardgm/screens/editEventScreen.dart';
 import 'package:boardgm/screens/eventScreen.dart';
 import 'package:boardgm/screens/eventScreenShow.dart';
 import 'package:boardgm/screens/itemsScreen.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/screens/mapScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';

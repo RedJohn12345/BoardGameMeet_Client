@@ -2,8 +2,10 @@ import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 import '../apiclient/persons_api_client.dart';
 import '../repositories/persons_repository.dart';
+import '../utils/dialog.dart';
 import '../widgets/PasswordWidget.dart';
 
 class ChangePassword2Screen extends StatefulWidget {
@@ -93,7 +95,11 @@ class _ChangePassword2ScreenState extends State<ChangePassword2Screen> {
               });
               return CircularProgressIndicator();
             } else if (state is PersonsError) {
-              return Center(child: Text(state.errorMessage),);
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                Restart.restartApp();
+              });
+              return Container();
             } else if (state is PersonsLoading) {
               return const Center(child: CircularProgressIndicator(),);
             } else {

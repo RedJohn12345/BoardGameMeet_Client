@@ -5,6 +5,7 @@ import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 import '../model/event.dart';
 import '../model/item.dart';
 import '../repositories/persons_repository.dart';
@@ -269,7 +270,11 @@ class _EventScreenState extends State<EventScreen> {
                 });
                 return Container();
               } else if (state is PersonsError) {
-                return Center(child: Text(state.errorMessage),);
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                  Restart.restartApp();
+                });
+                return Container();
               } else {
                 return Container();
               }

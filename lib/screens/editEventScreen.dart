@@ -6,6 +6,7 @@ import 'package:boardgm/widgets/AddressWidget.dart';
 import 'package:boardgm/widgets/DateTimeWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 import '../apiclient/events_api_client.dart';
 import '../bloc/events_bloc.dart';
 import '../repositories/events_repository.dart';
@@ -107,12 +108,17 @@ class _EditEventScreenState extends State<EditEventScreen> {
                 DialogUtil.showErrorDialog(context, state.errorMessage);
               });
               return Container();
-            } else if (state is EventsError) {
+            } else if (state is EventInputError) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
-                await DialogUtil.showErrorDialog(context, state.getErrorMessageWithoutException());
+                await DialogUtil.showErrorDialog(context, state.errorMessage);
               });
               return buildCenter(bloc, dateTimeWidget, event);
-              //return Center(child: Text(state.errorMessage),);
+            } else if (state is EventsError) {
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                Restart.restartApp();
+              });
+              return Container();
             } else if (state is EventCreated) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.pushNamedAndRemoveUntil(context, '/my_events',

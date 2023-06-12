@@ -37,8 +37,9 @@ class PersonsApiClient {
     );
 
     if (response.statusCode == 200) {
-      // Парсим JSON-ответ и преобразуем его в список событий
       return;
+    } else if (response.statusCode == 409) {
+      throw InputException(response.body);
     } else {
       throw Exception(response.body);
     }
@@ -58,11 +59,9 @@ class PersonsApiClient {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
       final body = jsonDecode(utf8.decode(response.bodyBytes));
       final token = body['token'];
       final role = body['role'] as String;
-      print(role);
       final nickname = body['nickname'] as String;
 
       await Preference.saveToken(token);
@@ -71,6 +70,8 @@ class PersonsApiClient {
       Member member = await fetchGetOwnProfile();
       await Preference.saveAvatar(member.getAvatar());
       return;
+    } else if (response.statusCode == 409) {
+      throw InputException(response.body);
     } else {
       throw Exception(response.body);
     }
@@ -147,7 +148,6 @@ class PersonsApiClient {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
       final body = jsonDecode(utf8.decode(response.bodyBytes));
       final token = body['token'];
       final nickname = body['nickname'];
@@ -157,7 +157,7 @@ class PersonsApiClient {
       await Preference.saveAvatar("assets/images/${request.avatarId}.jpg");
       return;
     } else if (response.statusCode == 409) {
-      throw Exception(response.body);
+      throw InputException(response.body);
     } else {
       throw Exception('Error while update person with code ${response.statusCode}');
     }
@@ -181,10 +181,9 @@ class PersonsApiClient {
   }
 
   Future<List<MemberInEvent>> fetchGetMembers(int eventId, int page) async {
-    print("запрос");
     var url = Uri.parse('$address/getAllMembersIn/$eventId?page=$page&size=10');
     final token = await Preference.getToken();
-
+    print(token);
     var response = await http.get(url, headers: {
       authorization: bearer + token.toString()
     });
@@ -193,6 +192,7 @@ class PersonsApiClient {
       final List<dynamic> jsonMembers = jsonDecode(utf8.decode(response.bodyBytes));
       List<MemberInEvent> members = [];
       for (final jsonMember in jsonMembers) {
+        print(jsonMember);
         members.add(MemberInEvent.fromJson(jsonMember));
       }
       return members;
@@ -260,7 +260,6 @@ class PersonsApiClient {
     if (response.statusCode == 200) {
       return true;
     } else {
-      print(response.statusCode);
       return false;
     }
   }

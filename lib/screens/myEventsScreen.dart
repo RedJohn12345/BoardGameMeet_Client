@@ -6,7 +6,9 @@ import 'package:boardgm/repositories/events_repository.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 import '../model/event.dart';
+import '../utils/dialog.dart';
 import '../utils/preference.dart';
 
 class MyEventsScreen extends StatefulWidget {
@@ -97,7 +99,11 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                   children: [buildAvatar(context), getColumnEvents(), Center(child: CircularProgressIndicator())],
                 );
               } else if (state is EventsError) {
-                return Center(child: Text(state.errorMessage),);
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                  Restart.restartApp();
+                });
+                return Container();
               } else {
                 return Container();
               }

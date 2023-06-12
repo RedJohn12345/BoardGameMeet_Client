@@ -5,6 +5,7 @@ import 'package:boardgm/repositories/persons_repository.dart';
 import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 
 import '../apiclient/persons_api_client.dart';
 import '../model/dto/member_dto.dart';
@@ -97,7 +98,7 @@ class _MembersScreenState extends State<MembersScreen> {
                           padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
                           child: ListView.builder(
                             //shrinkWrap: true,
-                            controller: scrollController,
+                              controller: scrollController,
                               itemCount: state.members.length,
                               itemBuilder: (context, int index) =>
                                 Card(
@@ -158,7 +159,11 @@ class _MembersScreenState extends State<MembersScreen> {
                   });
                   return Container();
                 } else if (state is PersonsError) {
-                  return Center(child: Text(state.errorMessage),);
+                  WidgetsBinding.instance.addPostFrameCallback((_) async {
+                    await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                    Restart.restartApp();
+                  });
+                  return Container();
                 } else if (state is PersonsFirstLoading) {
                   return const Center(child: CircularProgressIndicator(),);
                 } else {

@@ -51,6 +51,12 @@ class EventNotFoundError extends EventsState {
   EventNotFoundError({required this.errorMessage});
 }
 
+class EventInputError extends EventsState {
+  final String errorMessage;
+
+  EventInputError({required this.errorMessage});
+}
+
 class KickPersonError extends EventsState {
   final String errorMessage;
 
