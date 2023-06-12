@@ -142,7 +142,7 @@ class _MapScreenState extends State<MapScreen> {
                           return null;
                         }
                       },),
-                    SizedBox(height: suggests.length > 3 ? 200 : suggests.length * 50,
+                    SizedBox(height: suggests.length > 3 ? 200 : suggests.length * 60,
                         child:
                         ListView.builder(
                           itemCount: suggests.length,
@@ -191,7 +191,7 @@ class _MapScreenState extends State<MapScreen> {
     }
     List<String> newSuggests = [];
     for (SuggestItem item in result.items!) {
-      if (newSuggests.length < 7) {
+      if (newSuggests.length < 10) {
           newSuggests.add(item.searchText);
       }
     }
@@ -222,23 +222,27 @@ class _MapScreenState extends State<MapScreen> {
     var resultWithSessions = YandexSearch.searchByText(searchText: searchText, geometry: Geometry.fromBoundingBox(box), searchOptions: SearchOptions());
 
     var result = await resultWithSessions.result;
-    _searchPoint(result);
+    _searchPoint(result, searchText);
   }
 
-  _searchPoint(SearchSessionResult result) {
+  _searchPoint(SearchSessionResult result, String search) {
     if (result.items == null) {
       return;
     }
 
     var geo = result.items!.first;
-    if (cityOnly) {
+    if (cityOnly && !YandexMapKitUtil.isCityOfFederalSignificance(search)) {
       setState(() {
-        if (geo.toponymMetadata!.address.addressComponents[SearchComponentKind.locality] == null) {
+        if (geo.toponymMetadata!.address.addressComponents[SearchComponentKind
+            .locality] == null) {
           addressFind = false;
           textFieldController.clear();
-        }
-        textFieldController.text = geo.toponymMetadata!.address.addressComponents[SearchComponentKind.locality]!;
+        } else {
+        textFieldController.text =
+        geo.toponymMetadata!.address.addressComponents[SearchComponentKind
+            .locality]!;
         addressFind = true;
+      }
       });
     }
     Point point = geo.toponymMetadata!.balloonPoint;

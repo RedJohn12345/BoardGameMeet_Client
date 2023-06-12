@@ -1,4 +1,3 @@
-
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
@@ -12,6 +11,7 @@ import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/Sex.dart';
+import '../model/event.dart';
 import '../model/member.dart';
 import '../utils/dialog.dart';
 
@@ -54,9 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
 
     final arguments = (ModalRoute.of(context)?.settings.arguments) as List;
-    final eventId = arguments[0] as int?;
-    final isHost = arguments[1] as bool?;
-    final nickname = arguments[2] as String;
+    final event = arguments[0] as Event?;
+    final nickname = arguments[1] as String;
     // Member? member;
 
     return BlocProvider<PersonBloc>(
@@ -158,13 +157,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         return Center(child: CircularProgressIndicator(),);
                     } else if (state is PersonBanned) {
                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: [eventId, isHost],
+                          Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: event,
                           (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
                        });
                         return Center(child: CircularProgressIndicator(),);
                     } else if (state is PersonNotFoundErrorForPerson)  {
                       WidgetsBinding.instance.addPostFrameCallback((_) async {
-                        Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: [eventId, isHost],
+                        Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: event,
                                 (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
                         DialogUtil.showErrorDialog(context, state.errorMessage);
                         //Navigator.pop(context);

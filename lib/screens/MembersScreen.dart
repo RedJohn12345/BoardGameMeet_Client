@@ -9,6 +9,7 @@ import 'package:restart_app/restart_app.dart';
 
 import '../apiclient/persons_api_client.dart';
 import '../model/dto/member_dto.dart';
+import '../model/event.dart';
 import '../utils/dialog.dart';
 import '../utils/preference.dart';
 
@@ -30,6 +31,7 @@ class _MembersScreenState extends State<MembersScreen> {
   );
   late int id;
   late int color;
+  late bool isHost;
 
   _MembersScreenState({required this.color});
   final scrollController = ScrollController();
@@ -61,14 +63,14 @@ class _MembersScreenState extends State<MembersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments) as List;
-    id = arguments[0] as int;
-    final isHost = arguments[1] as bool;
-    late int membersCount;
+    final event = (ModalRoute.of(context)?.settings.arguments) as Event;
+    id = event.id!;
+    isHost = event.isHost;
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.pop(context, membersCount);
+        Navigator.pushNamedAndRemoveUntil(context, "/event", arguments: event,
+                (Route<dynamic> route) => route.settings.name != '/event' && route.settings.name != '/members');
         return Future.value(false);
       },
       child: BlocProvider(create: (context) => bloc..add(AllMembersOfEvent(id)),
@@ -86,8 +88,7 @@ class _MembersScreenState extends State<MembersScreen> {
                 if (state is AllMembers) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     setState(() {
-                      members = state.members;//todo members count
-                      membersCount = state.members.length;
+                      members = state.members;
                     });
                   });
                   return Column(
@@ -107,7 +108,7 @@ class _MembersScreenState extends State<MembersScreen> {
                                     onTap: () async {
                                       await Preference.deletePath();
                                       Navigator.pushNamed(context, '/profile',
-                                          arguments: [id, isHost, state.members[index].nickname]);
+                                          arguments: [event, state.members[index].nickname]);
                                     },
                                     title: Text(state.members[index].nickname),
                                     leading: SizedBox(height: 40, width: 40,

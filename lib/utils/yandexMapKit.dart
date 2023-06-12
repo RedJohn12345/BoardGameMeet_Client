@@ -102,4 +102,8 @@ class YandexMapKitUtil {
       return result.items!.first.toponymMetadata!.balloonPoint;
     }
   }
+
+  static bool isCityOfFederalSignificance(String text) {
+    return text == "Москва" || text == "Севастополь" || text == "Санкт-Петербург";
+  }
 }

@@ -147,7 +147,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
                     child: avatarPath == null ? Container() :
                     FloatingActionButton(onPressed: () async {
                       await Preference.savePath('/my_events');
-                      Navigator.pushNamed(context, '/profile', arguments: [null, null, await Preference.getNickname()]);
+                      Navigator.pushNamed(context, '/profile', arguments: [null, await Preference.getNickname()]);
                     },
                       child: CircleAvatar(
                         backgroundImage: AssetImage(avatarPath!),

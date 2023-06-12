@@ -106,7 +106,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     return Container();
                   }  else if (state is UpdateProfileSuccess) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pushReplacementNamed(context, '/profile', arguments: [null, null, nicknameController.text]);
+                      Navigator.pushReplacementNamed(context, '/profile', arguments: [null, nicknameController.text]);
                     });
                     return const Center(child: CircularProgressIndicator(),);
                   } else {

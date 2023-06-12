@@ -47,12 +47,6 @@ class _EventScreenState extends State<EventScreen> {
     isAdmin = await Preference.isAdmin();
   }
 
-  _setShowOnly(id) async {
-    if (isAdmin) {
-      showOnly = !(await PersonsApiClient.fetchIsMemberEvent(id));
-    }
-  }
-
   Future<void> _getPathBack() async {
     pathBack = await Preference.getPath();
   }
@@ -146,7 +140,7 @@ class _EventScreenState extends State<EventScreen> {
             backgroundColor: Color(color),
             actions: [
               IconButton(onPressed: () async {
-                final membersCount = await Navigator.pushNamed(context, '/members', arguments: [event.id, event.isHost]) as int;
+                final membersCount = await Navigator.pushNamed(context, '/members', arguments: event) as int;
                 setState(() {
                   event.numberPlayers = membersCount;
                 });

@@ -246,7 +246,7 @@ class _MainScreenState extends State<MainScreen> {
       ) :
       FloatingActionButton(onPressed: () async {
         await Preference.savePath('/home');
-        Navigator.pushNamed(context, '/profile', arguments: [null, null, await Preference.getNickname()]);
+        Navigator.pushNamed(context, '/profile', arguments: [null, await Preference.getNickname()]);
       },
         child: CircleAvatar(
           backgroundImage: AssetImage(avatarPath!),
