@@ -138,7 +138,7 @@ class _MembersScreenState extends State<MembersScreen> {
                   );
                 } else if (state is KickingPerson) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.pushReplacementNamed(context, '/members', arguments: [id, isHost]);
+                    Navigator.pushReplacementNamed(context, '/members', arguments: event);
                   });
                   return Center(child: Text("error"),);
                 } else if (state is EventNotFoundErrorForPerson)  {
@@ -150,7 +150,7 @@ class _MembersScreenState extends State<MembersScreen> {
                 } else if (state is PersonNotFoundErrorForPerson)  {
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
                     await DialogUtil.showErrorDialog(context, state.errorMessage);
-                    Navigator.pushReplacementNamed(context, '/members', arguments: [id, isHost]);//todo
+                    Navigator.pushReplacementNamed(context, '/members', arguments: event);
                   });
                   return Container();
                 } else if (state is KickPersonErrorForPerson)  {
