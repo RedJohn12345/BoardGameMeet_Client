@@ -70,122 +70,127 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           return Future.value(false);
         },
-        child: Scaffold(
-                appBar: AppBar(
-                  title:
-                  Text("Профиль", style: TextStyle(fontSize: 24),),
-                  centerTitle: true,
-                  backgroundColor: Color(color),
-                  actions: isMyProfile && member != null ? [
-                    IconButton(onPressed: () {
-                      Navigator.pushReplacementNamed(
-                          context, '/profileEdit', arguments: member);
-                    }, icon: Icon(Icons.settings))
-                  ] : [],
-                ),
-                backgroundColor: Color(0xff292929),
-                body: BlocBuilder<PersonBloc, PersonState>(
-                  builder: (context, state) {
-                    if (state is ProfileLoaded) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        setState(() {
-                          isMyProfile = state.isMyProfile;
-                          member = state.member;
+        child: RefreshIndicator(
+          onRefresh: () async {
+            Navigator.pushReplacementNamed(context, '/profile', arguments: [event, nickname]);
+          },
+          child: Scaffold(
+                  appBar: AppBar(
+                    title:
+                    Text("Профиль", style: TextStyle(fontSize: 24),),
+                    centerTitle: true,
+                    backgroundColor: Color(color),
+                    actions: isMyProfile && member != null ? [
+                      IconButton(onPressed: () {
+                        Navigator.pushReplacementNamed(
+                            context, '/profileEdit', arguments: member);
+                      }, icon: Icon(Icons.settings))
+                    ] : [],
+                  ),
+                  backgroundColor: Color(0xff292929),
+                  body: BlocBuilder<PersonBloc, PersonState>(
+                    builder: (context, state) {
+                      if (state is ProfileLoaded) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          setState(() {
+                            isMyProfile = state.isMyProfile;
+                            member = state.member;
+                          });
                         });
-                      });
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20)),
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                              margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                              child: Column(
-                                children: getParams(state.member),
-                              )
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                                children: [
-                                  Visibility(
-                                    visible: state.isMyProfile,
-                                      child: Expanded(
-                                    child: ElevatedButton(onPressed: () {
-                                      setState(() {
-                                        bloc.add(ExitProfile());
-                                      });
-                                    },
-                                      child: Text("Выйти"),
-                                      style: ButtonStyle(
-                                          backgroundColor: MaterialStatePropertyAll<
-                                              Color>(Color(color))),
-                                    ),
-                                  ),
-                                  )
-                                ]
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20)),
+                                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                                child: Column(
+                                  children: getParams(state.member),
+                                )
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                                children: [
-                                  Visibility(
-                                    visible: !state.isMyProfile && isAdmin,
-                                    child: Expanded(
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                  children: [
+                                    Visibility(
+                                      visible: state.isMyProfile,
+                                        child: Expanded(
                                       child: ElevatedButton(onPressed: () {
                                         setState(() {
-                                          bloc.add(BanPerson(nickname));
+                                          bloc.add(ExitProfile());
                                         });
                                       },
-                                        child: Text("Заблокировать"),
+                                        child: Text("Выйти"),
                                         style: ButtonStyle(
                                             backgroundColor: MaterialStatePropertyAll<
                                                 Color>(Color(color))),
                                       ),
                                     ),
-                                  )
-                                ]
+                                    )
+                                  ]
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                    } else if (state is PersonsLoading) {
-                        return Center(child: CircularProgressIndicator(),);
-                    } else if (state is PersonBanned) {
-                       WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                  children: [
+                                    Visibility(
+                                      visible: !state.isMyProfile && isAdmin,
+                                      child: Expanded(
+                                        child: ElevatedButton(onPressed: () {
+                                          setState(() {
+                                            bloc.add(BanPerson(nickname));
+                                          });
+                                        },
+                                          child: Text("Заблокировать"),
+                                          style: ButtonStyle(
+                                              backgroundColor: MaterialStatePropertyAll<
+                                                  Color>(Color(color))),
+                                        ),
+                                      ),
+                                    )
+                                  ]
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                      } else if (state is PersonsLoading) {
+                          return Center(child: CircularProgressIndicator(),);
+                      } else if (state is PersonBanned) {
+                         WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: event,
+                            (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
+                         });
+                          return Center(child: CircularProgressIndicator(),);
+                      } else if (state is PersonNotFoundErrorForPerson)  {
+                        WidgetsBinding.instance.addPostFrameCallback((_) async {
                           Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: event,
-                          (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
-                       });
-                        return Center(child: CircularProgressIndicator(),);
-                    } else if (state is PersonNotFoundErrorForPerson)  {
-                      WidgetsBinding.instance.addPostFrameCallback((_) async {
-                        Navigator.pushNamedAndRemoveUntil(context, "/members", arguments: event,
-                                (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
-                        DialogUtil.showErrorDialog(context, state.errorMessage);
-                        //Navigator.pop(context);
-                      });
-                      return Container();
-                    } else if (state is PersonsError) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) async {
-                        await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
-                        Restart.restartApp();
-                      });
-                      return Container();
-                    } else if (state is ExitSuccess) {
-                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Navigator.pushNamedAndRemoveUntil(
-                          context, '/home', (route) => false);
-                       });
-                       return const Center(child: CircularProgressIndicator(),);
-                    } else {
-                      return Container();
+                                  (Route<dynamic> route) => route.settings.name != '/members' && route.settings.name != '/profile');
+                          DialogUtil.showErrorDialog(context, state.errorMessage);
+                          //Navigator.pop(context);
+                        });
+                        return Container();
+                      } else if (state is PersonsError) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) async {
+                          await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                          Restart.restartApp();
+                        });
+                        return Container();
+                      } else if (state is ExitSuccess) {
+                         WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.pushNamedAndRemoveUntil(
+                            context, '/home', (route) => false);
+                         });
+                         return const Center(child: CircularProgressIndicator(),);
+                      } else {
+                        return Container();
+                      }
                     }
-                  }
-                ),
+                  ),
+          ),
         ),
       )
     );

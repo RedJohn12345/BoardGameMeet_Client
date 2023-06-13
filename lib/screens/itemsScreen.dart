@@ -76,7 +76,6 @@ class _ItemsScreenState extends State<ItemsScreen> {
                     Expanded(
                       flex: 9,
                       child: ListView.builder(
-                        //shrinkWrap: true,
                           itemCount: items.length,
                           itemBuilder: (_, index) =>
                               Card(

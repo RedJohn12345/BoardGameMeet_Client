@@ -115,6 +115,11 @@ class BanPerson extends PersonEvent {
   BanPerson(this.nickname);
 }
 
+class ShowAddress extends PersonEvent {
+  final String address;
+  ShowAddress(this.address);
+}
+
 class MarkItem extends PersonEvent {
   final int eventId;
   final Item item;

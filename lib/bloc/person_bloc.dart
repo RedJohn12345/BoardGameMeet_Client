@@ -6,11 +6,13 @@ import 'package:boardgm/model/item.dart';
 import 'package:boardgm/model/member.dart';
 import 'package:boardgm/repositories/events_repository.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
+import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../exceptions/CustomExeption.dart';
 import '../model/event.dart';
@@ -260,6 +262,20 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         } else {
           yield PersonsError(errorMessage: e.toString());
         }
+      }
+    } else if (event is ShowAddress) {
+      yield PersonsLoading();
+      try {
+        Point? point = await YandexMapKitUtil.getPointByText(event.address);
+        Point p;
+        if (point == null) {
+          p = await YandexMapKitUtil.getGeo();
+        } else {
+          p = point;
+        }
+        yield AddressLoadedEvent(p, event.address);
+      } catch (e) {
+        yield PersonsError(errorMessage: e.toString());
       }
     }
   }

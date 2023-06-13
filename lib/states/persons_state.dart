@@ -95,6 +95,13 @@ class AdminShowedEvent extends PersonState {
   AdminShowedEvent(this.event);
 }
 
+class AddressLoadedEvent extends PersonState {
+  final Point point;
+  final String address;
+
+  AddressLoadedEvent(this.point, this.address);
+}
+
 class LeavingFromEvent extends PersonState {}
 
 class AllMembers extends PersonState {

@@ -65,6 +65,14 @@ class _EventScreenState extends State<EventScreen> {
       const SizedBox(height: 16,),
       const Center(child: Text("Место", style: TextStyle(color: Colors.black, fontSize: 26)),),
       Center(child: Text(event.location, style: TextStyle(color: Colors.black, fontSize: 24)),),
+      Center(child: TextButton(onPressed: () {
+          setState(() {
+            personBloc.add(ShowAddress(event.location));
+          });
+        },
+        child: Text("Посмотреть на карте", style: TextStyle(fontSize: 24, color: Colors.blue),),
+      ),
+      ),
       const SizedBox(height: 16,),
       event.description.isEmpty ? Container() :
       const Center(child: Text("Описание", style: TextStyle(color: Colors.black, fontSize: 26)),),
@@ -164,81 +172,7 @@ class _EventScreenState extends State<EventScreen> {
                     items = state.items;
                   });
                 });
-                return Column(
-                  children: [
-                    Flexible(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)),
-                        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        child: ListView.builder(
-                          itemCount: params.length,
-                          itemBuilder: (_, index) =>
-                          params[index],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                          children: [
-                            Visibility(
-                              visible: event.isHost || isAdmin,
-                                //   () async {
-                                // return await _isAdmin();
-                                // },
-                                child: Expanded(
-                                  child: ElevatedButton(onPressed: () {
-                                    personBloc.add(DeleteEvent(event.id!));
-                                  },
-                                  child: Text("Удалить"),
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll<
-                                          Color>(Color(color))),
-                                  ),
-                                ),
-                            ),
-                            Visibility(
-                              visible: event.isHost || isAdmin,
-                              //   () async {
-                              // return await _isAdmin();
-                              // },
-                              child: const SizedBox(width: 16,),
-                            ),
-                            Visibility(
-                              visible: !event.isHost,
-                              child: Expanded(
-                                child: ElevatedButton(onPressed: () async {
-                                  if (isAdmin && !(await PersonsApiClient.fetchIsMemberEvent(event.id))) {
-                                    Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
-                                    return;
-                                  }
-                                  personBloc.add(LeaveFromEvent(event.id));
-                                },
-                                  child: Text("Покинуть"),
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll<
-                                          Color>(Color(color))),
-                                ),
-                              )
-                            ),
-                            const SizedBox(width: 16,),
-                            Expanded(
-                              child: ElevatedButton(onPressed: () {
-                                Navigator.pushNamed(context, '/chat', arguments: event.id);
-                              },
-                                child: Text("Чат"),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll<
-                                        Color>(Color(color))),
-                              ),
-                            ),
-                          ]
-                      ),
-                    ),
-                  ],);
+                return buildColumn(params, event, context);
               } else if (state is LeavingFromEvent) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
@@ -251,7 +185,15 @@ class _EventScreenState extends State<EventScreen> {
                   Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
                 });
                 return const Center(child: CircularProgressIndicator(),);
-              }  else if (state is EventNotFoundErrorForPerson)  {
+              } else if (state is AddressLoadedEvent) {
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  await Navigator.pushNamed(context, '/mapShow', arguments: [state.point, state.address]);
+                  setState(() {
+                    personBloc.add(LoadEventForPerson(event.id!));
+                  });
+                });
+                return buildColumn(params, event, context);
+              } else if (state is EventNotFoundErrorForPerson)  {
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
                   Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                   DialogUtil.showErrorDialog(context, state.errorMessage);
@@ -277,5 +219,83 @@ class _EventScreenState extends State<EventScreen> {
         ),
       ),
     );
+  }
+
+  Column buildColumn(List<Widget> params, Event event, BuildContext context) {
+    return Column(
+                children: [
+                  Flexible(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20)),
+                      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      child: ListView.builder(
+                        itemCount: params.length,
+                        itemBuilder: (_, index) =>
+                        params[index],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                        children: [
+                          Visibility(
+                            visible: event.isHost || isAdmin,
+                              //   () async {
+                              // return await _isAdmin();
+                              // },
+                              child: Expanded(
+                                child: ElevatedButton(onPressed: () {
+                                  personBloc.add(DeleteEvent(event.id!));
+                                },
+                                child: Text("Удалить"),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(color))),
+                                ),
+                              ),
+                          ),
+                          Visibility(
+                            visible: event.isHost || isAdmin,
+                            //   () async {
+                            // return await _isAdmin();
+                            // },
+                            child: const SizedBox(width: 16,),
+                          ),
+                          Visibility(
+                            visible: !event.isHost,
+                            child: Expanded(
+                              child: ElevatedButton(onPressed: () async {
+                                if (isAdmin && !(await PersonsApiClient.fetchIsMemberEvent(event.id))) {
+                                  Navigator.pushNamedAndRemoveUntil(context, '/my_events', (route) => false);
+                                  return;
+                                }
+                                personBloc.add(LeaveFromEvent(event.id));
+                              },
+                                child: Text("Покинуть"),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll<
+                                        Color>(Color(color))),
+                              ),
+                            )
+                          ),
+                          const SizedBox(width: 16,),
+                          Expanded(
+                            child: ElevatedButton(onPressed: () {
+                              Navigator.pushNamed(context, '/chat', arguments: event.id);
+                            },
+                              child: Text("Чат"),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll<
+                                      Color>(Color(color))),
+                            ),
+                          ),
+                        ]
+                    ),
+                  ),
+                ],);
   }
 }
