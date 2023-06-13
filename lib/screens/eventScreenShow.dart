@@ -149,13 +149,13 @@ class _EventScreenShowState extends State<EventScreenShow> {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
                 await Preference.savePath('/home');
                 Navigator.pushReplacementNamed(
-                    context, '/event', arguments: state.event);
+                    context, '/event', arguments: state.event.id);
               });
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is AdminShowedEvent) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
                 Navigator.pushReplacementNamed(
-                    context, '/event', arguments: state.event);
+                    context, '/event', arguments: state.event.id);
               });
               return const Center(child: CircularProgressIndicator(),);
             } else if (state is EventNotFoundErrorForPerson)  {

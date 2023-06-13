@@ -73,7 +73,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         personRepository: PersonsRepository(apiClient: PersonsApiClient()));
     return WillPopScope(
         onWillPop: () {
-          Navigator.pushReplacementNamed(context, '/profile', arguments: [null, null, member.nickname]);
+          Navigator.pushReplacementNamed(context, '/profile', arguments: [null, member.nickname]);
           return Future.value(true);
         },
         child: BlocProvider<PersonBloc>(

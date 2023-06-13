@@ -28,7 +28,8 @@ class ChangePasswordSuccess extends PersonState {
 
 class EventForPersonLoaded extends PersonState {
   final List<Item> items;
-  EventForPersonLoaded(this.items);
+  final Event event;
+  EventForPersonLoaded(this.items, this.event);
 }
 
 class ItemsEdited extends PersonState {

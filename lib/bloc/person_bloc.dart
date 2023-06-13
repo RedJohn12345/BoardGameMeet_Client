@@ -216,7 +216,8 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       try {
         var eventRepository = EventsRepository(apiClient: EventsApiClient());
         var items = await eventRepository.getItems(event.eventId);
-        yield EventForPersonLoaded(items.cast<Item>());
+        var selectedEvent = await eventRepository.getEvent(event.eventId);
+        yield EventForPersonLoaded(items.cast<Item>(), selectedEvent);
       } catch (e) {
         if (e is EventNotFoundException) {
           yield EventNotFoundErrorForPerson(errorMessage: e.errMsg());

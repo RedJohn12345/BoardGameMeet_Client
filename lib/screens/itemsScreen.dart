@@ -149,7 +149,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
             } else if (state is ItemsEdited) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.pushNamedAndRemoveUntil(
-                context, '/event', arguments: event, (Route<dynamic> route) => route.settings.name != '/event' && route.settings.name != '/items');
+                context, '/event', arguments: event.id, (Route<dynamic> route) => route.settings.name != '/event' && route.settings.name != '/items');
               });
               return const Center(child: CircularProgressIndicator(),);
             } else {
