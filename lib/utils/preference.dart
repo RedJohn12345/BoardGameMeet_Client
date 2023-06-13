@@ -12,11 +12,14 @@ class Preference {
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    if (token == null) {
+      return null;
+    }
     final api = PersonsApiClient();
     if (await api.fetchVerifyToken(token.toString())) {
       return token;
     } else {
-      deletePreferences();
+      await deletePreferences();
       Restart.restartApp();
     }
     return null;
@@ -32,6 +35,7 @@ class Preference {
     prefs.remove('token');
     prefs.remove('avatar');
     prefs.remove('role');
+    prefs.remove('nickname');
   }
 
   static Future saveRole(String role) async {

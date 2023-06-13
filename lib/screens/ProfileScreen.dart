@@ -17,7 +17,6 @@ import '../utils/dialog.dart';
 class ProfileScreen extends StatefulWidget {
 
   late int color;
-
   ProfileScreen({super.key, required this.color});
 
   @override

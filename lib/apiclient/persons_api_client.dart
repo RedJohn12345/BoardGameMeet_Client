@@ -12,7 +12,7 @@ import '../model/member.dart';
 class PersonsApiClient {
 
   static const authorization = 'Authorization';
-  static const bearer = 'Bearer_';
+  static const bearer = 'Bearer ';
   static const contentType = 'Content-type';
   static const json = 'application/json';
   static const address = 'https://board-game-meet-dunad4n.cloud.okteto.net';
@@ -123,7 +123,7 @@ class PersonsApiClient {
       final Map<String, dynamic> jsonProfile = jsonDecode(utf8.decode(response.bodyBytes));
       return Member.fromJson(jsonProfile);
     } else {
-      throw Exception('Error while get profile wile code ${response.statusCode}');
+      throw Exception('Error while get profile wile code $token');
     }
   }
 
@@ -308,7 +308,6 @@ class PersonsApiClient {
   Future<bool> fetchVerifyToken(String token) async {
     var url = Uri.parse('$address/verifyToken');
     final nickname = await Preference.getNickname();
-
     final msg = jsonEncode({
       "token": token,
       "nickname": nickname
@@ -321,7 +320,8 @@ class PersonsApiClient {
     );
 
     if (response.statusCode == 200) {
-      return true;
+      print(jsonDecode(utf8.decode(response.bodyBytes)));
+      return jsonDecode(utf8.decode(response.bodyBytes));
     } else {
       return false;
     }

@@ -8,6 +8,7 @@ import 'package:boardgm/widgets/ChatWidget.dart';
 import 'package:boardgm/widgets/NameWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
@@ -28,10 +29,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class ChatScreenState extends State<ChatScreen> {
-
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   late int color;
   static const authorization = 'Authorization';
-  static const bearer = 'Bearer_';
+  static const bearer = 'Bearer ';
   static const address = 'https://board-game-meet-dunad4n.cloud.okteto.net';
 
   ChatScreenState({required this.color});
@@ -45,6 +46,7 @@ class ChatScreenState extends State<ChatScreen> {
   );
   late int eventId;
   late String token;
+  late String nickname;
   bool isAdmin = false;
 
   late StompClient stompClient;
@@ -65,6 +67,7 @@ class ChatScreenState extends State<ChatScreen> {
   void initState() {
     _setToken();
     _setAdmin();
+    _setNickname();
     super.initState();
     //scrollController.jumpTo(scrollController.position.maxScrollExtent);
     scrollController.addListener(_scrollListener);
@@ -74,7 +77,10 @@ class ChatScreenState extends State<ChatScreen> {
 
   _setToken() async {
     token = (await Preference.getToken())!;
-    print(token);
+  }
+
+  _setNickname() async {
+    nickname = (await Preference.getNickname())!;
   }
 
   _setAdmin() async {
@@ -105,11 +111,17 @@ class ChatScreenState extends State<ChatScreen> {
 
   void frameCallback(StompFrame frame) async {
     var json = await jsonDecode(frame.body!);
-    if (json['body']['eventId'] as int == eventId) {
-      String? myNickname = await Preference.getNickname();
-      setState(() {
-        chatBubbles.insert(0, ChatBubble.fromJson(json['body'], myNickname));
-      });
+    int statusCode = json['statusCodeValue'];
+    if (statusCode == 200) {
+      if (json['body']['eventId'] as int == eventId) {
+        setState(() {
+          chatBubbles.insert(0, ChatBubble.fromJson(json['body'], nickname));
+        });
+      }
+    } else {
+      if (json['body'][nickname] == nickname) {
+        _errorHandler(statusCode);
+      }
     }
   }
 
@@ -129,6 +141,7 @@ class ChatScreenState extends State<ChatScreen> {
         return BlocProvider(
           create: (context) => bloc..add(LoadMessages(eventId)),
           child: Scaffold(
+              key: _scaffoldKey,
               appBar: AppBar(
                 title:
                 Text("Чат", style: TextStyle(fontSize: 24),),
@@ -189,11 +202,6 @@ class ChatScreenState extends State<ChatScreen> {
               backgroundColor: Color(color),
               onPressed: () async {
                 if (messageController.text.isEmpty) return;
-                // if (!(await PersonsApiClient.fetchIsMemberEvent(eventId)) && !isAdmin) {
-                //   Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
-                //   DialogUtil.showErrorDialog(context, "Похоже вы были исключены из мероприятия");
-                // }
-
                 try {
                   stompClient.send(destination: '/app/chat',
                     body: json.encode(
@@ -211,6 +219,24 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           ),
         );
+  }
+
+  void _errorHandler(int code) {
+    if (code == 471) {
+      Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
+      DialogUtil.showErrorDialog(context, "Мероприятие не найдено, возможно оно было удалено создателем или администратором");
+    } else if (code == 472) {
+      DialogUtil.showErrorDialog(context, "Ошибка авторизации");
+      Preference.deletePreferences();
+      Restart.restartApp();
+    } else if (code == 473) {
+      if (isAdmin) {
+        DialogUtil.showErrorDialog(context, "Вы не являетесь участников мероприятия!");
+      } else {
+        Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
+        DialogUtil.showErrorDialog(context, "Похоже вы были исключены из мероприятия");
+      }
+    }
   }
 }
 

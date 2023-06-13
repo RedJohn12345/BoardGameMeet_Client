@@ -13,12 +13,13 @@ import '../model/event.dart';
 class EventsApiClient {
 
   static const authorization = 'Authorization';
-  static const bearer = 'Bearer_';
+  static const bearer = 'Bearer ';
   static const contentType = 'Content-type';
   static const json = 'application/json';
   static const address = 'https://board-game-meet-dunad4n.cloud.okteto.net';
 
   Future<List> fetchMyEvents(int page) async {
+    print(page);
     var url = Uri.parse('$address/myEvents?page=$page&size=20');
     final token = await Preference.getToken();
     var response = await http.get(url,
@@ -69,7 +70,6 @@ class EventsApiClient {
   }
 
   Future fetchCreateEvent(CreateEventRequest request) async {
-    //final String url = '$_baseUrl/';
     var url = Uri.parse('$address/createEvent');
     final token = await Preference.getToken();
     final city = await YandexMapKitUtil.getCityByAddress(request.address);
@@ -88,9 +88,9 @@ class EventsApiClient {
     print(msg);
 
     var response = await http.post(url, body: msg,
-        headers: {'Authorization':
-        'Bearer_$token', 'Content-type':
-        'application/json'}
+        headers: {authorization:
+        bearer + token.toString(), contentType:
+        json}
     );
 
 

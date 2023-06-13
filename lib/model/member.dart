@@ -16,7 +16,6 @@ class Member {
   });
 
   static fromJson(json) {
-
     Member member =  Member(name: json['name'] as String, avatarId: json['avatarId'] == null ? 1 : json['avatarId'] as int,
     nickname: json['nickname'] as String, age: json['age'] as int?, city: json['city'] as String,
         sex: json['gender'] as String == "MALE" ? Sex.MAN : (json['gender'] as String == "FEMALE" ? Sex.WOMAN : Sex.NONE));

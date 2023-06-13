@@ -265,7 +265,8 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       suggests = [];
       if (cityOnly) {
-        textFieldController.text = geo.toponymMetadata!.address.addressComponents[SearchComponentKind.locality]!;
+        var city = geo.toponymMetadata!.address.addressComponents[SearchComponentKind.locality];
+        textFieldController.text = city ?? "Москва";
       } else {
         textFieldController.text =
             geo.toponymMetadata!.address.formattedAddress;

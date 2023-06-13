@@ -268,6 +268,7 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       try {
         Point? point = await YandexMapKitUtil.getPointByText(event.address);
         Point p;
+        print(point);
         if (point == null) {
           p = await YandexMapKitUtil.getGeo();
         } else {

@@ -6,17 +6,16 @@ import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class YandexMapKitUtil {
-  static Future<String> getCity() async {
+  static Future<String?> getCity() async {
     LocationPermission status = await Geolocator.requestPermission();
-    //LocationPermission status = await Geolocator.checkPermission();
     return await getLocation(status);
   }
 
-  static Future<String> getCityByAddress(String address) async {
+  static Future<String?> getCityByAddress(String address) async {
     return await searchCityByAddress(address);
   }
 
-  static Future<String> searchCityByAddress(address) async {
+  static Future<String?> searchCityByAddress(address) async {
 
     final resultWithSession = YandexSearch.searchByText(searchText: address, geometry: Geometry.fromBoundingBox(BoundingBox(
         northEast: Point(latitude: 71.155753, longitude: -177.650671),
@@ -27,14 +26,14 @@ class YandexMapKitUtil {
 
   }
 
-  static Future<String> findCity(SearchResultWithSession resultWithSession) async {
+  static Future<String?> findCity(SearchResultWithSession resultWithSession) async {
     var result = await resultWithSession.result;
 
     return result.items!.first.toponymMetadata!.address.addressComponents[SearchComponentKind.locality]!;
   }
 
 
-  static Future getLocation(status) async {
+  static Future<String?> getLocation(status) async {
     bool isMoscow = !(status == LocationPermission.always || status == LocationPermission.whileInUse);
     AppLatLong? pos = isMoscow ? MoscowLocation() : null;
     if (!isMoscow) {
@@ -46,20 +45,20 @@ class YandexMapKitUtil {
 
   }
 
-  static Future searchCity(pos) async {
+  static Future<String?> searchCity(pos) async {
     SearchResultWithSession resultWithSession = YandexSearch.searchByPoint(point: Point(latitude: pos!.lat, longitude: pos.long), searchOptions: SearchOptions());
     var result = await resultWithSession.result;
 
     var res = [];
     result.items!.asMap().forEach((i, item) {
-      res.add(item.toponymMetadata!.address.addressComponents[SearchComponentKind.locality]);
+      var city = item.toponymMetadata!.address.addressComponents[SearchComponentKind.locality];
+      res.add(city ?? "Москва");
     });
-
     return res[0];
 
   }
 
-  static Future getCityToSearch() async {
+  static Future<String> getCityToSearch() async {
     var city;
     if (await Preference.checkToken()) {
       PersonsApiClient apiClient = PersonsApiClient();
@@ -74,6 +73,7 @@ class YandexMapKitUtil {
 
 
   static Future<Point> getGeo() async {
+    print("getGeo");
     LocationPermission status = await Geolocator.requestPermission();
     return await getGeolocation(status);
   }
@@ -94,12 +94,12 @@ class YandexMapKitUtil {
         northEast: Point(latitude: 71.155753, longitude: -177.650671),
         southWest: Point(latitude: 44.063222,  longitude: 180.940636)
     ),), searchOptions: SearchOptions());
-
     var result = await resultWithSession.result;
-    if (result == null) {
+    if (result.items == null || result.items!.first.toponymMetadata == null) {
       return null;
     } else {
       return result.items!.first.toponymMetadata!.balloonPoint;
+
     }
   }
 

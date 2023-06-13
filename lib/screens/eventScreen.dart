@@ -78,6 +78,7 @@ class _EventScreenState extends State<EventScreen> {
               centerTitle: true,
               backgroundColor: Color(color),
               actions: [
+                event == null ? SizedBox() :
                 IconButton(onPressed: () {
                   Navigator.pushNamed(context, '/members', arguments: event);
 

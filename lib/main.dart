@@ -16,6 +16,7 @@ import 'package:boardgm/screens/mapShowScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/MembersScreen.dart';
 import 'screens/changePassword2.dart';
@@ -35,15 +36,10 @@ Future<void> main() async {
 }
 
 class FlutterApp extends StatefulWidget {
-  const FlutterApp({super.key});
-
+  final globalNavigationKey = GlobalKey<NavigatorState>();
+  FlutterApp({super.key});
   @override
   State<FlutterApp> createState() => _FlutterAppState();
-
-  static Future<void> _setFirst() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('first', false);
-  }
 
 }
 
@@ -113,6 +109,10 @@ class _FlutterAppState extends State<FlutterApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     // _remoteConfig.fetchAndActivate();
     bool condition = _remoteConfig.getBool("main_color");
     print("conditional is $condition");
@@ -124,8 +124,8 @@ class _FlutterAppState extends State<FlutterApp> {
 
       return MaterialApp(
         title: 'Board Game Meet',
-        // navigatorObservers: <NavigatorObserver>[observer],
         initialRoute: '/splash',
+        navigatorKey: widget.globalNavigationKey,
         routes: {
           '/home': (context) => MainScreen(color: color),
           '/my_events': (context) => MyEventsScreen(color: color),

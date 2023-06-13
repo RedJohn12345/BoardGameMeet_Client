@@ -31,7 +31,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
       eventsRepository: EventsRepository(
           apiClient: EventsApiClient()
       )
-  )..add(LoadMyEvents());
+  );
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _MyEventsScreenState extends State<MyEventsScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EventsBloc>(
-      create: (context) => bloc,
+      create: (context) => bloc..add(LoadMyEvents()),
       child: Scaffold(
         appBar: AppBar(
           title:
