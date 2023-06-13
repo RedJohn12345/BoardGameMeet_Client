@@ -21,9 +21,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   late int color;
-
   _MainScreenState({required this.color});
   List<MainPageEvent> events = [];
   String? avatarPath;
