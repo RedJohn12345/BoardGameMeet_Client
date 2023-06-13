@@ -1,6 +1,4 @@
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
-import 'package:boardgm/apiclient/persons_api_client.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/dialog.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:flutter/material.dart';
@@ -66,13 +64,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    print("hello");
-    super.didChangeDependencies();
-  }
-
-
-  @override
   Widget build(BuildContext context) {
     search = (ModalRoute.of(context)?.settings.arguments) == null ? null : (ModalRoute.of(context)?.settings.arguments) as String;
     return BlocProvider<EventsBloc>(
@@ -114,7 +105,7 @@ class _MainScreenState extends State<MainScreen> {
               );
             } else if (state is EventsError) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
-                await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
+                await DialogUtil.showErrorDialog(context, state.errorMessage);
                 Restart.restartApp();
               });
               return Container();

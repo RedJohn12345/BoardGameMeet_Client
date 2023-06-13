@@ -48,7 +48,6 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
       try {
         final events = await eventsRepository.getEvents(event.search, page);
         yield MainPageEventsLoaded((list..addAll(events)).cast<MainPageEvent>());
-        // yield MainPageEventsLoaded(events);
         page++;
       } catch (e) {
         yield EventsError(errorMessage: e.toString());

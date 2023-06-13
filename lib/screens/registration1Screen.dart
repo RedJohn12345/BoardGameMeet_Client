@@ -1,6 +1,5 @@
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/model/member.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/LoginWidget.dart';

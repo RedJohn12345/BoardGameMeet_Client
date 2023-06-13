@@ -1,7 +1,6 @@
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/event.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/widgets/AddressWidget.dart';
 import 'package:boardgm/widgets/DateTimeWidget.dart';
 import 'package:flutter/material.dart';

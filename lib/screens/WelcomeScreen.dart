@@ -1,5 +1,4 @@
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 

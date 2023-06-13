@@ -1,7 +1,6 @@
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/event.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restart_app/restart_app.dart';

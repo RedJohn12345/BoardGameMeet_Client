@@ -2,22 +2,16 @@ import 'dart:convert';
 
 
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
-import 'package:boardgm/bloc/person_bloc.dart';
-import 'package:boardgm/model/dto/member_dto.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/dialog.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:boardgm/widgets/ChatWidget.dart';
 import 'package:boardgm/widgets/NameWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
-
 import '../apiclient/events_api_client.dart';
-import '../apiclient/persons_api_client.dart';
 import '../bloc/events_bloc.dart';
 import '../repositories/events_repository.dart';
 
@@ -96,7 +90,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   void onConnectCallback(StompFrame connectFrame) {
     print('stomp client connected');
-    stompClient!.subscribe(destination: '/topic/chat', callback: frameCallback);
+    stompClient.subscribe(destination: '/topic/chat', callback: frameCallback);
   }
 
   void onError(StompFrame stompFrame) {

@@ -37,7 +37,6 @@ class EventsApiClient {
 
   Future<List<MainPageEvent>> fetchEvents(String? search, int page) async {
     final Uri url;
-    print(search);
     final city = await YandexMapKitUtil.getCityToSearch();
     if (search != null) {
       url = Uri.parse(

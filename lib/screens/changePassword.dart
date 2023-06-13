@@ -3,7 +3,6 @@ import 'package:boardgm/apiclient/persons_api_client.dart';
 import 'package:boardgm/bloc/person_bloc.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restart_app/restart_app.dart';

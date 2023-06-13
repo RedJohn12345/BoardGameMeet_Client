@@ -1,5 +1,4 @@
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
-import 'package:boardgm/utils/analytics.dart';
 import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:flutter/material.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
