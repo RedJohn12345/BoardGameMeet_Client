@@ -70,7 +70,7 @@ class ChatBubble extends StatelessWidget {
 
   static fromJson(json, myNickname) {
     bool isMyNickname = json['myNickname'] as String == myNickname;
-    Interlocutor interlocutor = Interlocutor(name: json['name'] as String, avatarId: json['avatarId'] == null ? 1 : json['avatarId'] as int);
+    Interlocutor interlocutor = Interlocutor(name: json['name'] as String, avatarId: json['avatarId'] ?? 1);
     ChatBubble bubble =  ChatBubble(text: json['text'] as String, isCurrentUser: isMyNickname, interlocutor: interlocutor,);
     return bubble;
   }

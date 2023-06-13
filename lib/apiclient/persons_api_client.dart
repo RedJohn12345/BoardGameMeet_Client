@@ -6,7 +6,7 @@ import 'package:boardgm/utils/yandexMapKit.dart';
 import 'package:boardgm/utils/preference.dart';
 import 'package:http/http.dart' as http;
 
-import '../exceptions/CustomExeption.dart';
+import '../exceptions/CustomException.dart';
 import '../model/member.dart';
 
 class PersonsApiClient {

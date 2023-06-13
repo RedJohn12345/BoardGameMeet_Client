@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:boardgm/apiclient/events_api_client.dart';
 import 'package:boardgm/bloc/events_bloc.dart';
 import 'package:boardgm/model/dto/member_dto.dart';
-import 'package:boardgm/model/item.dart';
 import 'package:boardgm/model/member.dart';
 import 'package:boardgm/repositories/events_repository.dart';
 import 'package:boardgm/repositories/persons_repository.dart';
@@ -14,7 +13,7 @@ import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-import '../exceptions/CustomExeption.dart';
+import '../exceptions/CustomException.dart';
 import '../model/event.dart';
 import '../model/item.dart';
 part '../events/persons_event.dart';

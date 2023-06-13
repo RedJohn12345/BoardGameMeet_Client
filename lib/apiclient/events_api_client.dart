@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:boardgm/apiclient/persons_api_client.dart';
-import 'package:boardgm/exceptions/CustomExeption.dart';
+import 'package:boardgm/exceptions/CustomException.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/model/item.dart';
 import 'package:boardgm/utils/preference.dart';
