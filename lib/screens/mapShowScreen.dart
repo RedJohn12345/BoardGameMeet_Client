@@ -99,6 +99,7 @@ class _MapShowScreenState extends State<MapShowScreen> {
               child: Container(
                 padding: EdgeInsets.all(16),
                 child: TextFormField(controller: TextEditingController(text: address),
+                  readOnly: true,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                       fillColor:  Color(0xff171717),

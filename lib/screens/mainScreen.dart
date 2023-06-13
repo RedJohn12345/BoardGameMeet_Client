@@ -103,7 +103,7 @@ class _MainScreenState extends State<MainScreen> {
               );
             } else if (state is EventsError) {
               WidgetsBinding.instance.addPostFrameCallback((_) async {
-                await DialogUtil.showErrorDialog(context, state.errorMessage);
+                await DialogUtil.showErrorDialog(context, "Не удалось подключиться к серверу");
                 Restart.restartApp();
               });
               return Container();

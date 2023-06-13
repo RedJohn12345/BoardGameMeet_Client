@@ -1,6 +1,5 @@
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:boardgm/utils/dialog.dart';
 import '../apiclient/persons_api_client.dart';
 
 class Preference {

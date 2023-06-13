@@ -94,7 +94,9 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void onError(StompFrame stompFrame) {
-    print('error');
+    var json = jsonDecode(stompFrame.body!);
+
+    print(json['statusCodeValue']);
   }
 
   void onDisconnect(StompFrame frame) {
@@ -103,9 +105,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   void frameCallback(StompFrame frame) async {
     var json = await jsonDecode(frame.body!);
-    print(json);
-    print(json['body']);
-    print(json['body']['eventId']);
     if (json['body']['eventId'] as int == eventId) {
       String? myNickname = await Preference.getNickname();
       setState(() {
