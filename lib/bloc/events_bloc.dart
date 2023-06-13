@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:boardgm/exceptions/CustomExeption.dart';
+import 'package:boardgm/exceptions/CustomException.dart';
 import 'package:boardgm/model/dto/event_dto.dart';
 import 'package:boardgm/widgets/ChatWidget.dart';
 import 'package:flutter/cupertino.dart';

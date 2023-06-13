@@ -96,7 +96,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   void onConnectCallback(StompFrame connectFrame) {
     print('stomp client connected');
-    stompClient!.subscribe(destination: '/topic/chat', callback: frameCallback);
+    stompClient.subscribe(destination: '/topic/chat', callback: frameCallback);
   }
 
   void onError(StompFrame stompFrame) {
@@ -108,11 +108,14 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void frameCallback(StompFrame frame) async {
-    var json = jsonDecode(frame.body!);
-    if (json['eventId'] as int == eventId) {
+    var json = await jsonDecode(frame.body!);
+    print(json);
+    print(json['body']);
+    print(json['body']['eventId']);
+    if (json['body']['eventId'] as int == eventId) {
       String? myNickname = await Preference.getNickname();
       setState(() {
-        chatBubbles.insert(0, ChatBubble.fromJson(json, myNickname));
+        chatBubbles.insert(0, ChatBubble.fromJson(json['body'], myNickname));
       });
     }
   }
@@ -122,9 +125,7 @@ class ChatScreenState extends State<ChatScreen> {
     messageController.dispose();
 
     super.dispose();
-    if (stompClient != null) {
-      stompClient.deactivate();
-    }
+    stompClient.deactivate();
     scrollController.removeListener(_scrollListener);
     scrollController.dispose();
   }
@@ -202,7 +203,6 @@ class ChatScreenState extends State<ChatScreen> {
 
                 try {
                   stompClient.send(destination: '/app/chat',
-                    headers: {authorization: bearer + token},
                     body: json.encode(
                   {
                   "text": messageController.text,

@@ -1,3 +1,5 @@
+import 'dart:core';
+
 class EventNotFoundException implements Exception {
   String errMsg() => 'Мероприятие не найдено, возможно оно было удалено создателем или администратором';
 }
@@ -14,6 +16,7 @@ class InputException implements Exception {
   final String e;
 
   InputException(this.e);
+
   String errMsg() => e;
 }
 
