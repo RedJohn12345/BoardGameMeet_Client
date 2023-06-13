@@ -88,7 +88,7 @@ class PersonsApiClient {
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonProfile = jsonDecode(utf8.decode(response.bodyBytes));
       return Member.fromJson(jsonProfile);
-    } else if (response.statusCode == 511) {
+    } else if (response.statusCode == 472) {
       throw PersonNotFoundException();
     } else {
       throw Exception('Error while get profile wile code ${response.statusCode}');
@@ -173,7 +173,7 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       return;
-    } else if (response.statusCode == 511) {
+    } else if (response.statusCode == 472) {
       throw PersonNotFoundException();
     }  else {
       throw Exception('Ошибка при удалении пользователя с кодом ${response.statusCode}');
@@ -196,9 +196,9 @@ class PersonsApiClient {
         members.add(MemberInEvent.fromJson(jsonMember));
       }
       return members;
-    } else if (response.statusCode == 510) {
+    } else if (response.statusCode == 471) {
       throw EventNotFoundException();
-    } else if (response.statusCode == 512) {
+    } else if (response.statusCode == 473) {
       throw KickFromEventException();
     } else {
       throw Exception('Ошибка при получении всех участников мероприятия '
@@ -216,7 +216,7 @@ class PersonsApiClient {
 
     if (response.statusCode == 200) {
       return;
-    } else if (response.statusCode == 510) {
+    } else if (response.statusCode == 471) {
       throw EventNotFoundException();
     } else {
       throw Exception('Ошибка при добавлении участника в мероприятие с кодом'
@@ -234,9 +234,9 @@ class PersonsApiClient {
     //await _deleteToken();
     if (response.statusCode == 200) {
       return;
-    } else if (response.statusCode == 510) {
+    } else if (response.statusCode == 471) {
       throw EventNotFoundException();
-    } else if (response.statusCode == 512) {
+    } else if (response.statusCode == 473) {
       throw KickFromEventException();
     } else  {
       throw Exception('Ошибка при выходе из мероприятия с кодом '
