@@ -220,6 +220,8 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       } catch (e) {
         if (e is EventNotFoundException) {
           yield EventNotFoundErrorForPerson(errorMessage: e.errMsg());
+        } else if (e is KickFromEventException) {
+          yield KickPersonErrorForPerson(errorMessage: e.errMsg());
         } else {
           yield PersonsError(errorMessage: e.toString());
         }

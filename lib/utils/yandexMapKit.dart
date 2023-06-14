@@ -50,6 +50,9 @@ class YandexMapKitUtil {
     var result = await resultWithSession.result;
 
     var res = [];
+    if (result.items == null) {
+      return "Москва";
+    }
     result.items!.asMap().forEach((i, item) {
       var city = item.toponymMetadata!.address.addressComponents[SearchComponentKind.locality];
       res.add(city ?? "Москва");
@@ -65,7 +68,7 @@ class YandexMapKitUtil {
       Member member = await apiClient.fetchGetOwnProfile();
       city = member.city;
     } else {
-      city = await getCity();
+      city = await getCity() ?? "Москва";
     }
 
     return city;
@@ -73,7 +76,6 @@ class YandexMapKitUtil {
 
 
   static Future<Point> getGeo() async {
-    print("getGeo");
     LocationPermission status = await Geolocator.requestPermission();
     return await getGeolocation(status);
   }

@@ -69,7 +69,6 @@ class ChatScreenState extends State<ChatScreen> {
     _setAdmin();
     _setNickname();
     super.initState();
-    //scrollController.jumpTo(scrollController.position.maxScrollExtent);
     scrollController.addListener(_scrollListener);
     _setUpStompClient();
     AppMetrica.reportEvent('Chat screen');
@@ -111,6 +110,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   void frameCallback(StompFrame frame) async {
     var json = await jsonDecode(frame.body!);
+    print(json);
     int statusCode = json['statusCodeValue'];
     if (statusCode == 200) {
       if (json['body']['eventId'] as int == eventId) {
@@ -119,7 +119,8 @@ class ChatScreenState extends State<ChatScreen> {
         });
       }
     } else {
-      if (json['body'][nickname] == nickname) {
+      print(json);
+      if (json['body'] == nickname) {
         _errorHandler(statusCode);
       }
     }
@@ -221,19 +222,19 @@ class ChatScreenState extends State<ChatScreen> {
         );
   }
 
-  void _errorHandler(int code) {
+  Future<void> _errorHandler(int code) async {
     if (code == 471) {
-      Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       DialogUtil.showErrorDialog(context, "Мероприятие не найдено, возможно оно было удалено создателем или администратором");
     } else if (code == 472) {
-      DialogUtil.showErrorDialog(context, "Ошибка авторизации");
-      Preference.deletePreferences();
+      await DialogUtil.showErrorDialog(context, "Ошибка авторизации");
+      await Preference.deletePreferences();
       Restart.restartApp();
     } else if (code == 473) {
       if (isAdmin) {
-        DialogUtil.showErrorDialog(context, "Вы не являетесь участников мероприятия!");
+        DialogUtil.showErrorDialog(context, "Вы не являетесь участником мероприятия!");
       } else {
-        Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         DialogUtil.showErrorDialog(context, "Похоже вы были исключены из мероприятия");
       }
     }
