@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class YandexMapKitUtil {
+
   static Future<String?> getCity() async {
     LocationPermission status = await Geolocator.requestPermission();
     return await getLocation(status);
