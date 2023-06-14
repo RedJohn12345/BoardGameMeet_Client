@@ -28,8 +28,11 @@ class YandexMapKitUtil {
 
   static Future<String?> findCity(SearchResultWithSession resultWithSession) async {
     var result = await resultWithSession.result;
-
-    return result.items!.first.toponymMetadata!.address.addressComponents[SearchComponentKind.locality]!;
+    if (result.items == null || result.items!.first.toponymMetadata == null) {
+      return "Москва";
+    }
+    String? city =  result.items!.first.toponymMetadata!.address.addressComponents[SearchComponentKind.locality];
+    return city ?? "Москва";
   }
 
 
